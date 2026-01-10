@@ -1,0 +1,122 @@
+"use client"
+
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { cn } from '@/lib/utils'
+import {
+    Users,
+    Calendar,
+    Activity,
+    DollarSign,
+    ClipboardList,
+    Settings,
+    LayoutDashboard,
+    FileText,
+    FileCheck,
+    Image as ImageIcon,
+    Package,
+    ShieldCheck,
+    BookOpen,
+    MessageSquare,
+    Diamond,
+    Briefcase,
+    Zap,
+    ShieldAlert,
+    Brain,
+    Library,
+    FlaskConical,
+    Target,
+    Sparkles,
+    Shapes,
+    Stethoscope
+} from 'lucide-react'
+
+const navigation = [
+    { name: 'Tableau de bord', href: '/', icon: LayoutDashboard },
+    { name: 'Patients', href: '/patients', icon: Users },
+    { name: 'Agenda', href: '/agenda', icon: Calendar },
+    { name: 'Planification', href: '/planning', icon: Target },
+    { name: 'Imagerie 3D', href: '/imaging', icon: ImageIcon },
+    { name: 'Bloc Chirurgie', href: '/surgery', icon: Activity },
+    { name: 'Laboratoire', href: '/lab', icon: FlaskConical },
+    { name: 'Soins', href: '/charting', icon: Stethoscope },
+    { name: 'Facturation', href: '/billing', icon: DollarSign },
+    { name: 'Tâches', href: '/tasks', icon: ClipboardList },
+    { name: 'Ordonnances', href: '/prescriptions', icon: FileText },
+    { name: 'Devis', href: '/quotes', icon: FileCheck },
+    { name: 'Stocks', href: '/inventory', icon: Package },
+    { name: 'Connaissances', href: '/knowledge', icon: Library },
+    { name: 'Stérilisation', href: '/sterilization', icon: ShieldCheck },
+    { name: 'AI Lab Elite', href: '/ai-lab', icon: Brain },
+    { name: 'Comptabilité', href: '/accounting', icon: BookOpen },
+    { name: 'Rédaction IA', href: '/docs/draft', icon: Sparkles },
+    { name: 'Business Intel', href: '/business', icon: Briefcase },
+    { name: 'Intégrations', href: '/integrations', icon: Zap },
+    { name: 'Sécurité', href: '/security', icon: ShieldAlert },
+    { name: 'Communication', href: '/communication', icon: MessageSquare },
+    { name: 'Paramètres', href: '/settings', icon: Settings },
+]
+
+export function Sidebar() {
+    const [mounted, setMounted] = useState(false)
+    const rawPathname = usePathname()
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
+
+    if (!mounted) {
+        return <div className="w-64 bg-slate-950 h-full border-r border-white/5" />
+    }
+
+    const pathname = rawPathname
+
+    return (
+        <div className="flex h-full w-64 flex-col border-r bg-slate-950 text-slate-300">
+            <div className="flex h-20 items-center px-6 border-b border-white/5 bg-slate-950/50 backdrop-blur-xl">
+                <Diamond className="h-6 w-6 text-accent mr-3 animate-pulse" />
+                <span className="text-lg font-black tracking-tighter text-white uppercase">Dento<span className="text-accent">Prestige</span></span>
+            </div>
+
+            <nav className="flex-1 space-y-1 px-4 py-6 overflow-y-auto no-scrollbar">
+                {navigation.map((item) => {
+                    const isActive = mounted ? pathname === item.href : false
+                    return (
+                        <Link
+                            key={item.name}
+                            href={item.href}
+                            className={cn(
+                                "group flex items-center px-4 py-2.5 text-[13px] font-bold rounded-xl transition-all duration-300",
+                                isActive
+                                    ? "bg-accent/10 text-accent shadow-[inset_0_0_20px_rgba(212,175,55,0.05)] border border-accent/20"
+                                    : "text-slate-400 hover:bg-white/5 hover:text-white"
+                            )}
+                        >
+                            <item.icon
+                                className={cn(
+                                    "mr-3 h-4 w-4 flex-shrink-0 transition-all duration-300",
+                                    isActive ? "text-accent scale-110" : "text-slate-500 group-hover:text-slate-300"
+                                )}
+                            />
+                            {item.name}
+                        </Link>
+                    )
+                })}
+            </nav>
+
+            <div className="border-t border-white/5 p-6 bg-slate-950/50">
+                <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-full bg-accent/20 border border-accent/30 flex items-center justify-center text-accent font-black text-xs shadow-lg">
+                        DR
+                    </div>
+                    <div>
+                        <p className="text-sm font-black text-white">Dr. Aere Lao</p>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-accent/60">Praticien Elite</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+

@@ -1,0 +1,445 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  password  String?  // Hashed
+  role      String   @default("DENTIST") // OWNER (SuperAdmin), DENTIST, ASSISTANT, SECRETARY, PARTNER
+  skills    String?  // JSON string: list of competencies/certifications
+  permissions String? // JSON string of specific rights or list of scopes
+  cabinetId String?  // For multi-site management
+  treatments  Treatment[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  auditLogs AuditLog[]
+  timeEntries TimeEntry[]
+}
+
+model Patient {
+  id          String   @id @default(uuid())
+  firstName   String
+  lastName    String
+  email       String?   @unique
+  phone       String?
+  dob         DateTime?
+  gender      String?
+  address     String?
+  source      String?   
+  status      String    @default("ACTIVE") 
+  isRestricted Boolean  @default(false) 
+  portalActive Boolean  @default(false) 
+  portalPassword String? 
+  medicalHistory MedicalHistory?
+  appointments Appointment[]
+  treatments   Treatment[]
+  treatmentPlans TreatmentPlan[]
+  simulations  PlanningSimulation[]
+  invoices     Invoice[]
+  prescriptions Prescription[]
+  quotes        Quote[]
+  images       Image[]
+  consents     Consent[]
+  communications CommunicationLog[]
+  tasks        Task[]
+  documents    Document[]
+  auditLogs    AuditLog[]
+  timeEntries  TimeEntry[]
+  paroCharts   ParoChart[]
+  toothStates  PatientToothState[]
+  familyLinks  FamilyLink[] @relation("FamilyLinkOrigin")
+  affectedBy   FamilyLink[] @relation("FamilyLinkTarget")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model PatientToothState {
+  id        String   @id @default(uuid())
+  patientId String
+  patient   Patient  @relation(fields: [patientId], references: [id])
+  toothNumber Int
+  status    String   // HEALTHY, CARIES, CROWN, IMPLANT, MISSING, PLANNED, EXTRACTED
+  notes     String?
+  updatedAt DateTime @updatedAt
+  
+  @@unique([patientId, toothNumber])
+}
+
+model CommunicationLog {
+  id        String   @id @default(uuid())
+  patientId String
+  patient   Patient  @relation(fields: [patientId], references: [id])
+  type      String   // SMS, EMAIL, WHATSAPP, PORTAL_NOTICE
+  category  String   // REMINDER, POST_OP, RECALL, EDUCATION, BILLING
+  content   String
+  status    String   // SENT, DELIVERED, OPENED, FAILED
+  sentAt    DateTime @default(now())
+}
+
+model TreatmentPlan {
+  id          String   @id @default(uuid())
+  patientId   String
+  patient     Patient  @relation(fields: [patientId], references: [id])
+  title       String
+  description String?
+  status      String   @default("DRAFT") // DRAFT, ACCEPTED, REJECTED, COMPLETED
+  totalCost   Float
+  steps       TreatmentPlanStep[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model TreatmentPlanStep {
+  id              String        @id @default(uuid())
+  treatmentPlanId String
+  treatmentPlan   TreatmentPlan @relation(fields: [treatmentPlanId], references: [id])
+  title           String
+  description     String?
+  order           Int
+  status          String        @default("PENDING") // PENDING, IN_PROGRESS, COMPLETED
+  cost            Float?
+  date            DateTime?
+}
+
+model PlanningSimulation {
+  id          String   @id @default(uuid())
+  patientId   String
+  patient     Patient  @relation(fields: [patientId], references: [id])
+  type        String   // SMILE_DESIGN, IMPLANT_GUIDE, ORTHO_SIMUL
+  data        String   // JSON containing positions, overlay masks, or mesh links
+  beforeImageUrl String?
+  afterImageUrl  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ParoChart {
+  id        String   @id @default(uuid())
+  patientId String
+  patient   Patient  @relation(fields: [patientId], references: [id])
+  date      DateTime @default(now())
+  data      String   // JSON: pocket depths, recession, mobility, furcation
+  notes     String?
+}
+
+model Playbook {
+  id          String   @id @default(uuid())
+  title       String
+  category    String   
+  content     String   
+  tags        String?  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model KnowledgeBase {
+  id          String   @id @default(uuid())
+  title       String
+  content     String
+  category    String
+  isPublic    Boolean  @default(false)
+  tags        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model FamilyLink {
+  id        String   @id @default(uuid())
+  originId  String
+  targetId  String
+  origin    Patient  @relation("FamilyLinkOrigin", fields: [originId], references: [id])
+  target    Patient  @relation("FamilyLinkTarget", fields: [targetId], references: [id])
+  relation  String   
+  notes     String?
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  patientId String?
+  patient   Patient? @relation(fields: [patientId], references: [id])
+  action    String   
+  details   String?  
+  severity  String   @default("INFO") 
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
+}
+
+model Document {
+  id            String   @id @default(uuid())
+  patientId     String
+  patient       Patient  @relation(fields: [patientId], references: [id])
+  name          String
+  url           String
+  category      String   
+  isArchived    Boolean  @default(false)
+  archivedAt    DateTime?
+  retentionLimit DateTime? 
+  encryptionIv  String?  
+  aiSummary     String?  
+  aiTags        String?  
+  aiSensitivity String   @default("NORMAL") 
+  aiClassifiedAs String? 
+  aiOutcomePred String?  
+  processed     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+}
+
+model Image {
+  id        String   @id @default(uuid())
+  patientId String
+  patient   Patient  @relation(fields: [patientId], references: [id])
+  url       String
+  type      String   // XRAY, PHOTO, PANORAMIC, DICOM, CBCT, STL
+  date      DateTime @default(now())
+  notes     String?
+  metadata  String?  // JSON: measurements, density, tooth number, DICOM tags
+  createdAt DateTime @default(now())
+}
+
+model StockItem {
+  id          String   @id @default(uuid())
+  name        String
+  category    String
+  quantity    Int
+  minQuantity Int      @default(5)
+  unit        String   
+  lastRestock DateTime @default(now())
+  lotNumber   String?  // For traceability
+  expiryDate  DateTime?
+  isSterile   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SterilizationLog {
+  id          String   @id @default(uuid())
+  operator    String
+  machineId   String
+  cycleNumber Int
+  status      String   
+  date        DateTime @default(now())
+  instruments String?  
+  notes       String?
+  createdAt   DateTime @default(now())
+}
+
+model LabWork {
+  id          String   @id @default(uuid())
+  patientId   String
+  labName     String
+  type        String   
+  material    String?
+  shade       String?
+  status      String    @default("SENT") 
+  sentDate    DateTime @default(now())
+  dueDate     DateTime?
+  receivedDate DateTime?
+  stlFileUrl  String?
+  price       Float?
+  notes       String?
+}
+
+model Appointment {
+  id        String   @id @default(uuid())
+  patientId String
+  patient   Patient  @relation(fields: [patientId], references: [id])
+  dentistId String?
+  assistantId String?
+  roomId    String?  
+  title     String
+  start     DateTime
+  end     DateTime
+  type      String   
+  status    String   
+  notes     String?
+  videoLink String?  
+  meetingId String?  
+  isSurgery Boolean  @default(false)
+  checklist String?  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Treatment {
+  id            String   @id @default(uuid())
+  patientId     String
+  patient       Patient  @relation(fields: [patientId], references: [id])
+  dentistId     String?
+  dentist       User?    @relation(fields: [dentistId], references: [id])
+  toothNumber   String?  
+  description   String
+  category      String?  // SURGERY, PROSTHESIS, ENDO, etc.
+  status        String   
+  outcome       String?  @default("PENDING") // PENDING, SUCCESS, COMPLICATION, FAILURE
+  complicationType String? // INFECTION, REJECTION, etc.
+  date          DateTime @default(now())
+  cost          Float    // Price charged to patient
+  estimatedCost Float?   // Internal cost (materials + lab + time)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Invoice {
+  id        String   @id @default(uuid())
+  patientId String
+  patient   Patient  @relation(fields: [patientId], references: [id])
+  amount    Float
+  tax       Float    @default(0)
+  status    String   
+  type      String   @default("STANDARD") 
+  nomenclature String? 
+  teletransmissionId String? 
+  date      DateTime @default(now())
+  dueDate   DateTime?
+  items     InvoiceItem[]
+  createdAt DateTime @default(now())
+}
+
+model InvoiceItem {
+  id        String   @id @default(uuid())
+  invoiceId String
+  invoice   Invoice  @relation(fields: [invoiceId], references: [id])
+  code      String?  
+  description String
+  quantity  Int
+  unitPrice Float
+  total     Float
+}
+
+model Integration {
+  id           String    @id @default(uuid())
+  provider     String    // Stripe, Sirona, Google Calendar, etc.
+  type         String    // PAYMENT, IMAGING, CALENDAR, API, TELECONSULT
+  status       String    @default("DISCONNECTED") // CONNECTED, DISCONNECTED, ERROR
+  config       String?   // JSON configuration (endpoints, keys, local paths)
+  accessToken  String?
+  refreshToken String?
+  expiresAt    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model MedicalHistory {
+  id         String   @id @default(uuid())
+  patientId  String   @unique
+  patient    Patient  @relation(fields: [patientId], references: [id])
+  conditions String?  
+  allergies  String?  
+  medications String? 
+  updatedAt  DateTime @updatedAt
+}
+
+model Consent {
+  id             String    @id @default(uuid())
+  patientId      String
+  patient        Patient   @relation(fields: [patientId], references: [id])
+  title          String
+  status         String    @default("PENDING") // PENDING, SIGNED, REVOKED
+  signedAt       DateTime?
+  content        String?
+  signatureUrl   String?   // URL to the stored signature image or data
+  ipAddress      String?
+  userAgent      String?
+  checksum       String?   // For document integrity (hash)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model Task {
+  id        String   @id @default(uuid())
+  patientId String?
+  patient   Patient? @relation(fields: [patientId], references: [id])
+  title     String
+  status    String   @default("TODO") // TODO, IN_PROGRESS, DONE
+  priority  String?  // LOW, MEDIUM, HIGH, URGENT
+  category  String?  // CLINICAL, ADMIN, LAB, FOLLOW_UP
+  dueDate   DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Quote {
+  id        String   @id @default(uuid())
+  patientId String
+  patient   Patient  @relation(fields: [patientId], references: [id])
+  title     String
+  status    String   @default("DRAFT") // DRAFT, SENT, ACCEPTED, REJECTED
+  total     Float
+  createdAt DateTime @default(now())
+}
+
+model TimeEntry {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  patientId String?
+  patient   Patient? @relation(fields: [patientId], references: [id])
+  activity  String
+  start     DateTime
+  end       DateTime?
+  duration  Int?     // Duration in minutes
+}
+
+model Prescription {
+  id        String   @id @default(uuid())
+  patientId String
+  patient   Patient  @relation(fields: [patientId], references: [id])
+  date      DateTime @default(now())
+  notes     String?
+  items     PrescriptionItem[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PrescriptionItem {
+  id             String       @id @default(uuid())
+  prescriptionId String
+  prescription   Prescription @relation(fields: [prescriptionId], references: [id])
+  medicationName String
+  dosage         String?
+  duration       String?
+  instructions   String?
+}
+
+model Journal {
+  id        String   @id @default(uuid())
+  code      String   @unique
+  name      String
+  entries   JournalEntry[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Account {
+  id        String   @id @default(uuid())
+  code      String   @unique
+  name      String
+  type      String   // ASSET, LIABILITY, EQUITY, INCOME, EXPENSE
+  entries   JournalEntry[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model JournalEntry {
+  id        String   @id @default(uuid())
+  journalId String
+  journal   Journal  @relation(fields: [journalId], references: [id])
+  accountId String
+  account   Account  @relation(fields: [accountId], references: [id])
+  date      DateTime @default(now())
+  description String
+  debit     Float    @default(0)
+  credit    Float    @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
