@@ -78,6 +78,7 @@ const navigationSections = [
     {
         title: 'Système',
         items: [
+            { name: 'Documentation Elite', href: '/documentation', icon: BookOpen },
             { name: 'Communication', href: '/communication', icon: MessageSquare },
             { name: 'Paramètres', href: '/settings', icon: Settings },
         ]
