@@ -28,7 +28,11 @@ import { cn } from "@/lib/utils"
 
 export default function AcademyPage() {
     const [selectedVideo, setSelectedVideo] = useState<any>(null)
-    const [score, setScore] = useState(0)
+    const [activeQuiz, setActiveQuiz] = useState<any>(null)
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
+    const [quizAnswers, setQuizAnswers] = useState<boolean[]>([])
+    const [quizFinished, setQuizFinished] = useState(false)
+    const [xp, setXp] = useState(1240)
 
     const courses = [
         {
@@ -41,7 +45,19 @@ export default function AcademyPage() {
             icon: Radiation,
             progress: 85,
             completed: false,
-            desc: "Apprenez à interpréter les scores de confiance de l'IA et à détecter les pathologies complexes via le scanner neural."
+            desc: "Apprenez à interpréter les scores de confiance de l'IA et à détecter les pathologies complexes via le scanner neural.",
+            questions: [
+                {
+                    q: "Que signifie un score de confiance de 95% affiché par l'IA sur une carie ?",
+                    options: ["Probabilité élevée de pathologie confirmée", "Précision de l'image DICOM", "Temps restant avant traitement", "Niveau de douleur estimé"],
+                    correct: 0
+                },
+                {
+                    q: "Quel module IA est utilisé pour l'analyse des clichés STL ?",
+                    options: ["Voice Hub", "Radio Lab Vision", "Financial Engine", "Smile Design"],
+                    correct: 1
+                }
+            ]
         },
         {
             id: 2,
@@ -53,7 +69,14 @@ export default function AcademyPage() {
             icon: ShieldCheck,
             progress: 100,
             completed: true,
-            desc: "Maîtrisez le cycle complet de traçabilité QR-Trace et la conformité aux normes sanitaires internationales."
+            desc: "Maîtrisez le cycle complet de traçabilité QR-Trace et la conformité aux normes sanitaires internationales.",
+            questions: [
+                {
+                    q: "Quelle est la température standard d'un cycle Prion ?",
+                    options: ["121°C", "134°C", "100°C", "150°C"],
+                    correct: 1
+                }
+            ]
         },
         {
             id: 3,
@@ -65,21 +88,35 @@ export default function AcademyPage() {
             icon: Mic,
             progress: 30,
             completed: false,
-            desc: "Optimisez votre vitesse de saisie grâce aux commandes vocales avancées et à la correction linguistique neuronale."
-        },
-        {
-            id: 4,
-            title: "Financial War Room : Simulation",
-            category: "Management",
-            duration: "15 min",
-            difficulty: "Associé",
-            image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800",
-            icon: Target,
-            progress: 0,
-            completed: false,
-            desc: "Apprenez à utiliser le projecteur de flux pour anticiper les investissements stratégiques du cabinet."
+            desc: "Optimisez votre vitesse de saisie grâce aux commandes vocales avancées et à la correction linguistique neuronale.",
+            questions: [
+                {
+                    q: "Comment activer le mode 'Ordonnance' en cours de dictée ?",
+                    options: ["Appui long sur le micro", "Commande vocale 'Passer en prescription'", "Menu latéral tactile", "Toutes les réponses"],
+                    correct: 3
+                }
+            ]
         }
     ]
+
+    const handleAnswer = (index: number) => {
+        const isCorrect = index === activeQuiz.questions[currentQuestionIndex].correct
+        setQuizAnswers([...quizAnswers, isCorrect])
+
+        if (currentQuestionIndex < activeQuiz.questions.length - 1) {
+            setCurrentQuestionIndex(currentQuestionIndex + 1)
+        } else {
+            setQuizFinished(true)
+            if (isCorrect) setXp(prev => prev + 200)
+        }
+    }
+
+    const resetQuiz = () => {
+        setActiveQuiz(null)
+        setCurrentQuestionIndex(0)
+        setQuizAnswers([])
+        setQuizFinished(false)
+    }
 
     return (
         <div className="p-8 space-y-10 max-w-7xl mx-auto pb-40">
@@ -101,7 +138,7 @@ export default function AcademyPage() {
                     <Card className="bg-white border shadow-sm px-6 py-2 flex items-center gap-4 rounded-2xl">
                         <div className="text-right">
                             <p className="text-[10px] font-black text-slate-400 uppercase leading-none mb-1">Mon Score</p>
-                            <p className="text-xl font-black text-slate-900">1,240 <span className="text-[10px] text-indigo-600">XP</span></p>
+                            <p className="text-xl font-black text-slate-900">{xp.toLocaleString()} <span className="text-[10px] text-indigo-600">XP</span></p>
                         </div>
                         <div className="h-10 w-10 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600">
                             <Trophy className="h-5 w-5" />
@@ -116,64 +153,148 @@ export default function AcademyPage() {
             <div className="grid grid-cols-12 gap-10">
                 {/* Featured Course Player / Interaction */}
                 <div className="col-span-12 lg:col-span-8 space-y-8">
-                    {!selectedVideo ? (
-                        <Card className="rounded-[4rem] border-none shadow-2xl bg-slate-950 text-white p-12 overflow-hidden relative min-h-[500px] flex items-center justify-center">
-                            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=1200')] opacity-10 bg-center bg-cover" />
-                            <div className="relative z-10 text-center space-y-8 max-w-xl">
-                                <div className="h-24 w-24 bg-indigo-600 rounded-[2.5rem] flex items-center justify-center mx-auto shadow-2xl animate-pulse">
-                                    <Play className="h-10 w-10 fill-white" />
-                                </div>
-                                <div className="space-y-4">
-                                    <h2 className="text-4xl font-black tracking-tighter uppercase italic">Commencer la formation <br /><span className="text-gold">Workflow Management</span></h2>
-                                    <p className="text-slate-400 font-medium">Apprenez à optimiser le parcours patient via notre nouveau module Kanban en 5 minutes chrono.</p>
-                                </div>
-                                <Button className="bg-white text-indigo-900 font-black uppercase text-[11px] tracking-widest h-14 px-12 rounded-2xl hover:bg-indigo-50 transition-all">
-                                    Lancer la Masterclass
-                                </Button>
-                            </div>
-                        </Card>
-                    ) : (
-                        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
-                            <Card className="rounded-[4rem] border-none shadow-2xl bg-black overflow-hidden relative min-h-[500px]">
-                                <img src={selectedVideo.image} className="absolute inset-0 w-full h-full object-cover opacity-40 blur-sm" />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
-                                <div className="absolute inset-x-8 bottom-8 z-10 space-y-6">
-                                    <div className="flex items-center justify-between">
-                                        <div className="space-y-2">
-                                            <span className="px-4 py-1 bg-indigo-600 text-[10px] font-black uppercase tracking-widest rounded-full">{selectedVideo.category}</span>
-                                            <h3 className="text-3xl font-black">{selectedVideo.title}</h3>
+                    <AnimatePresence mode="wait">
+                        {activeQuiz ? (
+                            <motion.div
+                                key="quiz"
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                            >
+                                <Card className="rounded-[4rem] border-none shadow-2xl bg-indigo-950 text-white p-12 min-h-[500px] flex flex-col justify-between relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
+                                        <Brain className="h-64 w-64 text-white" />
+                                    </div>
+
+                                    {!quizFinished ? (
+                                        <>
+                                            <div className="relative z-10 space-y-8">
+                                                <div className="flex items-center justify-between">
+                                                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-indigo-400">Question {currentQuestionIndex + 1} sur {activeQuiz.questions.length}</span>
+                                                    <Button variant="ghost" onClick={resetQuiz} className="text-white/40 hover:text-white"><X className="h-4 w-4 mr-2" /> Abandonner</Button>
+                                                </div>
+                                                <h2 className="text-3xl font-black tracking-tight max-w-2xl">{activeQuiz.questions[currentQuestionIndex].q}</h2>
+                                                <div className="grid grid-cols-1 gap-4">
+                                                    {activeQuiz.questions[currentQuestionIndex].options.map((opt: string, i: number) => (
+                                                        <button
+                                                            key={i}
+                                                            onClick={() => handleAnswer(i)}
+                                                            className="w-full p-6 bg-white/5 border border-white/10 rounded-[2rem] text-left hover:bg-white/10 transition-all font-bold text-sm flex justify-between items-center group"
+                                                        >
+                                                            {opt}
+                                                            <ChevronRight className="h-4 w-4 text-white/20 group-hover:text-gold group-hover:translate-x-1 transition-all" />
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            <div className="h-1.5 w-full bg-white/5 rounded-full mt-10">
+                                                <div className="h-full bg-gold rounded-full transition-all duration-500" style={{ width: `${((currentQuestionIndex + 1) / activeQuiz.questions.length) * 100}%` }} />
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <div className="relative z-10 text-center space-y-8 py-10">
+                                            <div className="h-24 w-24 bg-gold rounded-[2.5rem] flex items-center justify-center mx-auto shadow-2xl shadow-gold/20">
+                                                <Trophy className="h-10 w-10 text-white" />
+                                            </div>
+                                            <div className="space-y-4">
+                                                <h2 className="text-5xl font-black tracking-tighter uppercase italic">Certification Validée !</h2>
+                                                <p className="text-indigo-300 font-medium">Félicitations, vous avez maîtrisé le module <span className="text-white font-bold">{activeQuiz.title}</span>.</p>
+                                                <div className="flex justify-center gap-10 pt-6">
+                                                    <div>
+                                                        <p className="text-3xl font-black text-white">+200</p>
+                                                        <p className="text-[10px] font-black uppercase tracking-widest text-indigo-400">Points XP</p>
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-3xl font-black text-white">100%</p>
+                                                        <p className="text-[10px] font-black uppercase tracking-widest text-indigo-400">Score</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="flex justify-center gap-4">
+                                                <Button onClick={resetQuiz} className="bg-white text-indigo-900 font-black uppercase text-[11px] tracking-widest h-14 px-12 rounded-2xl hover:bg-indigo-50 transition-all">Retour à l'Academy</Button>
+                                                <Button className="bg-gold text-white font-black uppercase text-[11px] tracking-widest h-14 px-12 rounded-2xl shadow-xl shadow-gold/20">Partager le Diplôme</Button>
+                                            </div>
                                         </div>
-                                        <div className="flex gap-4">
-                                            <Button size="icon" className="h-14 w-14 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20">
-                                                <PlaySquare className="h-6 w-6" />
-                                            </Button>
-                                            <Button className="h-14 px-8 rounded-2xl bg-indigo-600 font-black uppercase tracking-widest text-[11px]">Passer le Quiz</Button>
+                                    )}
+                                </Card>
+                            </motion.div>
+                        ) : selectedVideo ? (
+                            <motion.div key="player" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
+                                <Card className="rounded-[4rem] border-none shadow-2xl bg-black overflow-hidden relative min-h-[500px]">
+                                    <img src={selectedVideo.image} className="absolute inset-0 w-full h-full object-cover opacity-40 blur-sm" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+                                    <div className="absolute inset-x-12 bottom-12 z-10 space-y-6">
+                                        <div className="flex items-center justify-between">
+                                            <div className="space-y-2">
+                                                <div className="flex items-center gap-3">
+                                                    <span className="px-4 py-1 bg-indigo-600 text-[10px] font-black uppercase tracking-widest rounded-full">{selectedVideo.category}</span>
+                                                    <span className="flex items-center gap-2 text-white/60 text-[10px] font-bold uppercase tracking-widest"><Clock className="h-3 w-3" /> {selectedVideo.duration}</span>
+                                                </div>
+                                                <h3 className="text-4xl font-black text-white tracking-tighter uppercase italic">{selectedVideo.title}</h3>
+                                            </div>
+                                            <div className="flex gap-4">
+                                                <Button variant="ghost" className="h-14 w-14 rounded-2xl bg-white/10 hover:bg-white/20 text-white"><PlaySquare className="h-6 w-6" /></Button>
+                                                <Button
+                                                    onClick={() => setActiveQuiz(selectedVideo)}
+                                                    className="h-14 px-10 rounded-2xl bg-indigo-600 text-white font-black uppercase tracking-widest text-[11px] shadow-xl shadow-indigo-600/20 active:scale-95 transition-all"
+                                                >
+                                                    Passer le Quiz de Validation
+                                                </Button>
+                                            </div>
+                                        </div>
+                                        <p className="text-white/60 text-sm max-w-xl font-medium leading-relaxed">{selectedVideo.desc}</p>
+                                        <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                                            <motion.div
+                                                initial={{ width: 0 }}
+                                                animate={{ width: `${selectedVideo.progress}%` }}
+                                                className="h-full bg-indigo-500"
+                                            />
                                         </div>
                                     </div>
-                                    <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
-                                        <motion.div
-                                            initial={{ width: 0 }}
-                                            animate={{ width: `${selectedVideo.progress}%` }}
-                                            className="h-full bg-indigo-500"
-                                        />
+                                </Card>
+                            </motion.div>
+                        ) : (
+                            <motion.div key="intro" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                                <Card className="rounded-[4rem] border-none shadow-2xl bg-slate-950 text-white p-12 overflow-hidden relative min-h-[500px] flex items-center justify-center">
+                                    <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=1200')] opacity-10 bg-center bg-cover" />
+                                    <div className="relative z-10 text-center space-y-8 max-w-xl">
+                                        <div className="h-24 w-24 bg-indigo-600 rounded-[2.5rem] flex items-center justify-center mx-auto shadow-2xl animate-pulse">
+                                            <Play className="h-10 w-10 fill-white" />
+                                        </div>
+                                        <div className="space-y-4">
+                                            <h2 className="text-4xl font-black tracking-tighter uppercase italic">Commencer la formation <br /><span className="text-gold">Workflow Management</span></h2>
+                                            <p className="text-slate-400 font-medium">Apprenez à optimiser le parcours patient via notre nouveau module Kanban en 5 minutes chrono.</p>
+                                        </div>
+                                        <Button className="bg-white text-indigo-900 font-black uppercase text-[11px] tracking-widest h-14 px-12 rounded-2xl hover:bg-indigo-50 transition-all">
+                                            Lancer la Masterclass
+                                        </Button>
                                     </div>
-                                </div>
-                            </Card>
-                        </motion.div>
-                    )}
+                                </Card>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
 
                     {/* Course Catalog */}
                     <div className="space-y-6">
                         <div className="flex items-center justify-between px-4">
                             <h3 className="text-xs font-black uppercase tracking-widest text-slate-400">Catalogue des Formations</h3>
-                            <Button variant="ghost" className="text-indigo-600 text-[10px] font-black uppercase">Tout voir</Button>
+                            <div className="flex gap-2">
+                                {['TOUT', 'INTELLIGENCE', 'OPÉRATIONS', 'MANAGEMENT'].map(cat => (
+                                    <button key={cat} className="px-4 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest border border-slate-100 hover:bg-slate-50 transition-all">
+                                        {cat}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             {courses.map(course => (
                                 <Card
                                     key={course.id}
                                     onClick={() => setSelectedVideo(course)}
-                                    className="rounded-[3rem] border-none shadow-luxury bg-white group cursor-pointer overflow-hidden hover:translate-y-[-8px] transition-all"
+                                    className={cn(
+                                        "rounded-[3rem] border-none shadow-luxury bg-white group cursor-pointer overflow-hidden hover:translate-y-[-8px] transition-all",
+                                        selectedVideo?.id === course.id && "ring-2 ring-indigo-500/20 shadow-2xl"
+                                    )}
                                 >
                                     <div className="aspect-video relative overflow-hidden">
                                         <img src={course.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
@@ -229,8 +350,8 @@ export default function AcademyPage() {
                                 { title: "Spécialiste IA Vision v1", date: "Jan 2026", icon: Brain },
                                 { title: "Maître de Consultation", date: "Déc 2025", icon: Star }
                             ].map((cert, i) => (
-                                <div key={i} className="flex items-center gap-4 p-4 bg-slate-50 rounded-[2rem] border border-slate-100 group hover:bg-indigo-600 transition-all cursor-pointer">
-                                    <div className="h-12 w-12 bg-white rounded-2xl flex items-center justify-center text-indigo-600 shadow-sm group-hover:bg-white/20 group-hover:text-white transition-all">
+                                <div key={i} className="flex items-center gap-4 p-4 bg-slate-50 rounded-[2rem] border border-slate-100 group hover:bg-slate-900 transition-all cursor-pointer">
+                                    <div className="h-12 w-12 bg-white rounded-2xl flex items-center justify-center text-indigo-600 shadow-sm group-hover:bg-white/10 group-hover:text-white transition-all">
                                         <cert.icon className="h-6 w-6" />
                                     </div>
                                     <div>
@@ -308,6 +429,26 @@ function PlaySquare(props: any) {
         >
             <rect width="18" height="18" x="3" y="3" rx="2" />
             <path d="m9 8 6 4-6 4Z" />
+        </svg>
+    )
+}
+
+function X(props: any) {
+    return (
+        <svg
+            {...props}
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <path d="M18 6 6 18" />
+            <path d="m6 6 12 12" />
         </svg>
     )
 }
