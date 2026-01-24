@@ -19,13 +19,25 @@ import {
     ArrowRight,
     Filter,
     ArrowUpRight,
-    UserCheck
+    UserCheck,
+    RefreshCw
 } from "lucide-react"
 import Link from "next/link"
 import { format } from "date-fns"
 import { fr } from "date-fns/locale"
 import { cn } from "@/lib/utils"
 import { motion, AnimatePresence } from "framer-motion"
+
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+    DialogFooter
+} from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
+import { toast } from "sonner" // Assuming sonner is available for premium feedback
 
 type PatientData = {
     id: string
@@ -38,6 +50,48 @@ type PatientData = {
 
 export default function PatientsClient({ initialPatients = [] }: { initialPatients: PatientData[] }) {
     const [searchTerm, setSearchTerm] = useState("")
+    const [isRegistering, setIsRegistering] = useState(false)
+    const [open, setOpen] = useState(false)
+
+    // Form states
+    const [formData, setFormData] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: ""
+    })
+
+    const handleRegister = async (e: React.FormEvent) => {
+        e.preventDefault()
+        setIsRegistering(true)
+
+        try {
+            const res = await fetch('/api/patients', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.message || "Failed to register patient");
+            }
+
+            setOpen(false)
+            setFormData({ firstName: "", lastName: "", email: "", phone: "" })
+            toast.success("Patient enregistré avec succès !", {
+                description: `${formData.firstName} ${formData.lastName} a été ajouté à la base de données.`,
+            });
+            window.location.reload() // Dynamic refresh
+        } catch (error: any) {
+            console.error(error)
+            toast.error("Erreur lors de l'inscription du patient", {
+                description: error.message || "Veuillez réessayer plus tard.",
+            });
+        } finally {
+            setIsRegistering(false)
+        }
+    }
 
     // Robust safety: ensures we don't crash if names are missing or null
     const getSafeInitial = (name?: string) => {
@@ -102,9 +156,69 @@ export default function PatientsClient({ initialPatients = [] }: { initialPatien
                     <Button variant="outline" onClick={exportPatientsCSV} className="rounded-2xl border-slate-200 h-14 px-6 text-[10px] font-black uppercase tracking-widest text-slate-500 bg-white">
                         <Download className="mr-2 h-4 w-4" /> Export CSV
                     </Button>
-                    <Button className="bg-slate-900 text-white hover:bg-slate-800 font-black px-8 rounded-2xl uppercase tracking-widest text-[11px] h-14 shadow-luxury transition-all">
-                        <Plus className="mr-2 h-5 w-5" /> Inscrire un Patient
-                    </Button>
+
+                    <Dialog open={open} onOpenChange={setOpen}>
+                        <DialogTrigger asChild>
+                            <Button className="bg-slate-900 text-white hover:bg-slate-800 font-black px-8 rounded-2xl uppercase tracking-widest text-[11px] h-14 shadow-luxury transition-all">
+                                <Plus className="mr-2 h-5 w-5" /> Inscrire un Patient
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[500px] rounded-[3rem] border-none shadow-2xl p-10 bg-white">
+                            <DialogHeader>
+                                <DialogTitle className="text-2xl font-black text-slate-900 tracking-tighter uppercase italic">Nouvelle <span className="text-gold">Inscription Elite</span></DialogTitle>
+                                <p className="text-slate-400 font-medium text-xs uppercase tracking-widest mt-2">Enregistrement dans la base de données clinique.</p>
+                            </DialogHeader>
+                            <form onSubmit={handleRegister} className="space-y-6 pt-6">
+                                <div className="grid grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Prénom</Label>
+                                        <Input
+                                            required
+                                            className="h-14 rounded-2xl bg-slate-50 border-none px-6 font-bold focus-visible:ring-gold"
+                                            value={formData.firstName}
+                                            onChange={e => setFormData({ ...formData, firstName: e.target.value })}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Nom de Famille</Label>
+                                        <Input
+                                            required
+                                            className="h-14 rounded-2xl bg-slate-50 border-none px-6 font-bold focus-visible:ring-gold"
+                                            value={formData.lastName}
+                                            onChange={e => setFormData({ ...formData, lastName: e.target.value })}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Email (Optionnel)</Label>
+                                    <Input
+                                        type="email"
+                                        className="h-14 rounded-2xl bg-slate-50 border-none px-6 font-bold focus-visible:ring-gold"
+                                        value={formData.email}
+                                        onChange={e => setFormData({ ...formData, email: e.target.value })}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Téléphone Mobile</Label>
+                                    <Input
+                                        className="h-14 rounded-2xl bg-slate-50 border-none px-6 font-bold focus-visible:ring-gold"
+                                        value={formData.phone}
+                                        onChange={e => setFormData({ ...formData, phone: e.target.value })}
+                                    />
+                                </div>
+                                <DialogFooter className="pt-6">
+                                    <Button
+                                        type="submit"
+                                        disabled={isRegistering}
+                                        className="w-full bg-slate-900 text-white font-black uppercase tracking-widest text-[11px] h-14 rounded-2xl shadow-luxury active:scale-95 transition-all"
+                                    >
+                                        {isRegistering ? <RefreshCw className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-5 w-5" />}
+                                        Finaliser l'Inscription
+                                    </Button>
+                                </DialogFooter>
+                            </form>
+                        </DialogContent>
+                    </Dialog>
                 </div>
             </div>
 
