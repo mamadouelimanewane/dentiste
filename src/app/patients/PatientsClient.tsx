@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Plus, Search, MoreHorizontal, FileText, Calendar } from "lucide-react"
+import { Plus, Search, MoreHorizontal, FileText, Calendar, Download, Printer } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 import { format } from "date-fns"
@@ -32,16 +32,54 @@ export default function PatientsClient({ initialPatients }: { initialPatients: P
         (p.email && p.email.toLowerCase().includes(searchTerm.toLowerCase()))
     )
 
+    const exportPatientsCSV = () => {
+        const headers = ["ID", "Prénom", "Nom", "Email", "Téléphone"];
+        const rows = initialPatients.map(p => [
+            p.id,
+            p.firstName,
+            p.lastName,
+            p.email || "",
+            p.phone || ""
+        ]);
+
+        const csvContent = "data:text/csv;charset=utf-8,"
+            + headers.join(",") + "\n"
+            + rows.map(e => e.join(",")).join("\n");
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `patients_dentiste_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     return (
-        <div className="p-8 space-y-8 max-w-7xl mx-auto">
-            <div className="flex items-center justify-between">
+        <div className="p-8 space-y-8 max-w-7xl mx-auto print:p-0">
+            <style jsx global>{`
+                @media print {
+                    .no-print { display: none !important; }
+                    body { background: white !important; }
+                }
+            `}</style>
+
+            <div className="flex items-center justify-between no-print">
                 <div>
                     <h1 className="text-3xl font-bold text-slate-900">Patients</h1>
                     <p className="text-slate-500">Gérez vos dossiers patients (Dossier Médical, Facturation, Historique)</p>
                 </div>
-                <Button className="bg-teal-600 hover:bg-teal-700 text-white">
-                    <Plus className="mr-2 h-4 w-4" /> Nouveau Patient
-                </Button>
+                <div className="flex gap-2">
+                    <Button variant="outline" onClick={exportPatientsCSV} className="border-slate-200">
+                        <Download className="mr-2 h-4 w-4" /> CSV
+                    </Button>
+                    <Button variant="outline" onClick={() => window.print()} className="border-slate-200">
+                        <Printer className="mr-2 h-4 w-4" /> PDF
+                    </Button>
+                    <Button className="bg-teal-600 hover:bg-teal-700 text-white">
+                        <Plus className="mr-2 h-4 w-4" /> Nouveau Patient
+                    </Button>
+                </div>
             </div>
 
             <div className="flex items-center gap-4 bg-white p-2 rounded-xl border shadow-sm">

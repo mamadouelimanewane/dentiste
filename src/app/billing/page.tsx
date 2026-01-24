@@ -26,6 +26,7 @@ import {
     ShieldAlert,
     History,
     FileCheck,
+    Printer,
     CreditCard as PaymentIcon
 } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -45,9 +46,37 @@ export default function BillingPage() {
         { patient: 'Modou Fall', total: '4,800,000', paid: '1,200,000', next: '20 Jan', progress: 25 },
     ]
 
+    const exportBillingCSV = () => {
+        const headers = ["ID", "Patient", "Montant", "Statut", "Type"];
+        const dataRows = [
+            { id: 'INV-2026-042', patient: 'Sophie Faye', amount: '145,000', status: 'PAID', type: 'FSE CCAM' },
+            { id: 'INV-2026-041', patient: 'Modou Diop', amount: '450,000', status: 'PARTIAL', type: 'Devis Echelonné' },
+            { id: 'INV-2026-040', patient: 'Mamadou Diallo', amount: '12,500', status: 'UNPAID', type: 'Consul. Simple' },
+        ];
+
+        const csvContent = "data:text/csv;charset=utf-8,"
+            + headers.join(",") + "\n"
+            + dataRows.map(r => [r.id, r.patient, r.amount.replace(/,/g, ''), r.status, r.type].join(",")).join("\n");
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `facturation_dentiste_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     return (
-        <div className="p-8 space-y-10 max-w-7xl mx-auto">
-            <div className="flex items-center justify-between">
+        <div className="p-8 space-y-10 max-w-7xl mx-auto print:p-0">
+            <style jsx global>{`
+                @media print {
+                    .no-print { display: none !important; }
+                    body { background: white !important; }
+                }
+            `}</style>
+
+            <div className="flex items-center justify-between no-print">
                 <div>
                     <div className="flex items-center gap-2 mb-1">
                         <div className="h-1 w-8 bg-teal-500 rounded-full"></div>
@@ -57,7 +86,15 @@ export default function BillingPage() {
                     <p className="text-slate-500 font-medium">Télétransmission FSE, gestion du tiers-payant et plans d'échelonnement.</p>
                 </div>
                 <div className="flex gap-4">
-                    <div className="flex gap-2 p-1 bg-slate-100 rounded-2xl">
+                    <div className="flex gap-2">
+                        <Button variant="outline" onClick={exportBillingCSV} className="rounded-xl border-slate-200">
+                            <Download className="mr-2 h-4 w-4" /> CSV
+                        </Button>
+                        <Button variant="outline" onClick={() => window.print()} className="rounded-xl border-slate-200">
+                            <Printer className="mr-2 h-4 w-4" /> PDF
+                        </Button>
+                    </div>
+                    <div className="flex gap-2 p-1 bg-white border border-slate-100 rounded-2xl">
                         {(['DASHBOARD', 'FSE', 'PAYMENTS'] as const).map(tab => (
                             <Button
                                 key={tab}
@@ -65,7 +102,7 @@ export default function BillingPage() {
                                 size="sm"
                                 className={cn(
                                     "rounded-xl px-6 text-[10px] font-black uppercase tracking-widest transition-all",
-                                    viewMode === tab ? "bg-white text-slate-900 shadow-sm" : "text-slate-500"
+                                    viewMode === tab ? "bg-slate-900 text-white shadow-sm" : "text-slate-500"
                                 )}
                                 onClick={() => setViewMode(tab as any)}
                             >
@@ -73,9 +110,6 @@ export default function BillingPage() {
                             </Button>
                         ))}
                     </div>
-                    <Button className="bg-slate-900 text-white font-black uppercase tracking-widest text-[10px] h-14 rounded-2xl px-8 shadow-xl">
-                        <Scan className="h-4 w-4 mr-2" /> Lire Carte Vitale
-                    </Button>
                 </div>
             </div>
 

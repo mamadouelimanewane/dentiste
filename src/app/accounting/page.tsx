@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { BookOpen, TrendingUp, TrendingDown, Receipt, FileText, ArrowRight, Wallet, PieChart, Activity, Clock, ShieldCheck, Plus, Sparkles, Loader2 } from "lucide-react"
+import { BookOpen, TrendingUp, TrendingDown, Receipt, FileText, ArrowRight, Wallet, PieChart, Activity, Clock, ShieldCheck, Plus, Sparkles, Loader2, Download, Printer } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { cn } from "@/lib/utils"
 
@@ -24,6 +24,38 @@ export default function AccountingPage() {
         fetchMetrics()
     }, [])
 
+    const exportToCSV = () => {
+        if (!metrics?.journals) return;
+        const headers = ["Nom", "Code", "Débit (FCFA)", "Crédit (FCFA)"];
+        const rows = metrics.journals.map((j: any) => [
+            j.name,
+            j.code,
+            j.debit.replace(/\s/g, ''),
+            j.credit.replace(/\s/g, '')
+        ]);
+
+        const csvContent = "data:text/csv;charset=utf-8,"
+            + headers.join(",") + "\n"
+            + rows.map((e: any) => e.join(",")).join("\n");
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `compta_dentiste_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    const exportToExcel = () => {
+        // En générant un format XML minimaliste ou juste CSV que Excel ouvre
+        exportToCSV();
+    };
+
+    const printToPDF = () => {
+        window.print();
+    };
+
     if (isLoading) {
         return (
             <div className="h-screen flex items-center justify-center bg-slate-50">
@@ -36,8 +68,17 @@ export default function AccountingPage() {
     }
 
     return (
-        <div className="p-8 space-y-10 max-w-7xl mx-auto">
-            <div className="flex items-center justify-between">
+        <div className="p-8 space-y-10 max-w-7xl mx-auto print:p-0">
+            <style jsx global>{`
+                @media print {
+                    .no-print { display: none !important; }
+                    .print-only { display: block !important; }
+                    body { background: white !important; }
+                    .card { border: 1px solid #eee !important; box-shadow: none !important; }
+                }
+            `}</style>
+
+            <div className="flex items-center justify-between no-print">
                 <div>
                     <div className="flex items-center gap-2 mb-1">
                         <div className="h-1 w-8 bg-accent rounded-full"></div>
@@ -46,9 +87,14 @@ export default function AccountingPage() {
                     <h1 className="text-4xl font-black text-slate-900 tracking-tighter">Gestion <span className="text-gold">SYSCOA / OHADA</span></h1>
                 </div>
                 <div className="flex gap-3">
-                    <Button variant="outline" className="rounded-xl border-slate-200 font-bold"><Receipt className="mr-2 h-4 w-4" /> Grand Livre</Button>
+                    <Button variant="outline" onClick={exportToCSV} className="rounded-xl border-slate-200 font-bold bg-white">
+                        <Download className="mr-2 h-4 w-4" /> CSV
+                    </Button>
+                    <Button variant="outline" onClick={printToPDF} className="rounded-xl border-slate-200 font-bold bg-white">
+                        <Printer className="mr-2 h-4 w-4" /> PDF
+                    </Button>
                     <Button className="bg-slate-900 text-white hover:bg-slate-800 font-black px-6 rounded-xl uppercase tracking-widest text-xs h-11">
-                        <Plus className="mr-2 h-4 w-4" /> Nouvelle Écritture
+                        <Plus className="mr-2 h-4 w-4" /> Nouvelle Écriture
                     </Button>
                 </div>
             </div>

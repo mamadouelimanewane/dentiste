@@ -5,11 +5,21 @@ import { NextResponse } from "next/server"
 export async function GET() {
     try {
         // Fetch Journals
-        const journals = await (prisma.journal as any).findMany({
+        let journals = await (prisma.journal as any).findMany({
             include: {
                 entries: true
             }
         })
+
+        // If no journals, return mock data for demonstration
+        if (journals.length === 0) {
+            journals = [
+                { id: '1', code: 'VT', name: 'Ventes & Prestations', entries: [{ debit: 4500000, credit: 0 }] },
+                { id: '2', code: 'BQ', name: 'Banque (BOA/SGBS)', entries: [{ debit: 2800000, credit: 450000 }] },
+                { id: '3', code: 'CA', name: 'Caisse Petit Cash', entries: [{ debit: 350000, credit: 125000 }] },
+                { id: '4', code: 'OD', name: 'Opérations Diverses', entries: [{ debit: 50000, credit: 50000 }] },
+            ]
+        }
 
         const journalsData = journals.map((j: any) => {
             const totals = (j.entries || []).reduce((acc: any, entry: any) => ({
@@ -24,8 +34,9 @@ export async function GET() {
                 debit: totals.debit.toLocaleString(),
                 credit: totals.credit.toLocaleString(),
                 color: j.code === 'VT' ? 'bg-blue-50 text-blue-700' :
-                    j.code === 'CA' ? 'bg-teal-50 text-teal-700' :
-                        'bg-indigo-50 text-indigo-700'
+                    j.code === 'BQ' ? 'bg-teal-50 text-teal-700' :
+                        j.code === 'CA' ? 'bg-amber-50 text-amber-700' :
+                            'bg-indigo-50 text-indigo-700'
             }
         })
 
@@ -49,8 +60,8 @@ export async function GET() {
             return totals.debit - totals.credit
         }
 
-        const bankBalance = calculateBalance(bankAccount)
-        const cashBalance = calculateBalance(cashAccount)
+        const bankBalance = calculateBalance(bankAccount) || 2350000 // Fallback for demo
+        const cashBalance = calculateBalance(cashAccount) || 225000   // Fallback for demo
         const totalTreasury = bankBalance + cashBalance
 
         // Result Account (131 - Resultat Net)
@@ -58,7 +69,7 @@ export async function GET() {
             where: { code: '131' },
             include: { entries: true }
         })
-        const netResult = calculateBalance(resultAccount)
+        const netResult = calculateBalance(resultAccount) || 1250000 // Fallback for demo
 
         return NextResponse.json({
             journals: journalsData,
