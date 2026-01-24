@@ -38,6 +38,21 @@ import { motion } from "framer-motion"
 export default function SettingsPage() {
     const [activeSection, setActiveSection] = useState('CLINIC')
     const [isSaving, setIsSaving] = useState(false)
+    const [users, setUsers] = useState<any[]>([])
+    const [isLoadingUsers, setIsLoadingUsers] = useState(false)
+
+    // Charger les utilisateurs
+    useEffect(() => {
+        if (activeSection === 'TEAM') {
+            setIsLoadingUsers(true)
+            fetch('/api/users')
+                .then(res => res.json())
+                .then(data => {
+                    if (Array.isArray(data)) setUsers(data)
+                })
+                .finally(() => setIsLoadingUsers(false))
+        }
+    }, [activeSection])
 
     // États pour les configurations
     const [clinicInfo, setClinicInfo] = useState({
@@ -550,49 +565,130 @@ export default function SettingsPage() {
                         <motion.div
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
+                            className="space-y-8"
                         >
                             <Card className="rounded-[3rem] border-none shadow-luxury bg-white overflow-hidden">
                                 <CardHeader className="p-10 border-b border-slate-50">
                                     <div className="flex items-center justify-between">
                                         <div>
-                                            <CardTitle className="text-xl font-black tracking-tight text-slate-900 uppercase">Équipe & Collaborateurs</CardTitle>
-                                            <CardDescription className="text-sm font-medium text-slate-500 mt-2">Gérez les accès et permissions de votre équipe</CardDescription>
+                                            <CardTitle className="text-xl font-black tracking-tight text-slate-900 uppercase">Gestion des Rôles & Permissions</CardTitle>
+                                            <CardDescription className="text-sm font-medium text-slate-500 mt-2">Définissez les niveaux d'accès standard pour votre cabinet</CardDescription>
+                                        </div>
+                                    </div>
+                                </CardHeader>
+                                <CardContent className="p-10">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                        {[
+                                            { role: 'OWNER', name: 'Administrateur', permissions: 'Accès Total', color: 'bg-red-50 text-red-600' },
+                                            { role: 'DENTIST', name: 'Praticien', permissions: 'Clinique + Patients', color: 'bg-blue-50 text-blue-600' },
+                                            { role: 'ASSISTANT', name: 'Assistant', permissions: 'Clinique + Stérilisation', color: 'bg-teal-50 text-teal-600' },
+                                            { role: 'SECRETARY', name: 'Secrétaire', permissions: 'Agenda + Facturation', color: 'bg-purple-50 text-purple-600' },
+                                        ].map((r, i) => (
+                                            <div key={i} className="p-6 rounded-3xl border border-slate-100 hover:border-slate-200 transition-all group cursor-pointer">
+                                                <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110", r.color)}>
+                                                    <ShieldCheck className="h-5 w-5" />
+                                                </div>
+                                                <h4 className="text-sm font-black text-slate-900 uppercase tracking-tight">{r.name}</h4>
+                                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">{r.permissions}</p>
+                                                <Button variant="link" className="p-0 h-auto mt-4 text-[9px] font-black uppercase text-slate-400 group-hover:text-slate-900 transition-colors">Éditer Permissions →</Button>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="mt-10 p-8 bg-slate-50 rounded-[2rem] border border-slate-100">
+                                        <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6 flex items-center gap-2">
+                                            <Users className="h-4 w-4" /> Matrice de Permissions Granulaires
+                                        </h4>
+                                        <div className="space-y-4">
+                                            {[
+                                                { category: 'Dossier Patient', rights: ['Lecture', 'Édition', 'Suppression', 'Export'] },
+                                                { category: 'Données Cliniques', rights: ['Odontogramme', 'Radios', 'Protocoles', 'Prescriptions'] },
+                                                { category: 'Finance', rights: ['Facturation', 'Encaissement', 'Comptabilité', 'Rapports'] },
+                                                { category: 'Configuration', rights: ['Paramètres', 'Utilisateurs', 'API', 'Audit'] },
+                                            ].map((cat, i) => (
+                                                <div key={i} className="flex items-center justify-between py-3 border-b border-slate-200 last:border-0">
+                                                    <span className="text-xs font-black text-slate-700 w-1/3">{cat.category}</span>
+                                                    <div className="flex gap-4 w-2/3">
+                                                        {cat.rights.map(right => (
+                                                            <div key={right} className="flex items-center gap-2">
+                                                                <div className="h-4 w-4 rounded-md border-2 border-slate-200 flex items-center justify-center cursor-pointer hover:border-teal-500 transition-colors">
+                                                                    <div className="h-2 w-2 rounded-sm bg-teal-500 opacity-0 bg-teal-500/0"></div>
+                                                                </div>
+                                                                <span className="text-[10px] font-bold text-slate-500">{right}</span>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            <Card className="rounded-[3rem] border-none shadow-luxury bg-white overflow-hidden">
+                                <CardHeader className="p-10 border-b border-slate-50">
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <CardTitle className="text-xl font-black tracking-tight text-slate-900 uppercase">Utilisateurs Actifs</CardTitle>
+                                            <CardDescription className="text-sm font-medium text-slate-500 mt-2">Gérez les comptes individuels et leurs rôles</CardDescription>
                                         </div>
                                         <Button className="bg-teal-600 hover:bg-teal-700 text-white font-black uppercase tracking-widest text-xs h-12 rounded-xl px-6">
-                                            <Plus className="mr-2 h-4 w-4" /> Ajouter un Membre
+                                            <Plus className="mr-2 h-4 w-4" /> Nouvel Utilisateur
                                         </Button>
                                     </div>
                                 </CardHeader>
                                 <CardContent className="p-10">
                                     <div className="space-y-4">
-                                        {[
-                                            { name: 'Dr. Aere Lao', role: 'Praticien Chef', email: 'aere.lao@clinic.sn', status: 'Actif' },
-                                            { name: 'Fatou Diop', role: 'Secrétaire Médicale', email: 'f.diop@clinic.sn', status: 'Actif' },
-                                            { name: 'Mamadou Sall', role: 'Assistant Dentaire', email: 'm.sall@clinic.sn', status: 'Actif' },
-                                        ].map((member, i) => (
-                                            <div key={i} className="flex items-center justify-between p-6 bg-slate-50 rounded-2xl hover:bg-white hover:shadow-md transition-all">
-                                                <div className="flex items-center gap-4">
-                                                    <div className="h-12 w-12 rounded-full bg-teal-100 flex items-center justify-center text-teal-700 font-black text-sm">
-                                                        {member.name.split(' ').map(n => n[0]).join('')}
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-sm font-black text-slate-900">{member.name}</p>
-                                                        <p className="text-xs text-slate-500">{member.role} • {member.email}</p>
-                                                    </div>
-                                                </div>
-                                                <div className="flex items-center gap-3">
-                                                    <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-black uppercase">{member.status}</span>
-                                                    <Button variant="ghost" size="icon" className="rounded-full">
-                                                        <Edit className="h-4 w-4" />
-                                                    </Button>
-                                                </div>
+                                        {isLoadingUsers ? (
+                                            <div className="flex flex-col items-center py-10 opacity-50">
+                                                <Loader2 className="h-8 w-8 animate-spin mb-2" />
+                                                <p className="text-[10px] font-black uppercase tracking-widest">Synchronisation des accès...</p>
                                             </div>
-                                        ))}
+                                        ) : users.length > 0 ? (
+                                            users.map((member, i) => (
+                                                <div key={member.id} className="flex items-center justify-between p-6 bg-slate-50 rounded-2xl hover:bg-white hover:shadow-md transition-all group">
+                                                    <div className="flex items-center gap-4">
+                                                        <div className="h-12 w-12 rounded-full bg-teal-100 flex items-center justify-center text-teal-700 font-black text-sm group-hover:bg-teal-500 group-hover:text-white transition-all">
+                                                            {member.name ? member.name.split(' ').map((n: string) => n[0]).join('') : 'U'}
+                                                        </div>
+                                                        <div>
+                                                            <div className="flex items-center gap-3">
+                                                                <p className="text-sm font-black text-slate-900">{member.name || 'Utilisateur sans nom'}</p>
+                                                                <span className={cn(
+                                                                    "px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-tighter",
+                                                                    member.role === 'OWNER' ? "bg-red-100 text-red-700" :
+                                                                        member.role === 'DENTIST' ? "bg-blue-100 text-blue-700" :
+                                                                            member.role === 'SECRETARY' ? "bg-purple-100 text-purple-700" : "bg-teal-100 text-teal-700"
+                                                                )}>{member.role}</span>
+                                                            </div>
+                                                            <p className="text-xs text-slate-500">{member.email} • <span className="text-slate-400 italic">Créé le: {new Date(member.createdAt).toLocaleDateString()}</span></p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-center gap-3">
+                                                        <Button variant="ghost" size="icon" className="rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-900 transition-all">
+                                                            <Key className="h-4 w-4" title="Réinitialiser MDP" />
+                                                        </Button>
+                                                        <Button variant="ghost" size="icon" className="rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-900 transition-all">
+                                                            <Edit className="h-4 w-4" />
+                                                        </Button>
+                                                        <Button variant="ghost" size="icon" className="rounded-full hover:bg-red-50 text-slate-400 hover:text-red-500 transition-all">
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <div className="text-center py-10 bg-slate-50 rounded-3xl border border-dashed">
+                                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Aucun utilisateur trouvé dans la base</p>
+                                                <Button variant="link" className="mt-2 text-teal-600 font-black text-[10px] uppercase">Initialiser l'équipe par défaut</Button>
+                                            </div>
+                                        )}
                                     </div>
                                 </CardContent>
                             </Card>
                         </motion.div>
-                    )}
+                    )
+                    }
 
                     {activeSection === 'BILLING' && (
                         <motion.div
