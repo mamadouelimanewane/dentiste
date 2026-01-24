@@ -32,13 +32,15 @@ import {
     Target,
     RefreshCw,
     Split,
-    ArrowRight
+    ArrowRight,
+    Mic
 } from 'lucide-react'
 
 const navigation = [
     { name: 'Tableau de bord', href: '/dashboard', icon: LayoutDashboard },
     { name: 'AI Command Center', href: '/ai-hub', icon: Brain },
     { name: 'AI Radio Lab', href: '/ai-radio-lab', icon: Radiation },
+    { name: 'AI Voice Dictation', href: '/dictation', icon: Mic },
     { name: 'Patients', href: '/patients', icon: Users },
     { name: 'Smile Design Studio', href: '/smile-design', icon: Sparkles },
     { name: 'Portail Patient VIP', href: '/portal', icon: UserCircle },
