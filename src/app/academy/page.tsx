@@ -342,6 +342,46 @@ export default function AcademyPage() {
                 <div className="col-span-12 lg:col-span-4 space-y-8">
                     <Card className="rounded-[3rem] border-none shadow-luxury bg-white p-8">
                         <div className="flex items-center justify-between mb-8">
+                            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Classement Elite</h3>
+                            <Trophy className="h-5 w-5 text-gold" />
+                        </div>
+                        <div className="space-y-4">
+                            {[
+                                { name: "Dr. Aere Lao", xp: "1,240", rank: 1, role: "Praticien Elite", avatar: "AL" },
+                                { name: "Fatou Diack", xp: "1,120", rank: 2, role: "Assistante Chef", avatar: "FD" },
+                                { name: "Dr. Marc Sène", xp: "980", rank: 3, role: "Chirurgien", avatar: "MS" },
+                                { name: "Sophie Fall", xp: "850", rank: 4, role: "Stagiaire Master", avatar: "SF" },
+                            ].map((user) => (
+                                <div key={user.name} className={cn(
+                                    "flex items-center justify-between p-3 rounded-2xl transition-all",
+                                    user.rank === 1 ? "bg-indigo-50 border border-indigo-100" : "hover:bg-slate-50"
+                                )}>
+                                    <div className="flex items-center gap-3">
+                                        <div className={cn(
+                                            "h-10 w-10 rounded-xl flex items-center justify-center font-black text-xs shadow-sm shadow-indigo-600/10",
+                                            user.rank === 1 ? "bg-indigo-600 text-white" : "bg-white text-slate-600 border border-slate-100"
+                                        )}>
+                                            {user.avatar}
+                                        </div>
+                                        <div>
+                                            <p className="text-[11px] font-black text-slate-900 leading-tight">{user.name}</p>
+                                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{user.role}</p>
+                                        </div>
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="text-xs font-black text-slate-900">{user.xp}</p>
+                                        <p className="text-[8px] font-black text-indigo-600 uppercase tracking-widest">XP</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <Button variant="outline" className="w-full border-slate-200 text-slate-900 font-black uppercase text-[10px] tracking-widest h-12 rounded-2xl mt-6">
+                            Voir le podium complet
+                        </Button>
+                    </Card>
+
+                    <Card className="rounded-[3rem] border-none shadow-luxury bg-white p-8">
+                        <div className="flex items-center justify-between mb-8">
                             <h3 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Mes Certificats</h3>
                             <Award className="h-5 w-5 text-indigo-600" />
                         </div>
