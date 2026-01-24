@@ -35,7 +35,8 @@ import {
     ArrowRight,
     Mic,
     HardDrive,
-    GraduationCap
+    GraduationCap,
+    Megaphone
 } from 'lucide-react'
 
 const navigationSections = [
@@ -70,6 +71,7 @@ const navigationSections = [
     {
         title: 'Opérations & Cabinet',
         items: [
+            { name: 'Marketing IA Hub', href: '/marketing', icon: Megaphone },
             { name: 'Gestion Elite (RH)', href: '/management', icon: Briefcase },
             { name: 'Stocks & Intrants', href: '/inventory', icon: Package },
             { name: 'Traçabilité Hub', href: '/sterilization', icon: ShieldCheck },
