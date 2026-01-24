@@ -28,6 +28,36 @@ export default function AIHubPage() {
     const [isGenerating, setIsGenerating] = useState(false)
     const [command, setCommand] = useState("")
 
+    const [isListening, setIsListening] = useState(false)
+    const [voiceStatus, setVoiceStatus] = useState("En attente de commande...")
+
+    const toggleListening = () => {
+        if (!isListening) {
+            setIsListening(true)
+            setVoiceStatus("Écoute active...")
+            // Simulated voice recognition sequence
+            setTimeout(() => {
+                setVoiceStatus("Traitement du signal...")
+                setTimeout(() => {
+                    const mockCommands = [
+                        "Planifie un détartrage pour M. Sène mardi prochain",
+                        "Affiche le rapport ROI du cabinet des Almadies",
+                        "Analyse la radio panoramique de la patiente Diop",
+                        "Vérifie le stock de gants nitrile"
+                    ]
+                    const randomCmd = mockCommands[Math.floor(Math.random() * mockCommands.length)]
+                    setCommand(randomCmd)
+                    setIsListening(false)
+                    setVoiceStatus("Commande exécutée avec succès")
+                    setTimeout(() => setVoiceStatus("En attente de commande..."), 3000)
+                }, 1500)
+            }, 2000)
+        } else {
+            setIsListening(false)
+            setVoiceStatus("Session vocale interrompue")
+        }
+    }
+
     const stats = [
         { label: 'Indice de performance IA', value: '98.4%', icon: Activity, color: 'text-teal-500' },
         { label: 'Optimisations Suggérées', value: '12', icon: Lightbulb, color: 'text-amber-500' },
@@ -57,21 +87,50 @@ export default function AIHubPage() {
             </div>
 
             {/* AI Console / Command Bar */}
-            <Card className="rounded-[3rem] border-none shadow-2xl bg-indigo-950 text-white p-10 relative overflow-hidden">
+            <Card className="rounded-[3rem] border-none shadow-2xl bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-950 text-white p-10 relative overflow-hidden">
                 <div className="absolute top-0 right-0 p-10 opacity-10">
                     <Brain className="h-80 w-80 text-white" />
                 </div>
+
                 <div className="relative z-10 space-y-8">
-                    <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 bg-indigo-500/20 rounded-full flex items-center justify-center border border-indigo-400/30">
-                            <Bot className="h-6 w-6 text-indigo-400" />
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="h-10 w-10 bg-indigo-500/20 rounded-full flex items-center justify-center border border-indigo-400/30">
+                                <Bot className="h-6 w-6 text-indigo-400" />
+                            </div>
+                            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-indigo-400">Assistant Vocal & Textuel Tactique</span>
                         </div>
-                        <span className="text-[10px] font-black uppercase tracking-[0.4em] text-indigo-400">Assistant Vocal & Textuel Tactique</span>
+                        <div className="flex items-center gap-4 bg-white/5 border border-white/10 px-4 py-2 rounded-full">
+                            <div className={cn("h-2 w-2 rounded-full animate-pulse", isListening ? "bg-red-500" : "bg-teal-500")} />
+                            <span className="text-[10px] font-black uppercase tracking-widest text-indigo-200">{voiceStatus}</span>
+                        </div>
                     </div>
 
-                    <h2 className="text-3xl font-black tracking-tight max-w-2xl">
-                        "Lancer l'analyse de rentabilité du secteur prothèse pour le mois de février."
-                    </h2>
+                    <div className="min-h-[100px] flex items-center">
+                        <AnimatePresence mode="wait">
+                            {isListening ? (
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    className="flex items-end gap-1.5 h-16"
+                                >
+                                    {[...Array(15)].map((_, i) => (
+                                        <motion.div
+                                            key={i}
+                                            animate={{ height: [10, 40, 10, 50, 10] }}
+                                            transition={{ repeat: Infinity, duration: 1, delay: i * 0.05 }}
+                                            className="w-1.5 bg-indigo-400 rounded-full"
+                                        />
+                                    ))}
+                                </motion.div>
+                            ) : (
+                                <h2 className="text-3xl font-black tracking-tight max-w-2xl animate-in fade-in slide-in-from-left-4 duration-500">
+                                    {command || "\"Lancer l'analyse de rentabilité du secteur prothèse pour le mois de février.\""}
+                                </h2>
+                            )}
+                        </AnimatePresence>
+                    </div>
 
                     <div className="flex items-center gap-4 bg-white/5 border border-white/10 p-2 rounded-[2rem] max-w-3xl focus-within:bg-white/10 transition-all focus-within:ring-2 focus-within:ring-indigo-500/50">
                         <Search className="ml-6 h-5 w-5 text-indigo-400" />
@@ -82,7 +141,14 @@ export default function AIHubPage() {
                             className="bg-transparent border-none outline-none flex-1 h-14 text-sm font-bold placeholder:text-indigo-300/30 px-4"
                         />
                         <div className="flex gap-2 mr-2">
-                            <Button size="icon" className="h-12 w-12 rounded-2xl bg-indigo-500 hover:bg-indigo-400">
+                            <Button
+                                onClick={toggleListening}
+                                size="icon"
+                                className={cn(
+                                    "h-12 w-12 rounded-2xl transition-all",
+                                    isListening ? "bg-red-500 hover:bg-red-600 animate-pulse" : "bg-indigo-500 hover:bg-indigo-400"
+                                )}
+                            >
                                 <Mic className="h-5 w-5" />
                             </Button>
                             <Button className="bg-white text-indigo-900 font-black uppercase text-[10px] tracking-widest h-12 rounded-2xl px-6">
