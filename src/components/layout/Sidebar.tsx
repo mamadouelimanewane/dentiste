@@ -34,7 +34,8 @@ import {
     Split,
     ArrowRight,
     Mic,
-    HardDrive
+    HardDrive,
+    GraduationCap
 } from 'lucide-react'
 
 const navigationSections = [
@@ -79,6 +80,7 @@ const navigationSections = [
         title: 'Système',
         items: [
             { name: 'Documentation Elite', href: '/documentation', icon: BookOpen },
+            { name: 'Elite Academy', href: '/academy', icon: GraduationCap },
             { name: 'Communication', href: '/communication', icon: MessageSquare },
             { name: 'Paramètres', href: '/settings', icon: Settings },
         ]
