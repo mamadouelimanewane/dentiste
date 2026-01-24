@@ -33,27 +33,55 @@ import {
     RefreshCw,
     Split,
     ArrowRight,
-    Mic
+    Mic,
+    HardDrive
 } from 'lucide-react'
 
-const navigation = [
-    { name: 'Tableau de bord', href: '/dashboard', icon: LayoutDashboard },
-    { name: 'AI Command Center', href: '/ai-hub', icon: Brain },
-    { name: 'AI Radio Lab', href: '/ai-radio-lab', icon: Radiation },
-    { name: 'AI Voice Dictation', href: '/dictation', icon: Mic },
-    { name: 'Patients', href: '/patients', icon: Users },
-    { name: 'Smile Design Studio', href: '/smile-design', icon: Sparkles },
-    { name: 'Portail Patient VIP', href: '/portal', icon: UserCircle },
-    { name: 'Gestion Elite (RH)', href: '/management', icon: Briefcase },
-    { name: 'Financial War Room', href: '/financial-war-room', icon: Target },
-    { name: 'Agenda', href: '/agenda', icon: Calendar },
-    { name: 'Facturation', href: '/billing', icon: DollarSign },
-    { name: 'Devis Multi-Options', href: '/quotes', icon: FileCheck },
-    { name: 'Stocks & Intrants', href: '/inventory', icon: Package },
-    { name: 'Traçabilité Hub', href: '/sterilization', icon: ShieldCheck },
-    { name: 'Comptabilité OHADA', href: '/accounting', icon: BookOpen },
-    { name: 'Communication', href: '/communication', icon: MessageSquare },
-    { name: 'Paramètres', href: '/settings', icon: Settings },
+const navigationSections = [
+    {
+        title: 'Intelligence & Pilotage',
+        items: [
+            { name: 'AI Command Center', href: '/ai-hub', icon: Brain },
+            { name: 'AI Radio Lab', href: '/ai-radio-lab', icon: Radiation },
+            { name: 'AI Voice Dictation', href: '/dictation', icon: Mic },
+            { name: 'Financial War Room', href: '/financial-war-room', icon: Target },
+        ]
+    },
+    {
+        title: 'Gestion Clinique',
+        items: [
+            { name: 'Tableau de bord', href: '/dashboard', icon: LayoutDashboard },
+            { name: 'Patients Elite', href: '/patients', icon: Users },
+            { name: 'Workflow Clinique', href: '/workflow', icon: Activity },
+            { name: 'Smile Design Studio', href: '/smile-design', icon: Sparkles },
+            { name: 'Agenda Dynamique', href: '/agenda', icon: Calendar },
+        ]
+    },
+    {
+        title: 'Admin & GED',
+        items: [
+            { name: 'GED Elite (Vault)', href: '/ged', icon: HardDrive },
+            { name: 'Devis Multi-Options', href: '/quotes', icon: FileCheck },
+            { name: 'Facturation & Actes', href: '/billing', icon: DollarSign },
+            { name: 'Comptabilité OHADA', href: '/accounting', icon: BookOpen },
+        ]
+    },
+    {
+        title: 'Opérations & Cabinet',
+        items: [
+            { name: 'Gestion Elite (RH)', href: '/management', icon: Briefcase },
+            { name: 'Stocks & Intrants', href: '/inventory', icon: Package },
+            { name: 'Traçabilité Hub', href: '/sterilization', icon: ShieldCheck },
+            { name: 'Portail Patient VIP', href: '/portal', icon: UserCircle },
+        ]
+    },
+    {
+        title: 'Système',
+        items: [
+            { name: 'Communication', href: '/communication', icon: MessageSquare },
+            { name: 'Paramètres', href: '/settings', icon: Settings },
+        ]
+    }
 ]
 
 export function Sidebar() {
@@ -75,30 +103,37 @@ export function Sidebar() {
                 <span className="text-lg font-black tracking-tighter text-white uppercase">Dento<span className="text-accent">Prestige</span></span>
             </div>
 
-            <nav className="flex-1 space-y-1 px-4 py-6 overflow-y-auto no-scrollbar">
-                {navigation.map((item) => {
-                    const isActive = pathname === item.href
-                    return (
-                        <Link
-                            key={item.name}
-                            href={item.href}
-                            className={cn(
-                                "group flex items-center px-4 py-2.5 text-[13px] font-bold rounded-xl transition-all duration-300",
-                                isActive
-                                    ? "bg-accent/10 text-accent shadow-[inset_0_0_20px_rgba(212,175,55,0.05)] border border-accent/20"
-                                    : "text-slate-400 hover:bg-white/5 hover:text-white"
-                            )}
-                        >
-                            <item.icon
-                                className={cn(
-                                    "mr-3 h-4 w-4 flex-shrink-0 transition-all duration-300",
-                                    isActive ? "text-accent scale-110" : "text-slate-500 group-hover:text-slate-300"
-                                )}
-                            />
-                            {item.name}
-                        </Link>
-                    )
-                })}
+            <nav className="flex-1 space-y-8 px-4 py-8 overflow-y-auto no-scrollbar">
+                {navigationSections.map((section) => (
+                    <div key={section.title} className="space-y-2">
+                        <h3 className="px-4 text-[9px] font-black uppercase tracking-[0.2em] text-slate-500 mb-4">{section.title}</h3>
+                        <div className="space-y-1">
+                            {section.items.map((item) => {
+                                const isActive = pathname === item.href
+                                return (
+                                    <Link
+                                        key={item.name}
+                                        href={item.href}
+                                        className={cn(
+                                            "group flex items-center px-4 py-2.5 text-[12px] font-bold rounded-xl transition-all duration-300",
+                                            isActive
+                                                ? "bg-accent/10 text-accent shadow-[inset_0_0_20px_rgba(212,175,55,0.05)] border border-accent/20"
+                                                : "text-slate-400 hover:bg-white/5 hover:text-white"
+                                        )}
+                                    >
+                                        <item.icon
+                                            className={cn(
+                                                "mr-3 h-4 w-4 flex-shrink-0 transition-all duration-300",
+                                                isActive ? "text-accent scale-110" : "text-slate-500 group-hover:text-slate-300"
+                                            )}
+                                        />
+                                        {item.name}
+                                    </Link>
+                                )
+                            })}
+                        </div>
+                    </div>
+                ))}
             </nav>
 
             <div className="border-t border-white/5 p-6 bg-slate-950/50">
