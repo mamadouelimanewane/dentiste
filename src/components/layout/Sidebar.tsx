@@ -39,15 +39,6 @@ import {
 
 const navigationSections = [
     {
-        title: 'Intelligence & Pilotage',
-        items: [
-            { name: 'AI Command Center', href: '/ai-hub', icon: Brain },
-            { name: 'AI Radio Lab', href: '/ai-radio-lab', icon: Radiation },
-            { name: 'AI Voice Dictation', href: '/dictation', icon: Mic },
-            { name: 'Financial War Room', href: '/financial-war-room', icon: Target },
-        ]
-    },
-    {
         title: 'Gestion Clinique',
         items: [
             { name: 'Tableau de bord', href: '/dashboard', icon: LayoutDashboard },
@@ -55,6 +46,15 @@ const navigationSections = [
             { name: 'Workflow Clinique', href: '/workflow', icon: Activity },
             { name: 'Smile Design Studio', href: '/smile-design', icon: Sparkles },
             { name: 'Agenda Dynamique', href: '/agenda', icon: Calendar },
+        ]
+    },
+    {
+        title: 'Intelligence & Pilotage',
+        items: [
+            { name: 'AI Command Center', href: '/ai-hub', icon: Brain },
+            { name: 'AI Radio Lab', href: '/ai-radio-lab', icon: Radiation },
+            { name: 'AI Voice Dictation', href: '/dictation', icon: Mic },
+            { name: 'Financial War Room', href: '/financial-war-room', icon: Target },
         ]
     },
     {
