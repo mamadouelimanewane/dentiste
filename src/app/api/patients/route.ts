@@ -36,14 +36,22 @@ export async function POST(request: Request) {
             data: {
                 firstName,
                 lastName,
-                email,
-                phone,
+                email: email || null, // Ensure empty string doesn't trigger unique constraint
+                phone: phone || null,
             }
         })
 
         return NextResponse.json(patient)
-    } catch (error) {
+    } catch (error: any) {
         console.error("Failed to create patient:", error)
-        return NextResponse.json({ error: "Failed to create patient" }, { status: 500 })
+        // Return a more descriptive error for debugging
+        const message = error.code === 'P2002'
+            ? "Cet email est déjà utilisé par un autre patient."
+            : error.message || "Erreur inconnue lors de la création du patient."
+
+        return NextResponse.json({
+            error: "Failed to create patient",
+            message: message
+        }, { status: 500 })
     }
 }
