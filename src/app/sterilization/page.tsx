@@ -1,279 +1,272 @@
 "use client"
 
 import { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import {
     ShieldCheck,
+    QrCode,
     RefreshCw,
-    Thermometer,
-    Activity,
-    Clock,
-    Box,
-    AlertTriangle,
-    CheckCircle2,
+    Search,
     History,
     FileText,
+    Activity,
+    Thermometer,
+    Timer,
+    AlertTriangle,
+    CheckCircle2,
+    XCircle,
+    Package,
+    ScanLine,
+    Plus,
+    ChevronLeft,
+    Clock,
     Zap,
-    Waves,
-    ClipboardCheck,
-    FlaskConical,
-    Search,
-    Download,
-    Settings,
-    ShieldAlert
+    Scale
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { motion, AnimatePresence } from "framer-motion"
 
-export default function SterilizationPage() {
-    const [viewMode, setViewMode] = useState<'LIVE' | 'HISTORY' | 'INVENTORY'>('LIVE')
+export default function SterilizationRegistry() {
+    const [isScanning, setIsScanning] = useState(false)
+    const [step, setStep] = useState(1) // 1: Preparation, 2: Cycle, 3: Validation
 
-    const cycles = [
-        { id: 'CYC-2026-081', autoclave: 'Lisa 500 - Onyx', status: 'IN_PROGRESS', temp: '134°C', pressure: '2.1 bar', time: '18m / 45m', type: 'Prion B', batch: 'KLT-992' },
-        { id: 'CYC-2026-080', autoclave: 'Lisa 300 - Quartz', status: 'SUCCESS', temp: '134°C', pressure: '2.1 bar', time: 'Terminé', type: 'Normal S', batch: 'KLT-991' },
-    ]
-
-    const instruments = [
-        { id: 'INS-442', name: 'Kit Implantologie Premium', cycle: 'CYC-2026-080', patient: 'Mamadou Diallo', date: 'Aujourd\'hui 09:12', user: 'Sarah (Ass.)' },
-        { id: 'INS-112', name: 'Micro-Miroir Réfractive', cycle: 'CYC-2026-078', patient: 'Sophie Faye', date: 'Hier 11:45', user: 'Alice (Ass.)' },
+    const recentCycles = [
+        { id: 'CY-2026-X41', type: 'Prion Cycle 134°', status: 'COMPLETED', assistant: 'Fatou D.', date: 'Aujourd\'hui 09:12', result: 'VALID' },
+        { id: 'CY-2026-X40', type: 'Normal Cycle 121°', status: 'COMPLETED', assistant: 'Mamadou S.', date: 'Hier 16:45', result: 'VALID' },
+        { id: 'CY-2026-X39', type: 'Prion Cycle 134°', status: 'FAILED', assistant: 'Fatou D.', date: 'Hier 11:20', result: 'INTERRUPTED' },
     ]
 
     return (
-        <div className="p-8 space-y-10 max-w-7xl mx-auto">
+        <div className="p-8 space-y-10 max-w-7xl mx-auto pb-40">
             <div className="flex items-center justify-between">
-                <div>
-                    <div className="flex items-center gap-2 mb-1">
-                        <div className="h-1 w-8 bg-teal-500 rounded-full"></div>
-                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-teal-500">Hygiène & Aseptie Elite</span>
+                <div className="flex items-center gap-6">
+                    <Button variant="ghost" onClick={() => window.location.href = '/inventory'} className="rounded-2xl h-14 w-14 bg-white border shadow-sm">
+                        <ChevronLeft className="h-6 w-6" />
+                    </Button>
+                    <div>
+                        <div className="flex items-center gap-2 mb-1">
+                            <ShieldCheck className="h-4 w-4 text-teal-600" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-teal-600 italic">Hygiene & Sterilization Unit</span>
+                        </div>
+                        <h1 className="text-4xl font-black text-slate-900 tracking-tighter">Elite <span className="text-teal-600">Traceability Hub</span></h1>
+                        <p className="text-slate-500 font-medium tracking-tight">Registre numérique de stérilisation, suivi des lots par QR Code et conformité sanitaire.</p>
                     </div>
-                    <h1 className="text-4xl font-black text-slate-900 tracking-tighter">Bunker <span className="text-gold">Sterilization Lab</span></h1>
-                    <p className="text-slate-500 font-medium">Gestion des cycles d'autoclave, traçabilité instrumentale et conformité ISO.</p>
                 </div>
                 <div className="flex gap-4">
-                    <div className="flex gap-2 p-1 bg-slate-100 rounded-2xl">
-                        {(['LIVE', 'HISTORY', 'INVENTORY'] as const).map(tab => (
-                            <Button
-                                key={tab}
-                                variant="ghost"
-                                size="sm"
-                                className={cn(
-                                    "rounded-xl px-6 text-[11px] font-black uppercase tracking-widest transition-all",
-                                    viewMode === tab ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
-                                )}
-                                onClick={() => setViewMode(tab)}
-                            >
-                                {tab === 'LIVE' ? 'En Direct' : tab === 'HISTORY' ? 'Historique' : 'Consommables'}
-                            </Button>
-                        ))}
-                    </div>
-                    <Button className="bg-slate-900 text-white font-black uppercase tracking-widest text-[10px] h-14 rounded-2xl px-8 shadow-xl">
-                        <Zap className="h-4 w-4 mr-2" /> Nouveau Cycle
+                    <Button variant="outline" className="rounded-2xl border-slate-200 h-14 px-8 text-[11px] font-black uppercase tracking-widest text-slate-500 bg-white">
+                        <History className="mr-2 h-4 w-4" /> Registre Légal
+                    </Button>
+                    <Button className="bg-slate-900 text-white hover:bg-slate-800 font-black px-10 rounded-2xl uppercase tracking-widest text-[11px] h-14 shadow-luxury transition-all">
+                        <Plus className="mr-2 h-5 w-5" /> Nouveau Cycle
                     </Button>
                 </div>
             </div>
 
-            <div className="grid grid-cols-12 gap-8">
-                {/* Main Content Area */}
+            <div className="grid grid-cols-12 gap-10">
+                {/* Main Interaction Area: QR Scanner / Cycle Launcher */}
                 <div className="col-span-12 lg:col-span-8 space-y-8">
-                    <AnimatePresence mode="wait">
-                        {viewMode === 'LIVE' && (
-                            <motion.div
-                                key="live"
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="space-y-8"
-                            >
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                    {cycles.map(cycle => (
-                                        <Card key={cycle.id} className={cn(
-                                            "rounded-[3rem] border-none shadow-luxury overflow-hidden relative group transition-all",
-                                            cycle.status === 'IN_PROGRESS' ? "bg-slate-950 text-white shadow-teal-500/10" : "bg-white text-slate-900 border border-slate-50"
-                                        )}>
-                                            <CardContent className="p-8 space-y-8">
-                                                <div className="flex justify-between items-start">
-                                                    <div className={cn(
-                                                        "h-14 w-14 rounded-2xl flex items-center justify-center",
-                                                        cycle.status === 'IN_PROGRESS' ? "bg-white/10 text-teal-400" : "bg-teal-50 text-teal-600"
-                                                    )}>
-                                                        <Waves className={cn("h-7 w-7", cycle.status === 'IN_PROGRESS' && "animate-pulse")} />
-                                                    </div>
-                                                    <div className="flex flex-col items-end">
-                                                        <span className={cn(
-                                                            "text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full border mb-2",
-                                                            cycle.status === 'IN_PROGRESS' ? "bg-teal-500/10 text-teal-400 border-teal-500/20" : "bg-teal-50 text-teal-600 border-teal-100"
-                                                        )}>
-                                                            {cycle.status === 'IN_PROGRESS' ? 'Phase: Plateau Vapor' : 'Cycle Terminé'}
-                                                        </span>
-                                                        <span className="text-[10px] font-black opacity-40 uppercase tracking-widest">{cycle.id}</span>
-                                                    </div>
-                                                </div>
+                    <Card className="rounded-[4rem] border-none shadow-2xl bg-white p-12 overflow-hidden relative">
+                        <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
+                            <QrCode className="h-64 w-64 text-slate-950" />
+                        </div>
 
-                                                <div className="space-y-2">
-                                                    <h3 className="text-xl font-black tracking-tight">{cycle.autoclave}</h3>
-                                                    <p className={cn("text-xs font-bold uppercase tracking-widest", cycle.status === 'IN_PROGRESS' ? "text-slate-400" : "text-slate-500")}>Profil: {cycle.type} • Lot: {cycle.batch}</p>
-                                                </div>
-
-                                                <div className="grid grid-cols-3 gap-4 pt-6 border-t border-white/5">
-                                                    <div>
-                                                        <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Température</p>
-                                                        <div className="flex items-center gap-1.5 font-black text-lg">
-                                                            <Thermometer className="h-4 w-4 text-red-400" /> {cycle.temp}
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Pression</p>
-                                                        <div className="flex items-center gap-1.5 font-black text-lg">
-                                                            <Activity className="h-4 w-4 text-blue-400" /> {cycle.pressure}
-                                                        </div>
-                                                    </div>
-                                                    <div className="text-right">
-                                                        <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Temps</p>
-                                                        <div className="flex items-center gap-1.5 font-black text-lg justify-end">
-                                                            <Clock className="h-4 w-4 text-teal-400" /> {cycle.time.split(' / ')[0]}
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                {cycle.status === 'IN_PROGRESS' && (
-                                                    <div className="pt-2">
-                                                        <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                                                            <div className="h-full bg-teal-500 animate-progress" style={{ width: '45%' }} />
-                                                        </div>
-                                                    </div>
-                                                )}
-                                            </CardContent>
-                                        </Card>
-                                    ))}
-                                </div>
-
-                                {/* Detailed History Table for current session */}
-                                <Card className="rounded-[3rem] border-none shadow-luxury bg-white overflow-hidden">
-                                    <div className="p-8 border-b border-slate-50 flex items-center justify-between">
-                                        <h3 className="text-base font-black tracking-tighter flex items-center gap-2">
-                                            <ClipboardCheck className="h-5 w-5 text-teal-600" /> Traceur Instrumentale J-0
-                                        </h3>
-                                        <div className="flex gap-2">
-                                            <div className="h-10 w-48 relative">
-                                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
-                                                <input placeholder="Scanner instrument..." className="w-full h-full bg-slate-50 border-none rounded-xl pl-9 text-[10px] font-black uppercase tracking-widest placeholder:text-slate-300 focus:ring-1 focus:ring-teal-500 transition-all" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="divide-y divide-slate-50">
-                                        {instruments.map((ins, i) => (
-                                            <div key={i} className="p-8 flex items-center justify-between group hover:bg-slate-50/50 transition-colors">
-                                                <div className="flex items-center gap-6">
-                                                    <div className="h-12 w-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 group-hover:scale-110 transition-transform">
-                                                        <FlaskConical className="h-6 w-6" />
-                                                    </div>
-                                                    <div>
-                                                        <h4 className="text-sm font-black text-slate-900 tracking-tight">{ins.name}</h4>
-                                                        <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
-                                                            <span className="text-teal-600">ID: {ins.id}</span>
-                                                            <span>•</span>
-                                                            <span>Cycle: {ins.cycle}</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="flex items-center gap-12">
-                                                    <div className="text-right">
-                                                        <p className="text-[10px] font-black text-slate-900 uppercase tracking-tighter">{ins.patient}</p>
-                                                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{ins.date}</p>
-                                                    </div>
-                                                    <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100">
-                                                        <div className="h-2 w-2 rounded-full bg-teal-500" />
-                                                        <span className="text-[9px] font-black uppercase text-slate-500">{ins.user}</span>
-                                                    </div>
-                                                </div>
-                                            </div>
+                        <div className="relative z-10 space-y-12">
+                            <div className="flex items-center justify-between">
+                                <div className="space-y-4">
+                                    <h2 className="text-3xl font-black tracking-tighter uppercase italic">Lancement d'une session <span className="text-teal-600">QR-Trace</span></h2>
+                                    <div className="flex gap-2">
+                                        {[1, 2, 3].map(s => (
+                                            <div key={s} className={cn(
+                                                "h-1.5 w-12 rounded-full",
+                                                step >= s ? "bg-teal-500" : "bg-slate-100"
+                                            )} />
                                         ))}
                                     </div>
+                                </div>
+                                <Button
+                                    onClick={() => setIsScanning(!isScanning)}
+                                    className={cn(
+                                        "h-20 w-20 rounded-3xl flex flex-col items-center justify-center transition-all",
+                                        isScanning ? "bg-rose-500 text-white animate-pulse" : "bg-slate-900 text-white hover:bg-slate-800"
+                                    )}
+                                >
+                                    <ScanLine className="h-8 w-8 mb-1" />
+                                    <span className="text-[8px] font-black uppercase">SCAN</span>
+                                </Button>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+                                <div className="space-y-8">
+                                    <div className="space-y-4">
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Équipement Actif</label>
+                                        <div className="p-6 bg-slate-50 border border-slate-100 rounded-[2rem] flex items-center justify-between group cursor-pointer hover:bg-white hover:shadow-lg transition-all">
+                                            <div className="flex items-center gap-4">
+                                                <div className="h-12 w-12 bg-white rounded-2xl flex items-center justify-center shadow-sm">
+                                                    <RefreshCw className="h-6 w-6 text-teal-600" />
+                                                </div>
+                                                <div>
+                                                    <p className="text-sm font-black text-slate-900 tracking-tight">Autoclave Getinge A-01</p>
+                                                    <p className="text-[10px] font-bold text-teal-600 uppercase tracking-widest">Opérationnel</p>
+                                                </div>
+                                            </div>
+                                            <RefreshCw className="h-4 w-4 text-slate-300 group-hover:text-teal-500" />
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-4">
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Sachets Instrumentaux Scannés</label>
+                                        <div className="flex flex-wrap gap-2">
+                                            {[...Array(4)].map((_, i) => (
+                                                <div key={i} className="px-4 h-10 border border-teal-100 bg-teal-50/50 rounded-xl flex items-center gap-2 group hover:bg-white transition-all">
+                                                    <QrCode className="h-3 w-3 text-teal-600" />
+                                                    <span className="text-[10px] font-black text-slate-800">PK-00{i + 1}</span>
+                                                    <XCircle className="h-3 w-3 text-slate-300 hover:text-rose-500 cursor-pointer" />
+                                                </div>
+                                            ))}
+                                            <Button variant="ghost" className="h-10 w-10 border-2 border-dashed border-slate-200 rounded-xl text-slate-400 hover:border-teal-500 hover:text-teal-500"><Plus className="h-4 w-4" /></Button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <Card className="bg-slate-950 text-white rounded-[3rem] p-8 space-y-8 border-none overflow-hidden relative">
+                                    <div className="absolute inset-0 bg-gradient-to-br from-teal-500/10 to-transparent pointer-events-none" />
+                                    <div className="flex items-center gap-4 border-b border-white/5 pb-8 mb-2">
+                                        <div className="h-14 w-14 bg-white/10 rounded-2xl flex items-center justify-center text-teal-500 border border-white/10">
+                                            <Zap className="h-8 w-8" />
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Cycle de Stérilisation</p>
+                                            <p className="text-lg font-black tracking-tight text-white uppercase italic">PRION CORE 134°C</p>
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-8">
+                                        <div className="space-y-1">
+                                            <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Pression</p>
+                                            <p className="text-xl font-black text-white">2.1 Bar</p>
+                                        </div>
+                                        <div className="space-y-1">
+                                            <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Température</p>
+                                            <p className="text-xl font-black text-white">134.5 °C</p>
+                                        </div>
+                                        <div className="space-y-1">
+                                            <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Durée Restante</p>
+                                            <p className="text-xl font-black text-teal-400">18:45 min</p>
+                                        </div>
+                                    </div>
+                                    <Button className="w-full bg-teal-600 text-white font-black uppercase text-[10px] tracking-widest h-14 rounded-2xl shadow-xl shadow-teal-600/20">Lancer Cycle Sécurisé</Button>
                                 </Card>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+                            </div>
+                        </div>
+                    </Card>
+
+                    {/* Historical Table */}
+                    <Card className="rounded-[3rem] border-none shadow-luxury bg-white overflow-hidden">
+                        <CardHeader className="p-10 border-b border-slate-50 flex flex-row items-center justify-between">
+                            <div>
+                                <CardTitle className="text-xl font-black tracking-tighter uppercase">Historique des Cycles & Validation</CardTitle>
+                                <CardDescription className="text-xs font-bold text-slate-400 tracking-widest mt-1">Traçabilité complète à valeur probante légale.</CardDescription>
+                            </div>
+                            <Button variant="ghost" className="text-[10px] font-black uppercase tracking-widest text-teal-600">Filtrer par date</Button>
+                        </CardHeader>
+                        <div className="divide-y divide-slate-50">
+                            {recentCycles.map((cycle, i) => (
+                                <div key={i} className="p-8 flex items-center justify-between hover:bg-slate-50 transition-colors group">
+                                    <div className="flex items-center gap-6">
+                                        <div className={cn(
+                                            "h-16 w-16 rounded-3xl flex items-center justify-center transition-transform group-hover:scale-110",
+                                            cycle.result === 'VALID' ? "bg-teal-50 text-teal-600 shadow-[0_5px_15px_rgba(20,184,166,0.1)]" : "bg-rose-50 text-rose-600 shadow-[0_5px_15px_rgba(244,63,94,0.1)]"
+                                        )}>
+                                            {cycle.result === 'VALID' ? <CheckCircle2 className="h-8 w-8" /> : <AlertTriangle className="h-8 w-8" />}
+                                        </div>
+                                        <div>
+                                            <div className="flex items-center gap-3 mb-1">
+                                                <p className="text-lg font-black text-slate-900 tracking-tight">{cycle.id}</p>
+                                                <span className={cn(
+                                                    "px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest border",
+                                                    cycle.result === 'VALID' ? "border-teal-200 text-teal-600 bg-teal-50" : "border-rose-200 text-rose-600 bg-rose-50"
+                                                )}>{cycle.result}</span>
+                                            </div>
+                                            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{cycle.type} • Opérateur : {cycle.assistant}</p>
+                                        </div>
+                                    </div>
+                                    <div className="text-right flex items-center gap-8">
+                                        <div>
+                                            <p className="text-xs font-black text-slate-900 leading-none">{cycle.date.split(' ')[1]}</p>
+                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">{cycle.date.split(' ')[0]}</p>
+                                        </div>
+                                        <Button size="icon" variant="ghost" className="rounded-full text-slate-300 hover:text-slate-900">
+                                            <FileText className="h-5 w-5" />
+                                        </Button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </Card>
                 </div>
 
-                {/* Right Panel: Compliance & Maintenance */}
+                {/* Right Compliance Info */}
                 <div className="col-span-12 lg:col-span-4 space-y-8">
-                    <Card className="rounded-[2.5rem] border-none shadow-luxury bg-white p-8 space-y-8 border border-slate-50">
-                        <div>
-                            <h3 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-6 flex items-center justify-between">
-                                Maintenance Autoclaves
-                                <Settings className="h-4 w-4" />
-                            </h3>
-                            <div className="space-y-4">
-                                {[
-                                    { name: 'Lisa 500 (Onyx)', next: '12 Mars 2026', usage: 78, status: 'OK' },
-                                    { name: 'Lisa 300 (Quartz)', next: '22 Jan 2026', usage: 92, status: 'WARNING' },
-                                ].map((m, i) => (
-                                    <div key={i} className="p-5 rounded-2xl bg-slate-50 border border-slate-50 hover:border-slate-200 transition-all group">
-                                        <div className="flex justify-between items-start mb-4">
-                                            <p className="text-xs font-black text-slate-900 uppercase">{m.name}</p>
-                                            {m.status === 'WARNING' && <AlertTriangle className="h-4 w-4 text-amber-500 animate-pulse" />}
-                                        </div>
-                                        <div className="space-y-3">
-                                            <div className="flex justify-between text-[9px] font-black uppercase text-slate-400 tracking-widest">
-                                                <span>Cycles avant révision</span>
-                                                <span className={m.status === 'WARNING' ? 'text-amber-600' : 'text-slate-900'}>{100 - m.usage}%</span>
-                                            </div>
-                                            <div className="h-1.5 w-full bg-white rounded-full overflow-hidden">
-                                                <div className={cn("h-full rounded-full transition-all", m.status === 'WARNING' ? 'bg-amber-500' : 'bg-slate-900')} style={{ width: `${m.usage}%` }} />
-                                            </div>
-                                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Prochaine intervention : {m.next}</p>
-                                        </div>
+                    <Card className="rounded-[3rem] border-none shadow-luxury bg-white p-8 space-y-8">
+                        <div className="flex items-center justify-between mb-8">
+                            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Analyse de Conformité</h3>
+                            <Activity className="h-5 w-5 text-teal-600" />
+                        </div>
+                        <div className="space-y-6">
+                            <div className="flex justify-between items-center bg-slate-50 p-6 rounded-[2rem] border border-slate-100">
+                                <div>
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Taux de Succès Cycles</p>
+                                    <p className="text-2xl font-black text-slate-900 tracking-tighter">97.8%</p>
+                                </div>
+                                <Zap className="h-8 w-8 text-gold opacity-30" />
+                            </div>
+
+                            <div className="p-6 border-slate-200 border-2 border-dashed rounded-[2rem] space-y-4">
+                                <div className="flex items-center gap-3">
+                                    <Scale className="h-5 w-5 text-indigo-600" />
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Statistiques de Charge</span>
+                                </div>
+                                <div className="space-y-2">
+                                    <div className="flex justify-between text-[9px] font-bold text-slate-400">
+                                        <span>Consommables Chimie</span>
+                                        <span>75%</span>
                                     </div>
-                                ))}
+                                    <div className="h-1.5 w-full bg-slate-50 rounded-full overflow-hidden">
+                                        <div className="h-full bg-indigo-500 rounded-full" style={{ width: '75%' }} />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </Card>
 
-                    <Card className="rounded-[2.5rem] border-none shadow-luxury bg-slate-950 p-8 text-white relative overflow-hidden">
+                    <Card className="rounded-[3rem] border-none shadow-luxury bg-slate-900 text-white p-10 space-y-8 relative overflow-hidden">
                         <div className="absolute top-0 right-0 p-8 opacity-10">
-                            <ShieldCheck className="h-32 w-32 text-accent" />
+                            <Clock className="h-32 w-32" />
                         </div>
                         <div className="relative z-10 space-y-6">
-                            <h3 className="text-xs font-black uppercase tracking-widest text-accent flex items-center gap-2">
-                                <ShieldCheck className="h-4 w-4" /> Compliance Hygiène ISO
-                            </h3>
-                            <div className="space-y-4">
-                                {[
-                                    { label: 'Indicateurs chimiques', val: 'CONFORME', date: 'Matin' },
-                                    { label: 'Test de vide (Bowie-Dick)', val: 'VALIDE', date: 'J-0' },
-                                    { label: 'Température Stockage', val: '21.4°C', date: 'Live' },
-                                ].map((s, i) => (
-                                    <div key={i} className="flex justify-between items-center bg-white/5 p-4 rounded-xl border border-white/5">
-                                        <div>
-                                            <p className="text-[9px] font-black text-slate-500 uppercase">{s.label}</p>
-                                            <p className="text-[10px] font-black text-accent mt-0.5">{s.val}</p>
-                                        </div>
-                                        <span className="text-[8px] font-bold text-slate-600">{s.date}</span>
-                                    </div>
-                                ))}
+                            <h3 className="text-sm font-black uppercase tracking-widest text-white/50">Urgence Réappro</h3>
+                            <div className="p-5 bg-white/5 border border-white/10 rounded-2xl flex items-center gap-4">
+                                <AlertTriangle className="h-6 w-6 text-gold" />
+                                <p className="text-[11px] font-medium text-slate-300 leading-relaxed italic">
+                                    "Stock de gaines de stérilisation (L-Size) inférieur au seuil. Commande programmée ce jour."
+                                </p>
                             </div>
-                            <Button className="w-full bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest text-[9px] h-11 hover:bg-white/10">Exporter Certificat Mensuel</Button>
+                            <Button className="w-full bg-teal-600 text-white font-black uppercase text-[10px] tracking-widest h-12 rounded-xl shadow-xl shadow-teal-600/20">Valider Réappro</Button>
                         </div>
                     </Card>
 
-                    <Card className="rounded-[2.5rem] border-none shadow-luxury bg-gradient-to-br from-teal-500 to-teal-700 p-8 text-white">
-                        <div className="flex items-center gap-2 mb-4">
-                            <Box className="h-5 w-5" />
-                            <h3 className="text-lg font-black tracking-tight">Consommables Stériles</h3>
+                    <Card className="rounded-[3rem] border-none shadow-luxury bg-white border border-slate-100 p-8 flex flex-col items-center text-center space-y-4 transition-all hover:bg-slate-50 cursor-pointer">
+                        <div className="h-16 w-16 bg-slate-900 text-white rounded-[2rem] flex items-center justify-center shadow-xl">
+                            <Package className="h-8 w-8 text-gold" />
                         </div>
-                        <p className="text-xs text-white/80 font-medium leading-relaxed mb-6">Tracez l'utilisation des gaines, indicateurs et filtres directement sur vos cycles.</p>
-                        <div className="bg-white/10 rounded-2xl p-4 border border-white/20">
-                            <div className="flex justify-between text-[10px] font-black uppercase mb-1">
-                                <span>Gaines de Stérilisation</span>
-                                <span>12%</span>
-                            </div>
-                            <p className="text-[9px] text-teal-100 font-bold italic">Alerte stock faible : Commander Lot 50x150</p>
+                        <div>
+                            <h3 className="text-base font-black tracking-tighter text-slate-900 uppercase">Stockage Stérile</h3>
+                            <p className="text-[11px] font-medium text-slate-400 leading-relaxed italic mt-2">Accéder au journal de stockage des bacs validés par QR Code.</p>
                         </div>
-                        <Button className="w-full bg-white text-teal-700 font-black uppercase text-[10px] tracking-widest h-12 rounded-xl mt-6 shadow-lg border-none hover:bg-teal-50">Lancer Commande</Button>
+                        <Button variant="link" className="text-[10px] font-black uppercase text-indigo-600 mt-2">Voir Registre Bacs →</Button>
                     </Card>
                 </div>
             </div>
         </div>
     )
 }
-
