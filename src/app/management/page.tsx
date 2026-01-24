@@ -198,6 +198,39 @@ export default function ManagementPage() {
 
                 {/* Right Column: Alerts & Global Actions */}
                 <div className="col-span-12 lg:col-span-4 space-y-8">
+                    {/* ACADEMY REWARDS MODULE */}
+                    <Card className="rounded-[3rem] border-none shadow-luxury bg-white p-8 space-y-8 border-2 border-gold/20">
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-gold">Elite Academy Rewards</h3>
+                            <Trophy className="h-5 w-5 text-gold" />
+                        </div>
+                        <div className="space-y-4">
+                            {[
+                                { name: "Dr. Aere Lao", xp: "1,240", bonus: "250,000", status: "À Payer" },
+                                { name: "Fatou Diack", xp: "1,120", bonus: "150,000", status: "À Payer" },
+                            ].map((user) => (
+                                <div key={user.name} className="flex items-center justify-between p-4 bg-gold/5 rounded-[2rem] border border-gold/10">
+                                    <div className="flex items-center gap-3">
+                                        <div className="h-10 w-10 bg-white rounded-full flex items-center justify-center font-black text-xs border border-gold/20 text-gold shadow-sm">
+                                            {user.name.split(' ').map(n => n[0]).join('')}
+                                        </div>
+                                        <div>
+                                            <p className="text-[11px] font-black text-slate-900 leading-tight">{user.name}</p>
+                                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{user.xp} XP ce mois</p>
+                                        </div>
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="text-sm font-black text-gold">{user.bonus} <span className="text-[8px] uppercase">FCFA</span></p>
+                                        <span className="text-[8px] font-black uppercase text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">{user.status}</span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <Button className="w-full bg-gold text-white font-black uppercase text-[10px] tracking-widest h-14 rounded-2xl shadow-xl shadow-gold/20">
+                            Décaisser Bonus Academy
+                        </Button>
+                    </Card>
+
                     <Card className="rounded-[3rem] border-none shadow-luxury bg-white p-8 space-y-8">
                         <div className="flex items-center justify-between">
                             <h3 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Actions Corporate</h3>
@@ -213,7 +246,7 @@ export default function ManagementPage() {
                                     <div className={cn("h-12 w-12 rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110", action.bg, action.color)}>
                                         <action.icon className="h-6 w-6" />
                                     </div>
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-700 leading-tight">{action.name}</span>
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-700 leading-tight text-center">{action.name}</span>
                                 </button>
                             ))}
                         </div>
@@ -226,7 +259,7 @@ export default function ManagementPage() {
                         <div className="relative z-10 space-y-6">
                             <h3 className="text-2xl font-black tracking-tighter">AI Finance Advisor</h3>
                             <p className="text-sm font-medium text-indigo-100 leading-relaxed">
-                                "Une réduction de 5% du coût des intrants dans la clinique des Almadies permettrait d'augmenter votre marge nette de 12.4M FCFA sur l'année prochaine."
+                                "L'introduction des bonus Academy a augmenté la productivité clinique de 15% le mois dernier aux Almadies."
                             </p>
                             <Button className="w-full bg-white text-indigo-700 font-black uppercase text-[10px] tracking-widest h-12 rounded-xl shadow-xl">Simuler Optimisation</Button>
                         </div>
