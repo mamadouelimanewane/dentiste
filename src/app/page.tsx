@@ -1,76 +1,94 @@
-import Link from 'next/link'
-import { Calendar, Users, Activity, DollarSign, ShieldCheck, BookOpen, MessageSquare, Sparkles, TrendingUp, ArrowRight, Briefcase, BarChart3, Share2 } from 'lucide-react'
+"use client"
 
-export default function Home() {
-  const modules = [
-    { name: 'Patients', icon: Users, href: '/patients', desc: 'Gestion de la base patient' },
-    { name: 'Agenda', icon: Calendar, href: '/agenda', desc: 'Planning & Rendez-vous' },
-    { name: 'Soins', icon: Activity, href: '/charting', desc: 'Dossier clinique interactif' },
-    { name: 'Facturation', icon: DollarSign, href: '/billing', desc: 'Suivi des paiements' },
-    { name: 'Communication', icon: MessageSquare, href: '/communication', desc: 'WhatsApp, SMS & Emails' },
-    { name: 'Comptabilité', icon: BookOpen, href: '/accounting', desc: 'Conformité OHADA/SYSCOA' },
-    { name: 'Analytique', icon: BarChart3, href: '/analytics', desc: 'Reporting & Performance' },
-    { name: 'Conformité', icon: ShieldCheck, href: '/compliance', desc: 'RGPD, ANS & Traçabilité' },
-    { name: 'Intégrations', icon: Share2, href: '/integrations', desc: 'Écosystème & API Tiers' },
-    { name: 'Business Intel', icon: Briefcase, href: '/business', desc: 'CRM & Pilotage stratégique' },
-  ]
+import { motion } from "framer-motion"
+import { Diamond, ShieldCheck, Zap, ArrowRight, ArrowRightCircle, Sparkles, UserCircle, Globe } from "lucide-react"
+import Link from "next/link"
 
+export default function LandingPage() {
   return (
-    <main className="min-h-screen bg-slate-50 p-8 space-y-12">
-      <div className="max-w-7xl mx-auto space-y-12">
+    <div className="relative min-h-screen w-full bg-slate-950 flex flex-col items-center justify-center overflow-hidden">
+      {/* Background Decorative Elements */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-accent/20 rounded-full blur-[120px] animate-pulse" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-600/20 rounded-full blur-[120px]" />
 
-        {/* Stats Grid Luxury */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-slate-950 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl group border border-white/5">
-            <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform duration-500">
-              <TrendingUp className="h-24 w-24" />
-            </div>
-            <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-4">Performance Mensuelle</p>
-            <h3 className="text-4xl font-black mb-2 tracking-tighter text-gold">4 250 000 FCFA</h3>
-            <div className="flex items-center gap-2 text-teal-400 text-xs font-bold">
-              <TrendingUp className="h-4 w-4" /> +12.5% depuis le mois dernier
-            </div>
-          </div>
+      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 pointer-events-none" />
 
-          <div className="bg-white rounded-[2.5rem] p-8 text-slate-900 relative overflow-hidden shadow-luxury border border-slate-100 group transition-all hover:border-accent/20">
-            <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-4">Agenda du Jour</p>
-            <h3 className="text-4xl font-black mb-2 tracking-tighter">12 <span className="text-lg text-slate-400 font-bold uppercase tracking-widest">Rendez-vous</span></h3>
-            <Link href="/agenda" className="text-accent text-xs font-black flex items-center gap-2 mt-4 hover:gap-4 transition-all">
-              VOIR LE PLANNING COMPLET <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
+      {/* Main Content Container */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="z-10 flex flex-col items-center text-center space-y-12 max-w-4xl px-6"
+      >
+        {/* Logo Section */}
+        <div className="flex flex-col items-center space-y-4">
+          <motion.div
+            animate={{ rotate: [0, 10, 0, -10, 0] }}
+            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+            className="h-24 w-24 bg-gradient-to-br from-accent to-[#b8860b] rounded-[2rem] flex items-center justify-center shadow-2xl shadow-accent/20 border border-white/10"
+          >
+            <Diamond className="h-12 w-12 text-white" />
+          </motion.div>
 
-          <div className="bg-gradient-to-br from-accent to-[#b8860b] rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl">
-            <div className="absolute -bottom-6 -right-6 opacity-20">
-              <Sparkles className="h-32 w-32" />
-            </div>
-            <p className="text-xs font-black uppercase tracking-widest text-white/70 mb-4">Status du Cabinet</p>
-            <h3 className="text-4xl font-black mb-2 tracking-tighter">Opérationnel</h3>
-            <p className="text-xs font-bold text-white/80">3 Assistants en ligne • 1 Praticien actif</p>
+          <div className="space-y-1">
+            <h1 className="text-6xl font-black text-white tracking-tighter uppercase">
+              Dento<span className="text-accent">Prestige</span>
+            </h1>
+            <p className="text-[10px] font-black text-accent uppercase tracking-[1em] ml-2">Elite Practice Management</p>
           </div>
         </div>
 
-        {/* Modules Navigation */}
-        <div className="space-y-6">
-          <h2 className="text-xs font-black uppercase tracking-[0.4em] text-slate-400 border-b pb-4">Services & Pilotage</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {modules.map((mod, i) => (
-              <Link key={mod.name} href={mod.href} className="group">
-                <div className="bg-white h-32 p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-6 transition-all duration-300 hover:shadow-luxury hover:border-accent/30 group-hover:-translate-y-1">
-                  <div className="h-16 w-16 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400 group-hover:bg-accent/10 group-hover:text-accent transition-all duration-300">
-                    <mod.icon className="h-8 w-8" />
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-black text-slate-800 tracking-tight group-hover:text-slate-900">{mod.name}</h4>
-                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{mod.desc}</p>
-                  </div>
-                </div>
-              </Link>
-            ))}
+        {/* Welcome Text */}
+        <div className="space-y-4">
+          <h2 className="text-3xl md:text-5xl font-black text-white/90 tracking-tight leading-tight">
+            Système de Pilotage <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-accent to-white">Haute Fidélité</span>
+          </h2>
+          <p className="text-slate-400 font-medium max-w-xl mx-auto leading-relaxed">
+            Bienvenue à la <span className="text-white font-bold">Clinique Dentaire Aere Lao</span>.
+            Entrez dans l'ère de l'excellence opérationnelle avec notre suite logicielle premium.
+          </p>
+        </div>
+
+        {/* Call to Action Section */}
+        <div className="flex flex-col items-center space-y-8">
+          <Link href="/dashboard">
+            <motion.button
+              whileHover={{ scale: 1.05, boxShadow: "0 0 60px rgba(16,185,129,0.4)" }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-emerald-600 text-white font-black px-16 py-7 rounded-[2rem] text-sm uppercase tracking-[0.4em] flex items-center gap-6 group transition-all shadow-2xl shadow-emerald-900/20"
+            >
+              Accès au Cabinet
+              <ArrowRightCircle className="h-6 w-6 group-hover:translate-x-2 transition-transform duration-300" />
+            </motion.button>
+          </Link>
+
+          {/* Status Badges */}
+          <div className="flex flex-wrap justify-center gap-6">
+            <div className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-full border border-white/10 backdrop-blur-sm">
+              <ShieldCheck className="h-3 w-3 text-teal-400" />
+              <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Sécurisé AES-256</span>
+            </div>
+            <div className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-full border border-white/10 backdrop-blur-sm">
+              <Zap className="h-3 w-3 text-gold" />
+              <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">IA DeepSeek v3 Active</span>
+            </div>
+            <div className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-full border border-white/10 backdrop-blur-sm">
+              <Globe className="h-3 w-3 text-indigo-400" />
+              <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Database Live : Dakar</span>
+            </div>
           </div>
         </div>
+      </motion.div>
+
+      {/* Bottom Signature */}
+      <div className="absolute bottom-10 flex flex-col items-center space-y-2 opacity-50">
+        <p className="text-[8px] font-black text-slate-500 uppercase tracking-[0.5em]">Digital Signature</p>
+        <p className="text-sm font-black text-white italic tracking-tighter">Dr. Aere Lao</p>
       </div>
-    </main>
+
+      {/* Overlay Gradient for focus */}
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent pointer-events-none" />
+    </div>
   )
 }
-

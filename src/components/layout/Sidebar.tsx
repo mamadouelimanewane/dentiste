@@ -33,7 +33,7 @@ import {
 } from 'lucide-react'
 
 const navigation = [
-    { name: 'Tableau de bord', href: '/', icon: LayoutDashboard },
+    { name: 'Tableau de bord', href: '/dashboard', icon: LayoutDashboard },
     { name: 'Patients', href: '/patients', icon: Users },
     { name: 'Agenda', href: '/agenda', icon: Calendar },
     { name: 'Planification', href: '/planning', icon: Target },
@@ -60,7 +60,7 @@ const navigation = [
 
 export function Sidebar() {
     const [mounted, setMounted] = useState(false)
-    const rawPathname = usePathname()
+    const pathname = usePathname()
 
     useEffect(() => {
         setMounted(true)
@@ -69,8 +69,6 @@ export function Sidebar() {
     if (!mounted) {
         return <div className="w-64 bg-slate-950 h-full border-r border-white/5" />
     }
-
-    const pathname = rawPathname
 
     return (
         <div className="flex h-full w-64 flex-col border-r bg-slate-950 text-slate-300">
@@ -81,7 +79,7 @@ export function Sidebar() {
 
             <nav className="flex-1 space-y-1 px-4 py-6 overflow-y-auto no-scrollbar">
                 {navigation.map((item) => {
-                    const isActive = mounted ? pathname === item.href : false
+                    const isActive = pathname === item.href
                     return (
                         <Link
                             key={item.name}
@@ -119,4 +117,3 @@ export function Sidebar() {
         </div>
     )
 }
-

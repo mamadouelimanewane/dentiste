@@ -5,7 +5,8 @@ import { usePathname } from "next/navigation"
 import { useState, useEffect } from "react"
 
 const routeTitles: Record<string, string> = {
-    "/": "Aere Lao Console",
+    "/": "Elite Portal",
+    "/dashboard": "Aere Lao Console",
     "/patients": "Gestion Patients",
     "/planning": "Planning 3D Elite",
     "/agenda": "Elite Planner Pro",
@@ -20,24 +21,22 @@ const routeTitles: Record<string, string> = {
     "/accounting": "Comptabilité OHADA",
     "/business": "Business Intelligence",
     "/security": "Security Compliance",
-    "/settings": "Command Center"
+    "/settings": "Command Center",
+    "/charting": "Dossier Clinique Elite"
 }
 
 export function Header({ title: manualTitle }: { title?: string }) {
-    const pathname = usePathname()
     const [mounted, setMounted] = useState(false)
+    const pathname = usePathname()
 
     useEffect(() => {
         setMounted(true)
     }, [])
 
     const getTitle = () => {
-        if (manualTitle) return manualTitle
         if (!mounted) return "Chargement..."
-
-        // Handle dynamic patient routes
+        if (manualTitle) return manualTitle
         if (pathname?.startsWith('/patients/')) return "Dossier Patient"
-
         return routeTitles[pathname || "/"] || "Aere Lao Console"
     }
 
@@ -87,4 +86,3 @@ export function Header({ title: manualTitle }: { title?: string }) {
         </header>
     )
 }
-
