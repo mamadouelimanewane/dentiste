@@ -25,41 +25,41 @@ export default function LandingPage() {
           <motion.div
             animate={{ rotate: [0, 10, 0, -10, 0] }}
             transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-            className="h-24 w-24 bg-gradient-to-br from-accent to-[#b8860b] rounded-[2rem] flex items-center justify-center shadow-2xl shadow-accent/20 border border-white/10"
+            className="h-16 w-16 md:h-24 md:w-24 bg-gradient-to-br from-accent to-[#b8860b] rounded-[1.5rem] md:rounded-[2rem] flex items-center justify-center shadow-2xl shadow-accent/20 border border-white/10"
           >
-            <Diamond className="h-12 w-12 text-white" />
+            <Diamond className="h-8 w-8 md:h-12 md:w-12 text-white" />
           </motion.div>
 
           <div className="space-y-1">
-            <h1 className="text-6xl font-black text-white tracking-tighter uppercase">
+            <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter uppercase">
               Dento<span className="text-accent">Prestige</span>
             </h1>
-            <p className="text-[10px] font-black text-accent uppercase tracking-[1em] ml-2">Elite Practice Management</p>
+            <p className="text-[8px] md:text-[10px] font-black text-accent uppercase tracking-[0.5em] md:tracking-[1em] ml-2">Elite Practice Management</p>
           </div>
         </div>
 
         {/* Welcome Text */}
         <div className="space-y-4">
-          <h2 className="text-3xl md:text-5xl font-black text-white/90 tracking-tight leading-tight">
+          <h2 className="text-2xl md:text-5xl font-black text-white/90 tracking-tight leading-tight">
             Système de Pilotage <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-accent to-white">Haute Fidélité</span>
           </h2>
-          <p className="text-slate-400 font-medium max-w-xl mx-auto leading-relaxed">
+          <p className="text-sm md:text-slate-400 font-medium max-w-xl mx-auto leading-relaxed">
             Bienvenue à la <span className="text-white font-bold">Clinique Dentaire Aere Lao</span>.
             Entrez dans l'ère de l'excellence opérationnelle avec notre suite logicielle premium.
           </p>
         </div>
 
         {/* Call to Action Section */}
-        <div className="flex flex-col items-center space-y-8">
-          <Link href="/dashboard">
+        <div className="flex flex-col items-center space-y-8 w-full max-w-xs md:max-w-none">
+          <Link href="/dashboard" className="w-full md:w-auto">
             <motion.button
               whileHover={{ scale: 1.05, boxShadow: "0 0 60px rgba(16,185,129,0.4)" }}
               whileTap={{ scale: 0.95 }}
-              className="bg-emerald-600 text-white font-black px-16 py-7 rounded-[2rem] text-sm uppercase tracking-[0.4em] flex items-center gap-6 group transition-all shadow-2xl shadow-emerald-900/20"
+              className="w-full md:w-auto bg-emerald-600 text-white font-black px-8 py-5 md:px-16 md:py-7 rounded-2xl md:rounded-[2rem] text-xs md:text-sm uppercase tracking-[0.2em] md:tracking-[0.4em] flex items-center justify-center gap-4 md:gap-6 group transition-all shadow-2xl shadow-emerald-900/20"
             >
               Accès au Cabinet
-              <ArrowRightCircle className="h-6 w-6 group-hover:translate-x-2 transition-transform duration-300" />
+              <ArrowRightCircle className="h-5 w-5 md:h-6 md:w-6 group-hover:translate-x-2 transition-transform duration-300" />
             </motion.button>
           </Link>
 

@@ -35,23 +35,23 @@ export default function FinancialWarRoom() {
     ]
 
     return (
-        <div className="p-8 space-y-10 max-w-7xl mx-auto pb-40">
+        <div className="p-4 md:p-8 space-y-6 md:space-y-10 max-w-7xl mx-auto pb-40">
             {/* Header Section */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
                     <div className="flex items-center gap-2 mb-1">
                         <Target className="h-4 w-4 text-emerald-500" />
                         <span className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500 italic">Executive Financial Command</span>
                     </div>
-                    <h1 className="text-4xl font-black text-slate-900 tracking-tighter">Financial <span className="text-emerald-600">War Room</span></h1>
-                    <p className="text-slate-500 font-medium tracking-tight">Pilotage stratégique de la rentabilité, projections 2026 et audit de performance.</p>
+                    <h1 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter">Financial <span className="text-emerald-600">War Room</span></h1>
+                    <p className="text-sm md:text-slate-500 font-medium tracking-tight">Pilotage stratégique de la rentabilité.</p>
                 </div>
-                <div className="flex gap-4">
-                    <Button variant="outline" className="rounded-2xl border-slate-200 h-14 px-6 text-[10px] font-black uppercase tracking-widest text-slate-500 bg-white">
-                        <Download className="mr-2 h-4 w-4" /> Export Bilan
+                <div className="flex flex-wrap gap-2 md:gap-4">
+                    <Button variant="outline" className="flex-1 md:flex-none rounded-2xl border-slate-200 h-12 md:h-14 px-4 md:px-6 text-[10px] font-black uppercase tracking-widest text-slate-500 bg-white">
+                        <Download className="mr-2 h-4 w-4" /> Bilan
                     </Button>
-                    <Button className="bg-slate-900 text-white hover:bg-slate-800 font-black px-8 rounded-2xl uppercase tracking-widest text-[11px] h-14 shadow-luxury transition-all">
-                        <RefreshCw className="mr-2 h-5 w-5" /> Live Sync Bank
+                    <Button className="flex-1 md:flex-none bg-slate-900 text-white hover:bg-slate-800 font-black px-4 md:px-8 rounded-2xl uppercase tracking-widest text-[11px] h-12 md:h-14 shadow-luxury transition-all">
+                        <RefreshCw className="mr-2 h-5 w-5" /> Live Sync
                     </Button>
                 </div>
             </div>

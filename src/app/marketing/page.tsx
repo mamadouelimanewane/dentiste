@@ -40,22 +40,27 @@ export default function MarketingHub() {
     ]
 
     return (
-        <div className="p-8 space-y-10 max-w-7xl mx-auto pb-40">
-            <div className="flex items-center justify-between">
-                <div>
-                    <div className="flex items-center gap-2 mb-1">
-                        <Megaphone className="h-4 w-4 text-indigo-600" />
-                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-indigo-600 italic">Elite Growth & Visibility</span>
+        <div className="p-4 md:p-8 space-y-6 md:space-y-10 max-w-7xl mx-auto pb-40">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div className="flex items-center gap-4 md:gap-6">
+                    <div className="h-12 w-12 md:h-16 md:w-16 bg-slate-100 rounded-[2rem] flex items-center justify-center text-indigo-600 shrink-0">
+                        <Megaphone className="h-6 w-6 md:h-8 md:w-8" />
                     </div>
-                    <h1 className="text-4xl font-black text-slate-900 tracking-tighter">Marketing <span className="text-indigo-600">IA Hub</span></h1>
-                    <p className="text-slate-500 font-medium tracking-tight">Pilotage de votre e-réputation, acquisition patient et campagnes automatisées par IA.</p>
+                    <div>
+                        <div className="flex items-center gap-2 mb-1">
+                            <div className="h-1 w-4 md:h-1 md:w-8 bg-indigo-600 rounded-full"></div>
+                            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.3em] text-indigo-600 italic">Elite Growth & Visibility</span>
+                        </div>
+                        <h1 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter">Marketing <span className="text-indigo-600">IA Hub</span></h1>
+                        <p className="text-xs md:text-sm text-slate-500 font-medium tracking-tight">Pilotage de votre e-réputation et acquisition.</p>
+                    </div>
                 </div>
-                <div className="flex gap-4">
-                    <Button variant="outline" className="rounded-2xl border-slate-200 h-14 px-6 text-[10px] font-black uppercase tracking-widest text-slate-500 bg-white">
-                        <BarChart3 className="mr-2 h-4 w-4" /> Analyse ROI
+                <div className="flex flex-wrap gap-2 md:gap-4">
+                    <Button variant="outline" className="flex-1 md:flex-none rounded-2xl border-slate-200 h-12 md:h-14 px-4 md:px-6 text-[10px] font-black uppercase tracking-widest text-slate-500 bg-white">
+                        <BarChart3 className="mr-2 h-4 w-4" /> ROI
                     </Button>
-                    <Button className="bg-slate-900 text-white hover:bg-slate-800 font-black px-8 rounded-2xl uppercase tracking-widest text-[11px] h-14 shadow-luxury transition-all">
-                        <Plus className="mr-2 h-5 w-5" /> Nouvelle Campagne
+                    <Button className="flex-1 md:flex-none bg-slate-900 text-white hover:bg-slate-800 font-black px-4 md:px-8 rounded-2xl uppercase tracking-widest text-[11px] h-12 md:h-14 shadow-luxury transition-all">
+                        <Plus className="mr-2 h-5 w-5" /> Campagne
                     </Button>
                 </div>
             </div>

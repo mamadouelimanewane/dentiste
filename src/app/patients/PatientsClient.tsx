@@ -137,24 +137,24 @@ export default function PatientsClient({ initialPatients = [] }: { initialPatien
     };
 
     return (
-        <div className="p-8 space-y-10 max-w-7xl mx-auto pb-40">
-            <div className="flex items-center justify-between no-print">
-                <div className="flex items-center gap-6">
-                    <div className="h-16 w-16 bg-slate-900 rounded-3xl flex items-center justify-center text-white shadow-xl shadow-slate-200">
-                        <Users className="h-8 w-8 text-gold" />
+        <div className="p-4 md:p-8 space-y-6 md:space-y-10 max-w-7xl mx-auto pb-40">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 no-print">
+                <div className="flex items-center gap-4 md:gap-6">
+                    <div className="h-12 w-12 md:h-16 md:w-16 bg-slate-900 rounded-3xl flex items-center justify-center text-white shadow-xl shadow-slate-200 shrink-0">
+                        <Users className="h-6 w-6 md:h-8 md:w-8 text-gold" />
                     </div>
                     <div>
                         <div className="flex items-center gap-2 mb-1">
-                            <div className="h-1 w-8 bg-gold rounded-full"></div>
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gold italic">Clinical Database Live</span>
+                            <div className="h-1 w-4 md:h-1 md:w-8 bg-gold rounded-full"></div>
+                            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.3em] text-gold italic">Clinical Database Live</span>
                         </div>
-                        <h1 className="text-4xl font-black text-slate-900 tracking-tighter">Gestion <span className="text-gold">Patients Elite</span></h1>
-                        <p className="text-slate-500 font-medium tracking-tight">Accès sécurisé aux dossiers médicaux, historiques et traçabilité des soins.</p>
+                        <h1 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter">Gestion <span className="text-gold">Patients Elite</span></h1>
+                        <p className="text-xs md:text-slate-500 font-medium tracking-tight">Accès sécurisé aux dossiers médicaux.</p>
                     </div>
                 </div>
-                <div className="flex gap-4">
-                    <Button variant="outline" onClick={exportPatientsCSV} className="rounded-2xl border-slate-200 h-14 px-6 text-[10px] font-black uppercase tracking-widest text-slate-500 bg-white">
-                        <Download className="mr-2 h-4 w-4" /> Export CSV
+                <div className="flex flex-wrap gap-2 md:gap-4">
+                    <Button variant="outline" onClick={exportPatientsCSV} className="flex-1 md:flex-none rounded-2xl border-slate-200 h-12 md:h-14 px-4 md:px-6 text-[10px] font-black uppercase tracking-widest text-slate-500 bg-white">
+                        <Download className="mr-2 h-4 w-4" /> Export
                     </Button>
 
                     <Dialog open={open} onOpenChange={setOpen}>
@@ -260,95 +260,97 @@ export default function PatientsClient({ initialPatients = [] }: { initialPatien
             </div>
 
             {/* Search and Filters */}
-            <div className="flex items-center gap-6 bg-white p-4 rounded-[2rem] border shadow-sm no-print">
-                <div className="relative flex-1 group">
+            <div className="flex flex-col md:flex-row items-center gap-4 bg-white p-2 md:p-4 rounded-[1.5rem] md:rounded-[2rem] border shadow-sm no-print">
+                <div className="relative flex-1 w-full group">
                     <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-gold transition-colors" />
                     <Input
-                        placeholder="Rechercher par nom, téléphone ou email..."
-                        className="h-14 pl-14 pr-6 rounded-2xl bg-slate-50 border-none text-sm font-bold placeholder:text-slate-300 focus-visible:ring-1 focus-visible:ring-gold transition-all"
+                        placeholder="Rechercher un patient..."
+                        className="h-12 md:h-14 pl-14 pr-6 rounded-xl md:rounded-2xl bg-slate-50 border-none text-sm font-bold placeholder:text-slate-300 focus-visible:ring-1 focus-visible:ring-gold transition-all w-full"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
-                <Button variant="outline" className="h-14 w-14 rounded-2xl border-slate-100 bg-slate-50 p-0 text-slate-400 hover:text-slate-900">
+                <Button variant="outline" className="hidden md:flex h-14 w-14 rounded-2xl border-slate-100 bg-slate-50 p-0 text-slate-400 hover:text-slate-900">
                     <Filter className="h-5 w-5" />
                 </Button>
             </div>
 
             {/* Patient Table with Elite Styling */}
-            <Card className="rounded-[3rem] border-none shadow-luxury bg-white overflow-hidden">
-                <Table>
-                    <TableHeader className="bg-slate-50/50">
-                        <TableRow className="border-b border-slate-50 hover:bg-transparent">
-                            <TableHead className="w-[350px] font-black text-[10px] uppercase tracking-widest h-16 pl-10">Patient & Dossier</TableHead>
-                            <TableHead className="font-black text-[10px] uppercase tracking-widest h-16">Coordonnées</TableHead>
-                            <TableHead className="font-black text-[10px] uppercase tracking-widest h-16">Dernière Mise à Jour</TableHead>
-                            <TableHead className="font-black text-[10px] uppercase tracking-widest h-16 text-right pr-10">Détails</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        <AnimatePresence>
-                            {filteredPatients.length === 0 ? (
-                                <TableRow>
-                                    <TableCell colSpan={4} className="text-center h-40">
-                                        <div className="flex flex-col items-center gap-2 opacity-30">
-                                            <Users className="h-10 w-10 text-slate-300" />
-                                            <p className="text-[10px] font-black uppercase tracking-widest">Aucun patient dans le registre</p>
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            ) : (
-                                filteredPatients.map((patient, i) => (
-                                    <motion.tr
-                                        key={patient.id}
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: i * 0.05 }}
-                                        className="hover:bg-slate-50 cursor-pointer border-b border-slate-50 last:border-0 group transition-all"
-                                    >
-                                        <TableCell className="py-6 pl-10">
-                                            <div className="flex items-center gap-5">
-                                                <div className="h-14 w-14 rounded-[1.2rem] bg-slate-950 flex items-center justify-center text-white font-black text-sm shadow-xl shadow-slate-200 group-hover:scale-105 transition-all">
-                                                    {getSafeInitial(patient.firstName)}{getSafeInitial(patient.lastName)}
-                                                </div>
-                                                <div>
-                                                    <p className="text-base font-black text-slate-900 group-hover:text-gold transition-colors">{patient.firstName} {patient.lastName}</p>
-                                                    <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">Dossier #{patient.id.slice(0, 8)}</p>
-                                                </div>
+            <Card className="rounded-2xl md:rounded-[3rem] border-none shadow-luxury bg-white overflow-hidden">
+                <div className="overflow-x-auto">
+                    <Table>
+                        <TableHeader className="bg-slate-50/50">
+                            <TableRow className="border-b border-slate-50 hover:bg-transparent">
+                                <TableHead className="w-[300px] md:w-[350px] font-black text-[9px] md:text-[10px] uppercase tracking-widest h-14 md:h-16 pl-6 md:pl-10">Patient</TableHead>
+                                <TableHead className="font-black text-[9px] md:text-[10px] uppercase tracking-widest h-14 md:h-16">Coordonnées</TableHead>
+                                <TableHead className="hidden md:table-cell font-black text-[9px] md:text-[10px] uppercase tracking-widest h-14 md:h-16">Dernière Mise à Jour</TableHead>
+                                <TableHead className="font-black text-[9px] md:text-[10px] uppercase tracking-widest h-14 md:h-16 text-right pr-6 md:pr-10">Détails</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            <AnimatePresence>
+                                {filteredPatients.length === 0 ? (
+                                    <TableRow>
+                                        <TableCell colSpan={4} className="text-center h-40">
+                                            <div className="flex flex-col items-center gap-2 opacity-30">
+                                                <Users className="h-10 w-10 text-slate-300" />
+                                                <p className="text-[10px] font-black uppercase tracking-widest">Aucun patient dans le registre</p>
                                             </div>
                                         </TableCell>
-                                        <TableCell>
-                                            <div className="space-y-1">
-                                                <p className="text-sm font-bold text-slate-700">{patient.phone || <span className="opacity-20 italic">Non renseigné</span>}</p>
-                                                <p className="text-[11px] font-medium text-slate-400 italic">{patient.email || '-'}</p>
-                                            </div>
-                                        </TableCell>
-                                        <TableCell>
-                                            <div className="flex items-center gap-3">
-                                                <div className="h-8 w-8 rounded-xl bg-slate-50 flex items-center justify-center text-slate-300">
-                                                    <Calendar className="h-4 w-4" />
+                                    </TableRow>
+                                ) : (
+                                    filteredPatients.map((patient, i) => (
+                                        <motion.tr
+                                            key={patient.id}
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: i * 0.05 }}
+                                            className="hover:bg-slate-50 cursor-pointer border-b border-slate-50 last:border-0 group transition-all"
+                                        >
+                                            <TableCell className="py-4 md:py-6 pl-6 md:pl-10">
+                                                <div className="flex items-center gap-3 md:gap-5">
+                                                    <div className="h-10 w-10 md:h-14 md:w-14 rounded-lg md:rounded-[1.2rem] bg-slate-950 flex items-center justify-center text-white font-black text-[10px] md:text-sm shadow-xl shadow-slate-200 group-hover:scale-105 transition-all shrink-0">
+                                                        {getSafeInitial(patient.firstName)}{getSafeInitial(patient.lastName)}
+                                                    </div>
+                                                    <div className="min-w-0">
+                                                        <p className="text-sm md:text-base font-black text-slate-900 group-hover:text-gold transition-colors truncate">{patient.firstName} {patient.lastName}</p>
+                                                        <p className="text-[8px] md:text-[10px] font-bold text-slate-300 uppercase tracking-widest truncate">Dossier #{patient.id.slice(0, 8)}</p>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <p className="text-xs font-bold text-slate-600">
-                                                        {patient.updatedAt ? format(new Date(patient.updatedAt), 'd MMM yyyy', { locale: fr }) : '-'}
-                                                    </p>
-                                                    <p className="text-[9px] font-black text-slate-300 uppercase tracking-widest">Dernière Action</p>
+                                            </TableCell>
+                                            <TableCell>
+                                                <div className="space-y-px">
+                                                    <p className="text-[10px] md:text-sm font-bold text-slate-700">{patient.phone || '-'}</p>
+                                                    <p className="hidden md:block text-[11px] font-medium text-slate-400 italic truncate">{patient.email || '-'}</p>
                                                 </div>
-                                            </div>
-                                        </TableCell>
-                                        <TableCell className="text-right pr-10">
-                                            <Link href={`/patients/${patient.id}`}>
-                                                <Button size="icon" variant="ghost" className="h-10 w-10 rounded-full text-slate-300 hover:text-gold hover:bg-gold/5 transition-all">
-                                                    <ArrowUpRight className="h-5 w-5" />
-                                                </Button>
-                                            </Link>
-                                        </TableCell>
-                                    </motion.tr>
-                                ))
-                            )}
-                        </AnimatePresence>
-                    </TableBody>
-                </Table>
+                                            </TableCell>
+                                            <TableCell className="hidden md:table-cell">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="h-8 w-8 rounded-xl bg-slate-50 flex items-center justify-center text-slate-300">
+                                                        <Calendar className="h-4 w-4" />
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-xs font-bold text-slate-600">
+                                                            {patient.updatedAt ? format(new Date(patient.updatedAt), 'd MMM yyyy', { locale: fr }) : '-'}
+                                                        </p>
+                                                        <p className="text-[9px] font-black text-slate-300 uppercase tracking-widest">Dernière Action</p>
+                                                    </div>
+                                                </div>
+                                            </TableCell>
+                                            <TableCell className="text-right pr-6 md:pr-10">
+                                                <Link href={`/patients/${patient.id}`}>
+                                                    <Button size="icon" variant="ghost" className="h-8 w-8 md:h-10 md:w-10 rounded-full text-slate-300 hover:text-gold hover:bg-gold/5 transition-all">
+                                                        <ArrowUpRight className="h-4 w-4 md:h-5 md:w-5" />
+                                                    </Button>
+                                                </Link>
+                                            </TableCell>
+                                        </motion.tr>
+                                    ))
+                                )}
+                            </AnimatePresence>
+                        </TableBody>
+                    </Table>
+                </div>
             </Card>
         </div>
     )

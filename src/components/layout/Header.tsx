@@ -1,6 +1,6 @@
 "use client"
 
-import { Search, Bell, Settings, User, Globe, Activity } from "lucide-react"
+import { Search, Bell, Settings, User, Globe, Activity, Menu } from "lucide-react"
 import { usePathname } from "next/navigation"
 import { useState, useEffect } from "react"
 
@@ -25,7 +25,7 @@ const routeTitles: Record<string, string> = {
     "/charting": "Dossier Clinique Elite"
 }
 
-export function Header({ title: manualTitle }: { title?: string }) {
+export function Header({ title: manualTitle, onMenuClick }: { title?: string, onMenuClick?: () => void }) {
     const [mounted, setMounted] = useState(false)
     const pathname = usePathname()
 
@@ -41,9 +41,15 @@ export function Header({ title: manualTitle }: { title?: string }) {
     }
 
     return (
-        <header className="flex h-20 items-center justify-between bg-white px-10 border-b border-slate-100 sticky top-0 z-30 shrink-0">
-            <div className="flex items-center gap-8 flex-1">
-                <h1 className="text-xl font-black text-slate-900 tracking-tighter uppercase whitespace-nowrap">{getTitle()}</h1>
+        <header className="flex h-20 items-center justify-between bg-white px-4 md:px-10 border-b border-slate-100 sticky top-0 z-30 shrink-0">
+            <div className="flex items-center gap-4 md:gap-8 flex-1">
+                <button
+                    onClick={onMenuClick}
+                    className="lg:hidden h-10 w-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-500 hover:text-slate-900"
+                >
+                    <Menu className="h-5 w-5" />
+                </button>
+                <h1 className="text-base md:text-xl font-black text-slate-900 tracking-tighter uppercase whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px] md:max-w-none">{getTitle()}</h1>
 
                 <div className="relative w-96 group hidden lg:block">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-accent transition-colors" />
@@ -54,19 +60,19 @@ export function Header({ title: manualTitle }: { title?: string }) {
                 </div>
             </div>
 
-            <div className="flex items-center gap-6">
-                <div className="flex items-center gap-2 border-r pr-6 border-slate-100 hidden sm:flex">
+            <div className="flex items-center gap-2 md:gap-6">
+                <div className="flex items-center gap-2 border-r pr-6 border-slate-100 hidden xl:flex">
                     <div className="h-2 w-2 rounded-full bg-teal-500 animate-pulse"></div>
                     <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Database Live</span>
                 </div>
 
-                <div className="flex gap-3">
-                    <button className="h-10 w-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-all">
+                <div className="flex gap-1 md:gap-3">
+                    <button className="h-9 w-9 md:h-10 md:w-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-all">
                         <Globe className="h-4 w-4" />
                     </button>
-                    <button className="h-10 w-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-all relative">
+                    <button className="h-9 w-9 md:h-10 md:w-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-all relative">
                         <Bell className="h-4 w-4" />
-                        <div className="absolute top-2 right-2 h-2 w-2 bg-red-500 rounded-full border-2 border-white"></div>
+                        <div className="absolute top-2 right-2 h-1.5 w-1.5 bg-red-500 rounded-full border border-white"></div>
                     </button>
                     <button className="h-10 w-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-all">
                         <Settings className="h-4 w-4" />

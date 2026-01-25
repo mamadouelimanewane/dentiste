@@ -39,7 +39,7 @@ import {
     Megaphone
 } from 'lucide-react'
 
-const navigationSections = [
+export const navigationSections = [
     {
         title: 'Gestion Clinique',
         items: [
@@ -89,7 +89,7 @@ const navigationSections = [
     }
 ]
 
-export function Sidebar() {
+export function Sidebar({ className }: { className?: string }) {
     const [mounted, setMounted] = useState(false)
     const pathname = usePathname()
 
@@ -98,11 +98,11 @@ export function Sidebar() {
     }, [])
 
     if (!mounted) {
-        return <div className="w-64 bg-slate-950 h-full border-r border-white/5" />
+        return <div className={cn("w-64 bg-slate-950 h-full border-r border-white/5", className)} />
     }
 
     return (
-        <div className="flex h-full w-64 flex-col border-r bg-slate-950 text-slate-300">
+        <div className={cn("flex h-full w-64 flex-col border-r bg-slate-950 text-slate-300", className)}>
             <div className="flex h-20 items-center px-6 border-b border-white/5 bg-slate-950/50 backdrop-blur-xl">
                 <Diamond className="h-6 w-6 text-accent mr-3 animate-pulse" />
                 <span className="text-lg font-black tracking-tighter text-white uppercase">Dento<span className="text-accent">Prestige</span></span>
