@@ -23,8 +23,8 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
     // No context before mount
     if (!mounted) return <div className="min-h-screen bg-slate-950" />
 
-    // If we are on the landing page or a mobile-specific route, don't show the standard sidebar/header layout
-    if (pathname === "/" || pathname.startsWith("/mobile")) {
+    // If we are on the landing page, don't show the standard sidebar/header layout
+    if (pathname === "/") {
         return <>{children}</>
     }
 

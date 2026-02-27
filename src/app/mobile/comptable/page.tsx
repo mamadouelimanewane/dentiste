@@ -18,17 +18,7 @@ import {
 
 export default function AccountantMobileApp() {
     return (
-        <div className="space-y-6 pt-10 px-6">
-            {/* Header */}
-            <div className="flex justify-between items-center">
-                <div className="space-y-1">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Module Comptable</p>
-                    <h1 className="text-3xl font-black text-slate-900 tracking-tighter">Finance <span className="text-gold">Elite</span></h1>
-                </div>
-                <div className="h-12 w-12 rounded-2xl bg-teal-600 flex items-center justify-center text-white font-black shadow-xl">
-                    CP
-                </div>
-            </div>
+        <div className="space-y-6 pt-4 px-6 pb-20">
 
             {/* Daily Cashflow Summary */}
             <Card className="rounded-[2.5rem] border-none bg-slate-900 text-white overflow-hidden shadow-2xl p-8 space-y-6">

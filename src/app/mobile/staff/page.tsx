@@ -16,17 +16,7 @@ import {
 
 export default function StaffMobileApp() {
     return (
-        <div className="space-y-6 pt-10 px-6">
-            {/* Header */}
-            <div className="flex justify-between items-center">
-                <div className="space-y-1">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Session Praticien</p>
-                    <h1 className="text-3xl font-black text-slate-900 tracking-tighter">Dr. <span className="text-gold">Aere Lao</span></h1>
-                </div>
-                <div className="h-12 w-12 rounded-2xl bg-gold flex items-center justify-center text-slate-900 font-black shadow-xl">
-                    AL
-                </div>
-            </div>
+        <div className="space-y-6 pt-4 px-6 pb-20">
 
             {/* Quick Patient Search Bar */}
             <div className="relative group">

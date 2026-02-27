@@ -16,17 +16,7 @@ import {
 
 export default function ClientMobileApp() {
     return (
-        <div className="space-y-6 pt-10 px-6">
-            {/* Header / Profile Summary */}
-            <div className="flex justify-between items-center">
-                <div className="space-y-1">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Bienvenue sur votre app</p>
-                    <h1 className="text-3xl font-black text-slate-900 tracking-tighter">Jean <span className="text-gold">Valjean</span></h1>
-                </div>
-                <div className="h-12 w-12 rounded-2xl bg-slate-900 flex items-center justify-center text-white font-black shadow-xl">
-                    JV
-                </div>
-            </div>
+        <div className="space-y-6 pt-4 px-6 pb-20">
 
             {/* Quick Action - QR Code Card */}
             <Card className="rounded-[2.5rem] border-none bg-slate-900 text-white overflow-hidden shadow-2xl relative">
