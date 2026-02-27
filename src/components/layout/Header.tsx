@@ -19,22 +19,40 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
     const [showSearch, setShowSearch] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+    const [user, setUser] = useState<{ role: string, name: string } | null>(null)
+
+    useEffect(() => {
+        const savedUser = localStorage.getItem('dp_user')
+        if (savedUser) {
+            setUser(JSON.parse(savedUser))
+        }
+    }, [])
 
     useEffect(() => {
         const timer = setInterval(() => setCurrentTime(new Date()), 1000)
         return () => clearInterval(timer)
     }, [])
 
+    // Filter allowed items
+    const allowedItems = navigationSections.flatMap(section => {
+        const sectionRoles = (section as any).roles
+        if (sectionRoles && user && !sectionRoles.includes(user.role)) return []
+
+        return section.items.filter(item => {
+            const itemRoles = (item as any).roles
+            if (!itemRoles || !user) return true
+            return itemRoles.includes(user.role)
+        })
+    })
+
     // Find current page title
-    const currentPage = navigationSections
-        .flatMap(s => s.items)
-        .find(item => item.href === pathname)
+    const currentPage = allowedItems.find(item => item.href === pathname)
 
     const unreadCount = 3
 
     // Search results
     const searchResults = searchQuery.length > 1
-        ? navigationSections.flatMap(s => s.items).filter(item =>
+        ? allowedItems.filter(item =>
             item.name.toLowerCase().includes(searchQuery.toLowerCase())
         ).slice(0, 5)
         : []

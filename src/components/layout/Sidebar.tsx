@@ -52,42 +52,46 @@ import {
 export const navigationSections = [
     {
         title: 'Gestion Clinique',
+        roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'],
         items: [
             { name: 'Tableau de bord', href: '/dashboard', icon: LayoutDashboard },
-            { name: 'Patients Elite', href: '/patients', icon: Users },
-            { name: 'Workflow Clinique', href: '/workflow', icon: Activity },
-            { name: 'Smile Design Studio', href: '/smile-design', icon: Sparkles },
+            { name: 'Patients Elite', href: '/patients', icon: Users, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
+            { name: 'Workflow Clinique', href: '/workflow', icon: Activity, roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
+            { name: 'Smile Design Studio', href: '/smile-design', icon: Sparkles, roles: ['OWNER', 'DENTIST'] },
             { name: 'Agenda Dynamique', href: '/agenda', icon: Calendar },
             { name: 'Salle d\'Attente', href: '/waiting-room', icon: Clock, badge: '3' },
         ]
     },
     {
         title: 'Intelligence & Pilotage',
+        roles: ['OWNER', 'DENTIST', 'ASSISTANT'],
         items: [
-            { name: 'AI Command Center', href: '/ai-hub', icon: Brain },
+            { name: 'AI Command Center', href: '/ai-hub', icon: Brain, roles: ['OWNER', 'DENTIST'] },
             { name: 'AI Radio Lab', href: '/ai-radio-lab', icon: Radiation },
             { name: 'AI Voice Dictation', href: '/dictation', icon: Mic },
-            { name: 'Financial War Room', href: '/financial-war-room', icon: Target },
+            { name: 'Financial War Room', href: '/financial-war-room', icon: Target, roles: ['OWNER', 'ACCOUNTANT'] },
             { name: 'Téléconsultation', href: '/teleconsultation', icon: Video, isNew: true },
         ]
     },
     {
         title: 'Admin & Finance',
+        roles: ['OWNER', 'SECRETARY', 'ACCOUNTANT'],
         items: [
-            { name: 'GED Elite (Vault)', href: '/ged', icon: HardDrive },
+            { name: 'GED Elite (Vault)', href: '/ged', icon: HardDrive, roles: ['OWNER', 'DENTIST', 'SECRETARY'] },
             { name: 'Devis Multi-Options', href: '/quotes', icon: FileCheck },
             { name: 'Facturation & Actes', href: '/billing', icon: DollarSign },
             { name: 'Paiement en Ligne', href: '/payment', icon: CreditCard, isNew: true },
-            { name: 'Comptabilité OHADA', href: '/accounting', icon: BookOpen },
+            { name: 'Comptabilité OHADA', href: '/accounting', icon: BookOpen, roles: ['OWNER', 'ACCOUNTANT'] },
         ]
     },
     {
         title: 'Opérations & Cabinet',
+        roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'],
         items: [
-            { name: 'Marketing IA Hub', href: '/marketing', icon: Megaphone },
-            { name: 'Gestion Elite (RH)', href: '/management', icon: Briefcase },
-            { name: 'Stocks & Intrants', href: '/inventory', icon: Package },
-            { name: 'Traçabilité Hub', href: '/sterilization', icon: ShieldCheck },
+            { name: 'Marketing IA Hub', href: '/marketing', icon: Megaphone, roles: ['OWNER'] },
+            { name: 'Gestion Elite (RH)', href: '/management', icon: Briefcase, roles: ['OWNER'] },
+            { name: 'Stocks & Intrants', href: '/inventory', icon: Package, roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
+            { name: 'Traçabilité Hub', href: '/sterilization', icon: ShieldCheck, roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
             { name: 'Portail Patient VIP', href: '/portal', icon: UserCircle },
             { name: 'Programme Fidélité', href: '/loyalty', icon: Star, isNew: true },
         ]
@@ -105,11 +109,12 @@ export const navigationSections = [
         items: [
             { name: 'Documentation Elite', href: '/documentation', icon: BookOpen },
             { name: 'Elite Academy', href: '/academy', icon: GraduationCap },
-            { name: 'Paramètres', href: '/settings', icon: Settings },
+            { name: 'Paramètres', href: '/settings', icon: Settings, roles: ['OWNER'] },
         ]
     },
     {
         title: 'Mobile Apps (Elite)',
+        roles: ['OWNER'], // Only Admin can switch for demo
         items: [
             { name: 'Mobile Hub (Switcher)', href: '/mobile', icon: Smartphone, badge: '4' },
             { name: 'App Patient', href: '/mobile/client', icon: UserCircle },
@@ -123,11 +128,35 @@ export const navigationSections = [
 export function Sidebar({ className }: { className?: string }) {
     const [mounted, setMounted] = useState(false)
     const [collapsed, setCollapsed] = useState(false)
+    const [user, setUser] = useState<{ role: string, name: string } | null>(null)
     const pathname = usePathname()
 
     useEffect(() => {
         setMounted(true)
+        const savedUser = localStorage.getItem('dp_user')
+        if (savedUser) {
+            setUser(JSON.parse(savedUser))
+        }
     }, [])
+
+    const filteredSections = navigationSections.map(section => {
+        // Filter items within section
+        const filteredItems = section.items.filter(item => {
+            const allowed = (item as any).roles
+            if (!allowed || !user) return true
+            return allowed.includes(user.role)
+        })
+
+        if (filteredItems.length === 0) return null
+
+        // Check if section itself is restricted
+        const sectionRoles = (section as any).roles
+        if (sectionRoles && user && !sectionRoles.includes(user.role)) {
+            return null
+        }
+
+        return { ...section, items: filteredItems }
+    }).filter(Boolean) as typeof navigationSections
 
     if (!mounted) {
         return <div className={cn("w-64 bg-slate-950 h-full border-r border-white/5", className)} />
@@ -157,7 +186,7 @@ export function Sidebar({ className }: { className?: string }) {
             </div>
 
             <nav className="flex-1 space-y-6 px-3 py-6 overflow-y-auto no-scrollbar">
-                {navigationSections.map((section) => (
+                {filteredSections.map((section) => (
                     <div key={section.title} className="space-y-1">
                         {!collapsed && (
                             <h3 className="px-3 text-[9px] font-black uppercase tracking-[0.2em] text-slate-600 mb-3">{section.title}</h3>
@@ -220,8 +249,14 @@ export function Sidebar({ className }: { className?: string }) {
                             DR
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-sm font-black text-white truncate">Dr. Aere Lao</p>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-accent/60">Praticien Elite</p>
+                            <p className="text-sm font-black text-white truncate">{user?.name || 'Dr. Aere Lao'}</p>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-accent/60">
+                                {user?.role === 'OWNER' ? 'Administrateur Elite' :
+                                    user?.role === 'DENTIST' ? 'Praticien Elite' :
+                                        user?.role === 'ASSISTANT' ? 'Assistant(e) Elite' :
+                                            user?.role === 'SECRETARY' ? 'Secrétaire Elite' :
+                                                'Utilisateur Elite'}
+                            </p>
                         </div>
                         <Link href="/login" className="h-8 w-8 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-500 hover:text-white transition-all">
                             <LogOut className="h-3.5 w-3.5" />

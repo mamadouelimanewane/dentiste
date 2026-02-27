@@ -1,3 +1,6 @@
+"use client"
+
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import {
   Calendar, Users, Activity, DollarSign, ShieldCheck, BookOpen,
@@ -7,10 +10,10 @@ import {
 } from 'lucide-react'
 
 const QUICK_STATS = [
-  { label: 'CA du Jour', value: '485 000', unit: 'FCFA', trend: '+12%', up: true, color: 'text-teal-600' },
+  { label: 'CA du Jour', value: '485 000', unit: 'FCFA', trend: '+12%', up: true, color: 'text-teal-600', roles: ['OWNER', 'DENTIST', 'ACCOUNTANT'] },
   { label: 'RDV Aujourd\'hui', value: '12', unit: 'patients', trend: '3 restants', up: true, color: 'text-blue-600' },
   { label: 'En Attente', value: '4', unit: 'en salle', trend: 'Moy. 18 min', up: false, color: 'text-orange-600' },
-  { label: 'Impayés', value: '675 000', unit: 'FCFA', trend: '5 factures', up: false, color: 'text-red-600' },
+  { label: 'Impayés', value: '675 000', unit: 'FCFA', trend: '5 factures', up: false, color: 'text-red-600', roles: ['OWNER', 'SECRETARY', 'ACCOUNTANT'] },
 ]
 
 const ALERTS = [
@@ -20,19 +23,19 @@ const ALERTS = [
 ]
 
 const MODULES_GRID = [
-  { name: 'Patients', icon: Users, href: '/patients', desc: 'Gestion base patient', color: 'bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white' },
-  { name: 'Agenda', icon: Calendar, href: '/agenda', desc: 'Planning & RDV', color: 'bg-teal-50 text-teal-600 group-hover:bg-teal-600 group-hover:text-white' },
-  { name: 'Soins', icon: Activity, href: '/charting', desc: 'Dossier clinique', color: 'bg-purple-50 text-purple-600 group-hover:bg-purple-600 group-hover:text-white' },
-  { name: 'Paiement', icon: CreditCard, href: '/payment', desc: 'Wave, Orange Money', color: 'bg-green-50 text-green-600 group-hover:bg-green-600 group-hover:text-white', isNew: true },
-  { name: 'Téléconsult', icon: Video, href: '/teleconsultation', desc: 'Vidéo consultation', color: 'bg-indigo-50 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white', isNew: true },
-  { name: 'Salle Attente', icon: Clock, href: '/waiting-room', desc: 'File d\'attente live', color: 'bg-orange-50 text-orange-600 group-hover:bg-orange-600 group-hover:text-white', isNew: true },
+  { name: 'Patients', icon: Users, href: '/patients', desc: 'Gestion base patient', color: 'bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white', roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
+  { name: 'Agenda', icon: Calendar, href: '/agenda', desc: 'Planning & RDV', color: 'bg-teal-50 text-teal-600 group-hover:bg-teal-600 group-hover:text-white', roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
+  { name: 'Soins', icon: Activity, href: '/charting', desc: 'Dossier clinique', color: 'bg-purple-50 text-purple-600 group-hover:bg-purple-600 group-hover:text-white', roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
+  { name: 'Paiement', icon: CreditCard, href: '/payment', desc: 'Wave, Orange Money', color: 'bg-green-50 text-green-600 group-hover:bg-green-600 group-hover:text-white', isNew: true, roles: ['OWNER', 'SECRETARY', 'ACCOUNTANT'] },
+  { name: 'Téléconsult', icon: Video, href: '/teleconsultation', desc: 'Vidéo consultation', color: 'bg-indigo-50 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white', isNew: true, roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
+  { name: 'Salle Attente', icon: Clock, href: '/waiting-room', desc: 'File d\'attente live', color: 'bg-orange-50 text-orange-600 group-hover:bg-orange-600 group-hover:text-white', isNew: true, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
   { name: 'Messages', icon: Hash, href: '/messages', desc: 'Chat équipe', color: 'bg-pink-50 text-pink-600 group-hover:bg-pink-600 group-hover:text-white', isNew: true },
-  { name: 'Fidélité', icon: Star, href: '/loyalty', desc: 'Programme points', color: 'bg-amber-50 text-amber-600 group-hover:bg-amber-600 group-hover:text-white', isNew: true },
-  { name: 'Facturation', icon: DollarSign, href: '/billing', desc: 'Suivi paiements', color: 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white' },
+  { name: 'Fidélité', icon: Star, href: '/loyalty', desc: 'Programme points', color: 'bg-amber-50 text-amber-600 group-hover:bg-amber-600 group-hover:text-white', isNew: true, roles: ['OWNER', 'SECRETARY'] },
+  { name: 'Facturation', icon: DollarSign, href: '/billing', desc: 'Suivi paiements', color: 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white', roles: ['OWNER', 'SECRETARY', 'ACCOUNTANT'] },
   { name: 'Communication', icon: MessageSquare, href: '/communication', desc: 'WhatsApp, SMS', color: 'bg-cyan-50 text-cyan-600 group-hover:bg-cyan-600 group-hover:text-white' },
-  { name: 'Analytique', icon: BarChart3, href: '/analytics', desc: 'Reporting', color: 'bg-violet-50 text-violet-600 group-hover:bg-violet-600 group-hover:text-white' },
-  { name: 'AI Hub', icon: Brain, href: '/ai-hub', desc: 'Intelligence IA', color: 'bg-slate-50 text-slate-600 group-hover:bg-slate-800 group-hover:text-white' },
-  { name: 'Mobile Suite', icon: Smartphone, href: '/mobile', desc: 'Apps Mobiles Elite', color: 'bg-amber-100/50 text-amber-700 group-hover:bg-amber-600 group-hover:text-white', isNew: true },
+  { name: 'Analytique', icon: BarChart3, href: '/analytics', desc: 'Reporting', color: 'bg-violet-50 text-violet-600 group-hover:bg-violet-600 group-hover:text-white', roles: ['OWNER', 'ACCOUNTANT'] },
+  { name: 'AI Hub', icon: Brain, href: '/ai-hub', desc: 'Intelligence IA', color: 'bg-slate-50 text-slate-600 group-hover:bg-slate-800 group-hover:text-white', roles: ['OWNER', 'DENTIST'] },
+  { name: 'Mobile Suite', icon: Smartphone, href: '/mobile', desc: 'Apps Mobiles Elite', color: 'bg-amber-100/50 text-amber-700 group-hover:bg-amber-600 group-hover:text-white', isNew: true, roles: ['OWNER'] },
 ]
 
 const TODAY_APPOINTMENTS = [
@@ -45,6 +48,31 @@ const TODAY_APPOINTMENTS = [
 ]
 
 export default function DashboardPage() {
+  const [user, setUser] = useState<{ role: string, name: string } | null>(null)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    const savedUser = localStorage.getItem('dp_user')
+    if (savedUser) {
+      setUser(JSON.parse(savedUser))
+    }
+  }, [])
+
+  if (!mounted) return <div className="min-h-screen bg-slate-50" />
+
+  const filteredStats = QUICK_STATS.filter(stat => {
+    const roles = (stat as any).roles
+    if (!roles || !user) return true
+    return roles.includes(user.role)
+  })
+
+  const filteredModules = MODULES_GRID.filter(mod => {
+    const roles = (mod as any).roles
+    if (!roles || !user) return true
+    return roles.includes(user.role)
+  })
+
   return (
     <main className="min-h-screen bg-slate-50 p-4 md:p-6 space-y-6 overflow-y-auto">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -56,8 +84,8 @@ export default function DashboardPage() {
           </div>
           <div className="relative z-10 flex items-center justify-between">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.3em] text-slate-400 mb-2">Mardi 18 Février 2026</p>
-              <h2 className="text-3xl font-black tracking-tighter">Bonjour, <span className="text-accent">Dr. Aere Lao</span> 👋</h2>
+              <p className="text-xs font-black uppercase tracking-[0.3em] text-slate-400 mb-2">{new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</p>
+              <h2 className="text-3xl font-black tracking-tighter">Bonjour, <span className="text-accent">{user?.name || 'Dr. Aere Lao'}</span> 👋</h2>
               <p className="text-slate-400 mt-1 font-medium">Vous avez 12 rendez-vous aujourd'hui. 3 patients en attente.</p>
             </div>
             <div className="hidden md:flex gap-3">
@@ -75,7 +103,7 @@ export default function DashboardPage() {
 
         {/* Quick Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {QUICK_STATS.map(stat => (
+          {filteredStats.map(stat => (
             <div key={stat.label} className="bg-white rounded-[2rem] p-6 border border-slate-100 shadow-sm hover:shadow-md transition-all">
               <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3">{stat.label}</p>
               <div className="flex items-end gap-2">
@@ -154,7 +182,7 @@ export default function DashboardPage() {
             <span className="text-[10px] font-bold text-teal-600 bg-teal-50 px-3 py-1 rounded-full">5 nouveaux modules</span>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-            {MODULES_GRID.map((mod) => (
+            {filteredModules.map((mod) => (
               <Link key={mod.name} href={mod.href} className="group">
                 <div className="bg-white h-28 p-4 rounded-3xl border border-slate-100 shadow-sm flex flex-col items-center justify-center gap-2 transition-all duration-300 hover:shadow-lg hover:border-transparent hover:-translate-y-1 relative overflow-hidden">
                   {(mod as any).isNew && (
