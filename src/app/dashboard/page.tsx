@@ -3,7 +3,7 @@ import {
   Calendar, Users, Activity, DollarSign, ShieldCheck, BookOpen,
   MessageSquare, Sparkles, TrendingUp, ArrowRight, Briefcase,
   BarChart3, Share2, Video, CreditCard, Star, Clock, Bell,
-  AlertCircle, CheckCircle, Zap, Brain, Package, Hash
+  AlertCircle, CheckCircle, Zap, Brain, Package, Hash, Smartphone
 } from 'lucide-react'
 
 const QUICK_STATS = [
@@ -32,6 +32,7 @@ const MODULES_GRID = [
   { name: 'Communication', icon: MessageSquare, href: '/communication', desc: 'WhatsApp, SMS', color: 'bg-cyan-50 text-cyan-600 group-hover:bg-cyan-600 group-hover:text-white' },
   { name: 'Analytique', icon: BarChart3, href: '/analytics', desc: 'Reporting', color: 'bg-violet-50 text-violet-600 group-hover:bg-violet-600 group-hover:text-white' },
   { name: 'AI Hub', icon: Brain, href: '/ai-hub', desc: 'Intelligence IA', color: 'bg-slate-50 text-slate-600 group-hover:bg-slate-800 group-hover:text-white' },
+  { name: 'Mobile Suite', icon: Smartphone, href: '/mobile', desc: 'Apps Mobiles Elite', color: 'bg-amber-100/50 text-amber-700 group-hover:bg-amber-600 group-hover:text-white', isNew: true },
 ]
 
 const TODAY_APPOINTMENTS = [
@@ -134,9 +135,9 @@ export default function DashboardPage() {
                     <p className="text-xs text-slate-400">{apt.type} • {apt.room}</p>
                   </div>
                   <span className={`text-[9px] font-black px-2.5 py-1 rounded-full flex-shrink-0 ${apt.status === 'done' ? 'bg-slate-100 text-slate-400' :
-                      apt.status === 'in-progress' ? 'bg-teal-100 text-teal-700' :
-                        apt.status === 'waiting' ? 'bg-orange-100 text-orange-700' :
-                          'bg-blue-100 text-blue-700'
+                    apt.status === 'in-progress' ? 'bg-teal-100 text-teal-700' :
+                      apt.status === 'waiting' ? 'bg-orange-100 text-orange-700' :
+                        'bg-blue-100 text-blue-700'
                     }`}>
                     {apt.status === 'done' ? '✓ Terminé' : apt.status === 'in-progress' ? '● En cours' : apt.status === 'waiting' ? '⏳ En attente' : '📅 Planifié'}
                   </span>

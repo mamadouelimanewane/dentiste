@@ -45,7 +45,8 @@ import {
     ChevronLeft,
     ChevronRight,
     LogOut,
-    User
+    User,
+    Smartphone
 } from 'lucide-react'
 
 export const navigationSections = [
@@ -105,6 +106,16 @@ export const navigationSections = [
             { name: 'Documentation Elite', href: '/documentation', icon: BookOpen },
             { name: 'Elite Academy', href: '/academy', icon: GraduationCap },
             { name: 'Paramètres', href: '/settings', icon: Settings },
+        ]
+    },
+    {
+        title: 'Mobile Apps (Elite)',
+        items: [
+            { name: 'Mobile Hub (Switcher)', href: '/mobile', icon: Smartphone, badge: '4' },
+            { name: 'App Patient', href: '/mobile/client', icon: UserCircle },
+            { name: 'App Admin', href: '/mobile/admin', icon: ShieldCheck },
+            { name: 'App Dentiste', href: '/mobile/staff', icon: Stethoscope },
+            { name: 'App Comptable', href: '/mobile/comptable', icon: BookOpen },
         ]
     }
 ]
