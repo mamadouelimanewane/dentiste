@@ -33,6 +33,8 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
                 setUser({ role: 'OWNER', name: 'Admin Hub' })
             } else if (pathname.includes('/mobile/staff')) {
                 setUser({ role: 'DENTIST', name: 'Dr. Aere Lao' })
+            } else if (pathname.includes('/mobile/client')) {
+                setUser({ role: 'CLIENT', name: 'Jean Valjean' })
             }
         }
     }, [pathname])

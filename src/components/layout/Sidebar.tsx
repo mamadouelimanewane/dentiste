@@ -54,12 +54,12 @@ export const navigationSections = [
         title: 'Gestion Clinique',
         roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'],
         items: [
-            { name: 'Tableau de bord', href: '/dashboard', icon: LayoutDashboard },
+            { name: 'Tableau de bord', href: '/dashboard', icon: LayoutDashboard, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY', 'ACCOUNTANT'] },
             { name: 'Patients Elite', href: '/patients', icon: Users, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
             { name: 'Workflow Clinique', href: '/workflow', icon: Activity, roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
             { name: 'Smile Design Studio', href: '/smile-design', icon: Sparkles, roles: ['OWNER', 'DENTIST'] },
-            { name: 'Agenda Dynamique', href: '/agenda', icon: Calendar },
-            { name: 'Salle d\'Attente', href: '/waiting-room', icon: Clock, badge: '3' },
+            { name: 'Agenda Dynamique', href: '/agenda', icon: Calendar, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
+            { name: 'Salle d\'Attente', href: '/waiting-room', icon: Clock, badge: '3', roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
         ]
     },
     {
@@ -67,10 +67,10 @@ export const navigationSections = [
         roles: ['OWNER', 'DENTIST', 'ASSISTANT'],
         items: [
             { name: 'AI Command Center', href: '/ai-hub', icon: Brain, roles: ['OWNER', 'DENTIST'] },
-            { name: 'AI Radio Lab', href: '/ai-radio-lab', icon: Radiation },
-            { name: 'AI Voice Dictation', href: '/dictation', icon: Mic },
+            { name: 'AI Radio Lab', href: '/ai-radio-lab', icon: Radiation, roles: ['OWNER', 'DENTIST'] },
+            { name: 'AI Voice Dictation', href: '/dictation', icon: Mic, roles: ['OWNER', 'DENTIST'] },
             { name: 'Financial War Room', href: '/financial-war-room', icon: Target, roles: ['OWNER', 'ACCOUNTANT'] },
-            { name: 'Téléconsultation', href: '/teleconsultation', icon: Video, isNew: true },
+            { name: 'Téléconsultation', href: '/teleconsultation', icon: Video, isNew: true, roles: ['OWNER', 'DENTIST', 'CLIENT'] },
         ]
     },
     {
@@ -78,34 +78,36 @@ export const navigationSections = [
         roles: ['OWNER', 'SECRETARY', 'ACCOUNTANT'],
         items: [
             { name: 'GED Elite (Vault)', href: '/ged', icon: HardDrive, roles: ['OWNER', 'DENTIST', 'SECRETARY'] },
-            { name: 'Devis Multi-Options', href: '/quotes', icon: FileCheck },
-            { name: 'Facturation & Actes', href: '/billing', icon: DollarSign },
-            { name: 'Paiement en Ligne', href: '/payment', icon: CreditCard, isNew: true },
+            { name: 'Devis Multi-Options', href: '/quotes', icon: FileCheck, roles: ['OWNER', 'DENTIST', 'SECRETARY'] },
+            { name: 'Facturation & Actes', href: '/billing', icon: DollarSign, roles: ['OWNER', 'SECRETARY', 'ACCOUNTANT'] },
+            { name: 'Paiement en Ligne', href: '/payment', icon: CreditCard, isNew: true, roles: ['OWNER', 'CLIENT', 'SECRETARY', 'ACCOUNTANT'] },
             { name: 'Comptabilité OHADA', href: '/accounting', icon: BookOpen, roles: ['OWNER', 'ACCOUNTANT'] },
         ]
     },
     {
         title: 'Opérations & Cabinet',
-        roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'],
+        roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY', 'CLIENT'],
         items: [
             { name: 'Marketing IA Hub', href: '/marketing', icon: Megaphone, roles: ['OWNER'] },
             { name: 'Gestion Elite (RH)', href: '/management', icon: Briefcase, roles: ['OWNER'] },
             { name: 'Stocks & Intrants', href: '/inventory', icon: Package, roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
             { name: 'Traçabilité Hub', href: '/sterilization', icon: ShieldCheck, roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
-            { name: 'Portail Patient VIP', href: '/portal', icon: UserCircle },
-            { name: 'Programme Fidélité', href: '/loyalty', icon: Star, isNew: true },
+            { name: 'Portail Patient VIP', href: '/portal', icon: UserCircle, roles: ['OWNER', 'CLIENT'] },
+            { name: 'Programme Fidélité', href: '/loyalty', icon: Star, isNew: true, roles: ['OWNER', 'CLIENT', 'SECRETARY'] },
         ]
     },
     {
         title: 'Communication',
+        roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY', 'ACCOUNTANT', 'CLIENT'],
         items: [
-            { name: 'Messagerie Interne', href: '/messages', icon: Hash, isNew: true },
+            { name: 'Messagerie Interne', href: '/messages', icon: Hash, isNew: true, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY', 'ACCOUNTANT'] },
             { name: 'Communication', href: '/communication', icon: MessageSquare },
             { name: 'Notifications', href: '/notifications', icon: Bell, badge: '3' },
         ]
     },
     {
         title: 'Système',
+        roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY', 'ACCOUNTANT'],
         items: [
             { name: 'Documentation Elite', href: '/documentation', icon: BookOpen },
             { name: 'Elite Academy', href: '/academy', icon: GraduationCap },
@@ -144,6 +146,8 @@ export function Sidebar({ className }: { className?: string }) {
                 setUser({ role: 'OWNER', name: 'Admin Hub' })
             } else if (pathname.includes('/mobile/staff')) {
                 setUser({ role: 'DENTIST', name: 'Dr. Aere Lao' })
+            } else if (pathname.includes('/mobile/client')) {
+                setUser({ role: 'CLIENT', name: 'Jean Valjean' })
             }
         }
     }, [pathname])
@@ -267,7 +271,8 @@ export function Sidebar({ className }: { className?: string }) {
                                         user?.role === 'ASSISTANT' ? 'Assistant(e) Elite' :
                                             user?.role === 'SECRETARY' ? 'Secrétaire Elite' :
                                                 user?.role === 'ACCOUNTANT' ? 'Comptable Elite' :
-                                                    'Utilisateur Elite'}
+                                                    user?.role === 'CLIENT' ? 'Patient VIP Elite' :
+                                                        'Utilisateur Elite'}
                             </p>
                         </div>
                         <Link href="/login" className="h-8 w-8 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-500 hover:text-white transition-all">

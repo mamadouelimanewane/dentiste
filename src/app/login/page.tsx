@@ -10,6 +10,7 @@ const DEMO_ACCOUNTS = [
     { role: 'ASSISTANT', name: 'Aminata Sow', email: 'assistant@dentoprestige.sn', password: 'assistant123', color: 'from-teal-500 to-emerald-600', icon: Users, label: 'Assistant(e)' },
     { role: 'SECRETARY', name: 'Moussa Ndiaye', email: 'secretaire@dentoprestige.sn', password: 'secretaire123', color: 'from-purple-500 to-violet-600', icon: ClipboardList, label: 'Secrétaire' },
     { role: 'ACCOUNTANT', name: 'Papa Samba', email: 'compta@dentoprestige.sn', password: 'compta123', color: 'from-orange-500 to-amber-600', icon: DollarSign, label: 'Comptable' },
+    { role: 'CLIENT', name: 'Jean Valjean', email: 'client@dentoprestige.sn', password: 'client123', color: 'from-amber-400 to-amber-600', icon: Users, label: 'Patient VIP' },
 ]
 
 export default function LoginPage() {
