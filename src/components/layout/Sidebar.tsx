@@ -150,7 +150,7 @@ export function Sidebar({ className }: { className?: string }) {
                 {collapsed && <Diamond className="h-6 w-6 text-accent animate-pulse mx-auto" />}
                 <button
                     onClick={() => setCollapsed(!collapsed)}
-                    className="h-8 w-8 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-all flex-shrink-0"
+                    className="hidden lg:flex h-8 w-8 rounded-xl bg-white/5 hover:bg-white/10 items-center justify-center text-slate-400 hover:text-white transition-all flex-shrink-0"
                 >
                     {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
                 </button>

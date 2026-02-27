@@ -12,7 +12,7 @@ const NOTIFICATIONS_PREVIEW = [
     { title: 'Stock critique', desc: 'Lidocaïne — 2 unités restantes', time: '1h', urgent: true },
 ]
 
-export function Header() {
+export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
     const pathname = usePathname()
     const [currentTime, setCurrentTime] = useState(new Date())
     const [showNotifications, setShowNotifications] = useState(false)
@@ -42,8 +42,14 @@ export function Header() {
     return (
         <>
             <header className="h-20 bg-white border-b border-slate-100 flex items-center justify-between px-6 flex-shrink-0 relative z-30">
-                {/* Left: Page Title */}
+                {/* Left: Mobile Menu & Page Title */}
                 <div className="flex items-center gap-4">
+                    <button
+                        onClick={onMenuClick}
+                        className="lg:hidden h-10 w-10 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-all"
+                    >
+                        <Menu className="h-5 w-5" />
+                    </button>
                     <div>
                         <p className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">DentoPrestige Elite</p>
                         <h1 className="text-lg font-black text-slate-900 tracking-tight leading-none">
