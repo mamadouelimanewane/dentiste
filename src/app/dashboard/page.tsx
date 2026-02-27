@@ -63,13 +63,15 @@ export default function DashboardPage() {
 
   const filteredStats = QUICK_STATS.filter(stat => {
     const roles = (stat as any).roles
-    if (!roles || !user) return true
+    if (!roles) return true
+    if (!user) return false
     return roles.includes(user.role)
   })
 
   const filteredModules = MODULES_GRID.filter(mod => {
     const roles = (mod as any).roles
-    if (!roles || !user) return true
+    if (!roles) return true
+    if (!user) return false
     return roles.includes(user.role)
   })
 

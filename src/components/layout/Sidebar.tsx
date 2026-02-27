@@ -140,20 +140,22 @@ export function Sidebar({ className }: { className?: string }) {
     }, [])
 
     const filteredSections = navigationSections.map(section => {
+        // Check if section itself is restricted
+        const sectionRoles = (section as any).roles
+        if (sectionRoles) {
+            if (!user) return null
+            if (!sectionRoles.includes(user.role)) return null
+        }
+
         // Filter items within section
         const filteredItems = section.items.filter(item => {
             const allowed = (item as any).roles
-            if (!allowed || !user) return true
+            if (!allowed) return true
+            if (!user) return false
             return allowed.includes(user.role)
         })
 
         if (filteredItems.length === 0) return null
-
-        // Check if section itself is restricted
-        const sectionRoles = (section as any).roles
-        if (sectionRoles && user && !sectionRoles.includes(user.role)) {
-            return null
-        }
 
         return { ...section, items: filteredItems }
     }).filter(Boolean) as typeof navigationSections

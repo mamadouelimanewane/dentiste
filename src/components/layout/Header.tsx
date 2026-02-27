@@ -36,11 +36,14 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
     // Filter allowed items
     const allowedItems = navigationSections.flatMap(section => {
         const sectionRoles = (section as any).roles
-        if (sectionRoles && user && !sectionRoles.includes(user.role)) return []
+        if (sectionRoles) {
+            if (!user || !sectionRoles.includes(user.role)) return []
+        }
 
         return section.items.filter(item => {
             const itemRoles = (item as any).roles
-            if (!itemRoles || !user) return true
+            if (!itemRoles) return true
+            if (!user) return false
             return itemRoles.includes(user.role)
         })
     })
