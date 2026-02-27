@@ -257,7 +257,8 @@ export function Sidebar({ className }: { className?: string }) {
                                     user?.role === 'DENTIST' ? 'Praticien Elite' :
                                         user?.role === 'ASSISTANT' ? 'Assistant(e) Elite' :
                                             user?.role === 'SECRETARY' ? 'Secrétaire Elite' :
-                                                'Utilisateur Elite'}
+                                                user?.role === 'ACCOUNTANT' ? 'Comptable Elite' :
+                                                    'Utilisateur Elite'}
                             </p>
                         </div>
                         <Link href="/login" className="h-8 w-8 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-500 hover:text-white transition-all">

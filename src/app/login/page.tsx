@@ -2,13 +2,14 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Diamond, Eye, EyeOff, Lock, Mail, Sparkles, Shield, Stethoscope, Users, ClipboardList } from 'lucide-react'
+import { Diamond, Eye, EyeOff, Lock, Mail, Sparkles, Shield, Stethoscope, Users, ClipboardList, DollarSign } from 'lucide-react'
 
 const DEMO_ACCOUNTS = [
     { role: 'OWNER', name: 'Dr. Aere Lao', email: 'admin@dentoprestige.sn', password: 'admin123', color: 'from-red-500 to-rose-600', icon: Shield, label: 'Administrateur' },
     { role: 'DENTIST', name: 'Dr. Fatou Diallo', email: 'dentiste@dentoprestige.sn', password: 'dentiste123', color: 'from-blue-500 to-indigo-600', icon: Stethoscope, label: 'Praticien' },
     { role: 'ASSISTANT', name: 'Aminata Sow', email: 'assistant@dentoprestige.sn', password: 'assistant123', color: 'from-teal-500 to-emerald-600', icon: Users, label: 'Assistant(e)' },
     { role: 'SECRETARY', name: 'Moussa Ndiaye', email: 'secretaire@dentoprestige.sn', password: 'secretaire123', color: 'from-purple-500 to-violet-600', icon: ClipboardList, label: 'Secrétaire' },
+    { role: 'ACCOUNTANT', name: 'Papa Samba', email: 'compta@dentoprestige.sn', password: 'compta123', color: 'from-orange-500 to-amber-600', icon: DollarSign, label: 'Comptable' },
 ]
 
 export default function LoginPage() {
