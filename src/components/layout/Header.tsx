@@ -25,8 +25,17 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
         const savedUser = localStorage.getItem('dp_user')
         if (savedUser) {
             setUser(JSON.parse(savedUser))
+        } else {
+            // Auto-detect role for demo pages
+            if (pathname.includes('/mobile/comptable')) {
+                setUser({ role: 'ACCOUNTANT', name: 'Papa Samba' })
+            } else if (pathname.includes('/mobile/admin')) {
+                setUser({ role: 'OWNER', name: 'Admin Hub' })
+            } else if (pathname.includes('/mobile/staff')) {
+                setUser({ role: 'DENTIST', name: 'Dr. Aere Lao' })
+            }
         }
-    }, [])
+    }, [pathname])
 
     useEffect(() => {
         const timer = setInterval(() => setCurrentTime(new Date()), 1000)
