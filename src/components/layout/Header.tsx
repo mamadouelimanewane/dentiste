@@ -35,6 +35,9 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
                 setUser({ role: 'DENTIST', name: 'Dr. Aere Lao' })
             } else if (pathname.includes('/mobile/client')) {
                 setUser({ role: 'CLIENT', name: 'Jean Valjean' })
+            } else {
+                // Default for demo cabinet
+                setUser({ role: 'OWNER', name: 'Dr. Aere Lao' })
             }
         }
     }, [pathname])
