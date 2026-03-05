@@ -10,6 +10,8 @@ export async function GET() {
                 firstName: true,
                 lastName: true,
                 email: true,
+                phone: true,
+                updatedAt: true,
                 dob: true,
             },
             orderBy: {
