@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server'
 import OpenAI from 'openai'
 
 const openai = new OpenAI({
-    apiKey: process.env.DEEPSEEK_API_KEY,
-    baseURL: process.env.DEEPSEEK_BASE_URL,
+    apiKey: process.env.DEEPSEEK_API_KEY || 'missing-key',
+    baseURL: process.env.DEEPSEEK_BASE_URL || 'https://api.deepseek.com',
 })
 
 export async function POST(req: Request) {
