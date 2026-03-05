@@ -3,12 +3,12 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id        String   @id @default(uuid())
+  id        String   @id @default(uuid()) @map("_id")
   email     String   @unique
   name      String?
   password  String?  // Hashed
@@ -24,7 +24,7 @@ model User {
 }
 
 model Patient {
-  id          String   @id @default(uuid())
+  id          String   @id @default(uuid()) @map("_id")
   firstName   String
   lastName    String
   email       String?   @unique
@@ -61,7 +61,7 @@ model Patient {
 }
 
 model PatientToothState {
-  id        String   @id @default(uuid())
+  id        String   @id @default(uuid()) @map("_id")
   patientId String
   patient   Patient  @relation(fields: [patientId], references: [id])
   toothNumber Int
@@ -73,7 +73,7 @@ model PatientToothState {
 }
 
 model CommunicationLog {
-  id        String   @id @default(uuid())
+  id        String   @id @default(uuid()) @map("_id")
   patientId String
   patient   Patient  @relation(fields: [patientId], references: [id])
   type      String   // SMS, EMAIL, WHATSAPP, PORTAL_NOTICE
@@ -84,7 +84,7 @@ model CommunicationLog {
 }
 
 model TreatmentPlan {
-  id          String   @id @default(uuid())
+  id          String   @id @default(uuid()) @map("_id")
   patientId   String
   patient     Patient  @relation(fields: [patientId], references: [id])
   title       String
@@ -97,7 +97,7 @@ model TreatmentPlan {
 }
 
 model TreatmentPlanStep {
-  id              String        @id @default(uuid())
+  id              String        @id @default(uuid()) @map("_id")
   treatmentPlanId String
   treatmentPlan   TreatmentPlan @relation(fields: [treatmentPlanId], references: [id])
   title           String
@@ -109,7 +109,7 @@ model TreatmentPlanStep {
 }
 
 model PlanningSimulation {
-  id          String   @id @default(uuid())
+  id          String   @id @default(uuid()) @map("_id")
   patientId   String
   patient     Patient  @relation(fields: [patientId], references: [id])
   type        String   // SMILE_DESIGN, IMPLANT_GUIDE, ORTHO_SIMUL
@@ -121,7 +121,7 @@ model PlanningSimulation {
 }
 
 model ParoChart {
-  id        String   @id @default(uuid())
+  id        String   @id @default(uuid()) @map("_id")
   patientId String
   patient   Patient  @relation(fields: [patientId], references: [id])
   date      DateTime @default(now())
@@ -130,7 +130,7 @@ model ParoChart {
 }
 
 model Playbook {
-  id          String   @id @default(uuid())
+  id          String   @id @default(uuid()) @map("_id")
   title       String
   category    String   
   content     String   
@@ -140,7 +140,7 @@ model Playbook {
 }
 
 model KnowledgeBase {
-  id          String   @id @default(uuid())
+  id          String   @id @default(uuid()) @map("_id")
   title       String
   content     String
   category    String
@@ -151,7 +151,7 @@ model KnowledgeBase {
 }
 
 model FamilyLink {
-  id        String   @id @default(uuid())
+  id        String   @id @default(uuid()) @map("_id")
   originId  String
   targetId  String
   origin    Patient  @relation("FamilyLinkOrigin", fields: [originId], references: [id])
@@ -161,7 +161,7 @@ model FamilyLink {
 }
 
 model AuditLog {
-  id        String   @id @default(uuid())
+  id        String   @id @default(uuid()) @map("_id")
   userId    String?
   user      User?    @relation(fields: [userId], references: [id])
   patientId String?
@@ -175,7 +175,7 @@ model AuditLog {
 }
 
 model Document {
-  id            String   @id @default(uuid())
+  id            String   @id @default(uuid()) @map("_id")
   patientId     String
   patient       Patient  @relation(fields: [patientId], references: [id])
   name          String
@@ -195,7 +195,7 @@ model Document {
 }
 
 model Image {
-  id        String   @id @default(uuid())
+  id        String   @id @default(uuid()) @map("_id")
   patientId String
   patient   Patient  @relation(fields: [patientId], references: [id])
   url       String
@@ -207,7 +207,7 @@ model Image {
 }
 
 model StockItem {
-  id          String   @id @default(uuid())
+  id          String   @id @default(uuid()) @map("_id")
   name        String
   category    String
   quantity    Int
@@ -222,7 +222,7 @@ model StockItem {
 }
 
 model SterilizationLog {
-  id          String   @id @default(uuid())
+  id          String   @id @default(uuid()) @map("_id")
   operator    String
   machineId   String
   cycleNumber Int
@@ -234,7 +234,7 @@ model SterilizationLog {
 }
 
 model LabWork {
-  id          String   @id @default(uuid())
+  id          String   @id @default(uuid()) @map("_id")
   patientId   String
   labName     String
   type        String   
@@ -250,7 +250,7 @@ model LabWork {
 }
 
 model Appointment {
-  id        String   @id @default(uuid())
+  id        String   @id @default(uuid()) @map("_id")
   patientId String
   patient   Patient  @relation(fields: [patientId], references: [id])
   dentistId String?
@@ -271,7 +271,7 @@ model Appointment {
 }
 
 model Treatment {
-  id            String   @id @default(uuid())
+  id            String   @id @default(uuid()) @map("_id")
   patientId     String
   patient       Patient  @relation(fields: [patientId], references: [id])
   dentistId     String?
@@ -290,7 +290,7 @@ model Treatment {
 }
 
 model Invoice {
-  id        String   @id @default(uuid())
+  id        String   @id @default(uuid()) @map("_id")
   patientId String
   patient   Patient  @relation(fields: [patientId], references: [id])
   amount    Float
@@ -306,7 +306,7 @@ model Invoice {
 }
 
 model InvoiceItem {
-  id        String   @id @default(uuid())
+  id        String   @id @default(uuid()) @map("_id")
   invoiceId String
   invoice   Invoice  @relation(fields: [invoiceId], references: [id])
   code      String?  
@@ -317,7 +317,7 @@ model InvoiceItem {
 }
 
 model Integration {
-  id           String    @id @default(uuid())
+  id           String    @id @default(uuid()) @map("_id")
   provider     String    // Stripe, Sirona, Google Calendar, etc.
   type         String    // PAYMENT, IMAGING, CALENDAR, API, TELECONSULT
   status       String    @default("DISCONNECTED") // CONNECTED, DISCONNECTED, ERROR
@@ -330,7 +330,7 @@ model Integration {
 }
 
 model MedicalHistory {
-  id         String   @id @default(uuid())
+  id         String   @id @default(uuid()) @map("_id")
   patientId  String   @unique
   patient    Patient  @relation(fields: [patientId], references: [id])
   conditions String?  
@@ -340,7 +340,7 @@ model MedicalHistory {
 }
 
 model Consent {
-  id             String    @id @default(uuid())
+  id             String    @id @default(uuid()) @map("_id")
   patientId      String
   patient        Patient   @relation(fields: [patientId], references: [id])
   title          String
@@ -356,7 +356,7 @@ model Consent {
 }
 
 model Task {
-  id        String   @id @default(uuid())
+  id        String   @id @default(uuid()) @map("_id")
   patientId String?
   patient   Patient? @relation(fields: [patientId], references: [id])
   title     String
@@ -369,7 +369,7 @@ model Task {
 }
 
 model Quote {
-  id        String   @id @default(uuid())
+  id        String   @id @default(uuid()) @map("_id")
   patientId String
   patient   Patient  @relation(fields: [patientId], references: [id])
   title     String
@@ -379,7 +379,7 @@ model Quote {
 }
 
 model TimeEntry {
-  id        String   @id @default(uuid())
+  id        String   @id @default(uuid()) @map("_id")
   userId    String?
   user      User?    @relation(fields: [userId], references: [id])
   patientId String?
@@ -391,7 +391,7 @@ model TimeEntry {
 }
 
 model Prescription {
-  id        String   @id @default(uuid())
+  id        String   @id @default(uuid()) @map("_id")
   patientId String
   patient   Patient  @relation(fields: [patientId], references: [id])
   date      DateTime @default(now())
@@ -402,7 +402,7 @@ model Prescription {
 }
 
 model PrescriptionItem {
-  id             String       @id @default(uuid())
+  id             String       @id @default(uuid()) @map("_id")
   prescriptionId String
   prescription   Prescription @relation(fields: [prescriptionId], references: [id])
   medicationName String
@@ -412,7 +412,7 @@ model PrescriptionItem {
 }
 
 model Journal {
-  id        String   @id @default(uuid())
+  id        String   @id @default(uuid()) @map("_id")
   code      String   @unique
   name      String
   entries   JournalEntry[]
@@ -421,7 +421,7 @@ model Journal {
 }
 
 model Account {
-  id        String   @id @default(uuid())
+  id        String   @id @default(uuid()) @map("_id")
   code      String   @unique
   name      String
   type      String   // ASSET, LIABILITY, EQUITY, INCOME, EXPENSE
@@ -431,7 +431,7 @@ model Account {
 }
 
 model JournalEntry {
-  id        String   @id @default(uuid())
+  id        String   @id @default(uuid()) @map("_id")
   journalId String
   journal   Journal  @relation(fields: [journalId], references: [id])
   accountId String
