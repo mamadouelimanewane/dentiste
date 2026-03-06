@@ -28,6 +28,8 @@ export async function GET() {
 export async function POST(req: Request) {
     try {
         const body = await req.json()
+
+        // 1. Création du rendez-vous
         const appointment = await prisma.appointment.create({
             data: {
                 patientId: body.patientId,
@@ -38,11 +40,39 @@ export async function POST(req: Request) {
                 status: body.status || 'CONFIRMED',
                 notes: body.notes,
                 isSurgery: !!body.isSurgery
+            },
+            include: {
+                patient: true
             }
         })
+
+        // 2. Génération automatique du rappel (Simulation Elite Connect)
+        const patientName = `${appointment.patient.firstName} ${appointment.patient.lastName}`
+        const dateStr = new Date(body.start).toLocaleDateString('fr-FR', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            hour: '2-digit',
+            minute: '2-digit'
+        })
+
+        const smsContent = `Bonjour ${appointment.patient.firstName}, votre rendez-vous chez DentoPrestige pour "${body.title}" est confirmé le ${dateStr}. Merci de prévenir en cas d'empêchement.`
+
+        await prisma.communicationLog.create({
+            data: {
+                patientId: body.patientId,
+                type: 'WHATSAPP',
+                category: 'REMINDER',
+                content: smsContent,
+                status: 'DELIVERED'
+            }
+        })
+
+        console.log(`[ELITE CONNECT] WhatsApp envoyé à ${appointment.patient.phone}: ${smsContent}`)
+
         return NextResponse.json(appointment)
     } catch (error) {
-        console.error("Failed to create appointment:", error)
+        console.error("Failed to create appointment & reminder:", error)
         return NextResponse.json({ error: "Failed to create appointment" }, { status: 500 })
     }
 }
