@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -23,7 +23,8 @@ import {
     Shapes,
     Sparkles,
     Eye,
-    Loader2
+    Loader2,
+    Plus
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { motion, AnimatePresence } from "framer-motion"
@@ -31,6 +32,7 @@ import { motion, AnimatePresence } from "framer-motion"
 export default function LabPage() {
     const [isLoading, setIsLoading] = useState(true)
     const [labWorks, setLabWorks] = useState<any[]>([])
+    const [activeTab, setActiveTab] = useState<'WORKS' | 'CATALOG' | 'STOCKS'>('WORKS')
 
     const fetchLabWorks = async () => {
         setIsLoading(true)
@@ -94,7 +96,7 @@ export default function LabPage() {
                         ))}
                     </div>
                     <Button className="bg-slate-900 text-white font-black uppercase tracking-widest text-[10px] h-14 rounded-2xl px-8 shadow-xl">
-                        <PlusIcon className="h-4 w-4 mr-2" /> Nouveau Travail
+                        <Plus className="h-4 w-4 mr-2" /> Nouveau Travail
                     </Button>
                 </div>
             </div>
@@ -238,7 +240,7 @@ export default function LabPage() {
                             </Card>
                         ))}
                         <Card className="rounded-[2rem] border-dashed border-2 border-slate-200 flex flex-col items-center justify-center text-slate-400 p-8 cursor-pointer hover:bg-slate-50 hover:border-slate-400 transition-all">
-                            <PlusIcon className="h-8 w-8 mb-2 opacity-20" />
+                            <Plus className="h-8 w-8 mb-2 opacity-20" />
                             <span className="text-[10px] font-black uppercase tracking-widest">Nouveau Matériau</span>
                         </Card>
                     </motion.div>
@@ -299,11 +301,5 @@ export default function LabPage() {
     )
 }
 
-function PlusIcon({ className }: { className?: string }) {
-    return (
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className={className}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-        </svg>
-    )
-}
+
 
