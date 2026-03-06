@@ -206,7 +206,7 @@ export default function AgendaPage() {
                     <p className="text-slate-500 font-medium tracking-tight">Gestion intelligente des ressources et rappels multi-canaux.</p>
                 </div>
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
                     <div className="bg-white border-none shadow-luxury rounded-2xl p-1 flex items-center">
                         {locations.map(loc => (
                             <Button
@@ -214,25 +214,25 @@ export default function AgendaPage() {
                                 variant="ghost"
                                 size="sm"
                                 className={cn(
-                                    "rounded-xl px-4 text-[10px] font-black uppercase tracking-widest h-9",
+                                    "rounded-xl px-3 text-[9px] font-black uppercase tracking-widest h-8",
                                     activeLocation === loc.id ? "bg-slate-900 text-white" : "text-slate-400"
                                 )}
                                 onClick={() => setActiveLocation(loc.id)}
                             >
-                                <MapPin className="h-3 w-3 mr-2" /> {loc.name}
+                                <MapPin className="h-3 w-3 mr-1" /> {loc.name.split(' ')[0]}
                             </Button>
                         ))}
                     </div>
 
                     <div className="flex items-center bg-white rounded-2xl border shadow-luxury p-1">
-                        <Button variant="ghost" size="icon" className="rounded-xl h-10 w-10 text-slate-400" onClick={() => setCurrentDate(subWeeks(currentDate, 1))}>
-                            <ChevronLeft className="h-5 w-5" />
+                        <Button variant="ghost" size="icon" className="rounded-xl h-8 w-8 text-slate-400" onClick={() => setCurrentDate(subWeeks(currentDate, 1))}>
+                            <ChevronLeft className="h-4 w-4" />
                         </Button>
-                        <div className="px-6 text-sm font-black capitalize text-slate-900 tracking-tight min-w-[140px] text-center">
-                            {format(currentDate, 'MMMM yyyy', { locale: fr })}
+                        <div className="px-3 text-[11px] font-black capitalize text-slate-900 tracking-tight min-w-[100px] text-center">
+                            {format(currentDate, 'MMM yyyy', { locale: fr })}
                         </div>
-                        <Button variant="ghost" size="icon" className="rounded-xl h-10 w-10 text-slate-400" onClick={() => setCurrentDate(addWeeks(currentDate, 1))}>
-                            <ChevronRight className="h-5 w-5" />
+                        <Button variant="ghost" size="icon" className="rounded-xl h-8 w-8 text-slate-400" onClick={() => setCurrentDate(addWeeks(currentDate, 1))}>
+                            <ChevronRight className="h-4 w-4" />
                         </Button>
                     </div>
 
@@ -241,43 +241,43 @@ export default function AgendaPage() {
                             variant="ghost"
                             size="sm"
                             className={cn(
-                                "rounded-xl px-4 text-[10px] font-black uppercase tracking-widest h-9",
+                                "rounded-xl px-3 text-[9px] font-black uppercase tracking-widest h-8",
                                 view === 'CALENDAR' ? "bg-slate-900 text-white" : "text-slate-400 hover:text-slate-900"
                             )}
                             onClick={() => setView('CALENDAR')}
                         >
-                            Vue Calendrier
+                            Agenda
                         </Button>
                         <Button
                             variant="ghost"
                             size="sm"
                             id="btn-waiting-list"
                             className={cn(
-                                "rounded-xl px-4 text-[10px] font-black uppercase tracking-widest h-9",
+                                "rounded-xl px-3 text-[9px] font-black uppercase tracking-widest h-8",
                                 view === 'WAITING_LIST' ? "bg-gold text-white" : "text-slate-400 hover:text-gold"
                             )}
                             onClick={() => setView('WAITING_LIST')}
                         >
-                            Liste d'Attente
+                            Attente
                         </Button>
                         <Button
                             variant="ghost"
                             size="sm"
                             className={cn(
-                                "rounded-xl px-4 text-[10px] font-black uppercase tracking-widest h-9",
+                                "rounded-xl px-3 text-[9px] font-black uppercase tracking-widest h-8",
                                 view === 'RESOURCES' ? "bg-indigo-600 text-white" : "text-slate-400 hover:text-indigo-600"
                             )}
                             onClick={() => setView('RESOURCES')}
                         >
-                            Ressources
+                            Staff
                         </Button>
                     </div>
 
                     <Button
                         onClick={() => setIsBookingOpen(true)}
-                        className="bg-slate-900 text-white font-black uppercase tracking-widest text-xs h-14 rounded-2xl px-8 shadow-xl hover:scale-105 transition-all"
+                        className="bg-slate-900 text-white font-black uppercase tracking-widest text-[9px] h-10 rounded-2xl px-5 shadow-xl hover:scale-105 transition-all"
                     >
-                        <Plus className="mr-2 h-5 w-5 text-gold" /> Réserver Créneau
+                        <Plus className="mr-1 h-3 w-3 text-gold" /> Réserver
                     </Button>
                 </div>
             </div>
