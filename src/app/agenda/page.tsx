@@ -234,105 +234,106 @@ export default function AgendaPage() {
                         </Button>
                     </div>
 
-                    <Dialog open={isBookingOpen} onOpenChange={setIsBookingOpen}>
-                        <DialogTrigger asChild>
-                            <Button className="bg-slate-900 text-white font-black uppercase tracking-widest text-xs h-14 rounded-2xl px-8 shadow-xl hover:scale-105 transition-all">
-                                <Plus className="mr-2 h-5 w-5 text-gold" /> Réserver Créneau
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[425px] bg-white rounded-[2rem] border-none shadow-luxury">
-                            <DialogHeader>
-                                <DialogTitle className="text-2xl font-black tracking-tight text-slate-900">
-                                    Nouveau <span className="text-gold">Rendez-vous</span>
-                                </DialogTitle>
-                            </DialogHeader>
-                            <form onSubmit={handleBooking} className="space-y-4 py-4">
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Patient</label>
-                                    <Select value={formData.patientId} onValueChange={(v) => {
-                                        const p = patients.find(pat => pat.id === v)
-                                        setFormData({ ...formData, patientId: v, title: p ? `Consultation ${p.firstName}` : '' })
-                                    }}>
-                                        <SelectTrigger className="rounded-xl border-slate-100 bg-slate-50/50 h-12">
-                                            <SelectValue placeholder="Sélectionner un patient" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {patients.map(p => (
-                                                <SelectItem key={p.id} value={p.id}>
-                                                    {p.firstName} {p.lastName}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Titre / Motif</label>
-                                    <Input
-                                        value={formData.title}
-                                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                        placeholder="ex: Détartrage, Pose implant..."
-                                        className="rounded-xl border-slate-100 bg-slate-50/50 h-12"
-                                    />
-                                </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Type de Soin</label>
-                                        <Select value={formData.type} onValueChange={(v) => setFormData({ ...formData, type: v })}>
-                                            <SelectTrigger className="rounded-xl border-slate-100 bg-slate-50/50 h-10">
-                                                <SelectValue />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="CONSULTATION">Consultation</SelectItem>
-                                                <SelectItem value="SURGERY">Chirurgie</SelectItem>
-                                                <SelectItem value="ESTHETIC">Esthétique</SelectItem>
-                                                <SelectItem value="EMERGENCY">Urgence</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Durée (min)</label>
-                                        <Input
-                                            type="number"
-                                            value={formData.duration}
-                                            onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                                            className="rounded-xl border-slate-100 bg-slate-50/50 h-10"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Date</label>
-                                        <Input
-                                            type="date"
-                                            value={formData.date}
-                                            onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                                            className="rounded-xl border-slate-100 bg-slate-50/50 h-10"
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Heure</label>
-                                        <Input
-                                            type="time"
-                                            value={formData.time}
-                                            onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                                            className="rounded-xl border-slate-100 bg-slate-50/50 h-10"
-                                        />
-                                    </div>
-                                </div>
-                                <Button
-                                    type="submit"
-                                    disabled={isSaving}
-                                    className="w-full bg-slate-900 text-gold font-black uppercase tracking-widest h-14 rounded-2xl shadow-xl mt-4"
-                                >
-                                    {isSaving ? "Enregistrement..." : "Confirmer la Réservation"}
-                                </Button>
-                            </form>
-                        </DialogContent>
-                    </Dialog>
+                    <Button
+                        onClick={() => setIsBookingOpen(true)}
+                        className="bg-slate-900 text-white font-black uppercase tracking-widest text-xs h-14 rounded-2xl px-8 shadow-xl hover:scale-105 transition-all"
+                    >
+                        <Plus className="mr-2 h-5 w-5 text-gold" /> Réserver Créneau
+                    </Button>
                 </div>
             </div>
 
-            {/* Main Area with Sidebar */}
+            <Dialog open={isBookingOpen} onOpenChange={setIsBookingOpen}>
+                <DialogContent className="sm:max-w-[425px] bg-white rounded-[2rem] border-none shadow-luxury">
+                    <DialogHeader>
+                        <DialogTitle className="text-2xl font-black tracking-tight text-slate-900">
+                            Nouveau <span className="text-gold">Rendez-vous</span>
+                        </DialogTitle>
+                    </DialogHeader>
+                    <form onSubmit={handleBooking} className="space-y-4 py-4">
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Patient</label>
+                            <Select value={formData.patientId} onValueChange={(v) => {
+                                const p = patients.find(pat => pat.id === v)
+                                setFormData({ ...formData, patientId: v, title: p ? `Consultation ${p.firstName}` : '' })
+                            }}>
+                                <SelectTrigger className="rounded-xl border-slate-100 bg-slate-50/50 h-12">
+                                    <SelectValue placeholder="Sélectionner un patient" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {patients.map(p => (
+                                        <SelectItem key={p.id} value={p.id}>
+                                            {p.firstName} {p.lastName}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Titre / Motif</label>
+                            <Input
+                                value={formData.title}
+                                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                placeholder="ex: Détartrage, Pose implant..."
+                                className="rounded-xl border-slate-100 bg-slate-50/50 h-12"
+                            />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Type de Soin</label>
+                                <Select value={formData.type} onValueChange={(v) => setFormData({ ...formData, type: v })}>
+                                    <SelectTrigger className="rounded-xl border-slate-100 bg-slate-50/50 h-10">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="CONSULTATION">Consultation</SelectItem>
+                                        <SelectItem value="SURGERY">Chirurgie</SelectItem>
+                                        <SelectItem value="ESTHETIC">Esthétique</SelectItem>
+                                        <SelectItem value="EMERGENCY">Urgence</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Durée (min)</label>
+                                <Input
+                                    type="number"
+                                    value={formData.duration}
+                                    onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+                                    className="rounded-xl border-slate-100 bg-slate-50/50 h-10"
+                                />
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Date</label>
+                                <Input
+                                    type="date"
+                                    value={formData.date}
+                                    onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                                    className="rounded-xl border-slate-100 bg-slate-50/50 h-10"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Heure</label>
+                                <Input
+                                    type="time"
+                                    value={formData.time}
+                                    onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                                    className="rounded-xl border-slate-100 bg-slate-50/50 h-10"
+                                />
+                            </div>
+                        </div>
+                        <Button
+                            type="submit"
+                            disabled={isSaving}
+                            className="w-full bg-slate-900 text-gold font-black uppercase tracking-widest h-14 rounded-2xl shadow-xl mt-4"
+                        >
+                            {isSaving ? "Enregistrement..." : "Confirmer la Réservation"}
+                        </Button>
+                    </form>
+                </DialogContent>
+            </Dialog>
+
             <div className="flex-1 flex gap-8 min-h-0">
                 {/* Left Sidebar: Waiting List */}
                 <div className="w-80 flex flex-col gap-6 shrink-0">
