@@ -449,14 +449,14 @@ export default function AgendaPage() {
                     {view === 'CALENDAR' && (
                         <div className="flex flex-col h-full animate-in fade-in duration-700">
                             {/* Day Headers */}
-                            <div className="flex border-b border-slate-50 bg-slate-50/10 shrink-0">
-                                <div className="w-24 border-r border-slate-50 flex flex-col items-center justify-center p-6 shrink-0 bg-slate-50/20">
+                            <div className="flex border-b border-slate-200 bg-slate-50/10 shrink-0">
+                                <div className="w-24 border-r border-slate-200 flex flex-col items-center justify-center p-6 shrink-0 bg-slate-50/20">
                                     <CalendarIcon className="h-5 w-5 text-slate-300" />
                                 </div>
                                 {weekDays.map(day => {
                                     const isToday = format(day, 'ddMMyyyy') === format(new Date(), 'ddMMyyyy')
                                     return (
-                                        <div key={day.toISOString()} className={cn("flex-1 p-6 text-center border-r border-slate-50 last:border-0", isToday ? "bg-gold/5" : "hover:bg-slate-50/30 transition-colors")}>
+                                        <div key={day.toISOString()} className={cn("flex-1 p-6 text-center border-r border-slate-200 last:border-0", isToday ? "bg-gold/5" : "hover:bg-slate-50/30 transition-colors")}>
                                             <div className={cn("text-[10px] font-black uppercase tracking-[0.3em] mb-1.5", isToday ? "text-gold" : "text-slate-400")}>
                                                 {format(day, 'EEE', { locale: fr }).replace('.', '')}
                                             </div>
@@ -479,14 +479,14 @@ export default function AgendaPage() {
 
                                 <div className="relative min-h-[1920px]">
                                     {hours.map(hour => (
-                                        <div key={hour} className="flex h-40 border-b border-slate-50 last:border-0 relative group">
-                                            <div className="w-24 border-r border-slate-50 bg-slate-50/20 flex flex-col items-center justify-start pt-8 text-[11px] text-slate-400 sticky left-0 font-black z-30 shrink-0">
+                                        <div key={hour} className="flex h-40 border-b border-slate-200 last:border-0 relative group">
+                                            <div className="w-24 border-r border-slate-200 bg-slate-50/20 flex flex-col items-center justify-start pt-8 text-[11px] text-slate-400 sticky left-0 font-black z-30 shrink-0">
                                                 <span className="text-slate-900">{hour}:00</span>
                                             </div>
 
                                             {weekDays.map((_, dayIndex) => (
-                                                <div key={dayIndex} className="flex-1 border-r border-slate-50 last:border-0 relative">
-                                                    <div className="absolute top-1/2 w-full border-t border-dashed border-slate-100 pointer-events-none" />
+                                                <div key={dayIndex} className="flex-1 border-r border-slate-200 last:border-0 relative">
+                                                    <div className="absolute top-1/2 w-full border-t border-dashed border-slate-200 pointer-events-none" />
                                                 </div>
                                             ))}
                                         </div>
