@@ -20,6 +20,17 @@ import {
     RefreshCw
 } from 'lucide-react'
 import { motion } from 'framer-motion'
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+    DialogFooter,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { toast } from "sonner"
 
 export default function AgendaPage() {
     const [currentDate, setCurrentDate] = useState(new Date())
@@ -27,6 +38,20 @@ export default function AgendaPage() {
     const [isLoading, setIsLoading] = useState(true)
     const [appointments, setAppointments] = useState<any[]>([])
     const [currentTime, setCurrentTime] = useState(new Date())
+
+    // Booking form state
+    const [isBookingOpen, setIsBookingOpen] = useState(false)
+    const [isSaving, setIsSaving] = useState(false)
+    const [patients, setPatients] = useState<any[]>([])
+    const [formData, setFormData] = useState({
+        patientId: '',
+        title: '',
+        type: 'CONSULTATION',
+        date: format(new Date(), 'yyyy-MM-dd'),
+        time: '09:00',
+        duration: '30',
+        isSurgery: false
+    })
 
     // Update current time every minute
     useEffect(() => {
@@ -43,6 +68,16 @@ export default function AgendaPage() {
         { id: 'CABINET_DAKAR', name: 'Elite Dakar Plateau' },
         { id: 'CABINET_ALMADIES', name: 'Almadies Health Center' },
     ]
+
+    const fetchPatients = async () => {
+        try {
+            const res = await fetch('/api/patients')
+            const data = await res.json()
+            if (Array.isArray(data)) setPatients(data)
+        } catch (e) {
+            console.error(e)
+        }
+    }
 
     const fetchAppointments = async () => {
         setIsLoading(true)
@@ -61,7 +96,48 @@ export default function AgendaPage() {
 
     useEffect(() => {
         fetchAppointments()
+        fetchPatients()
     }, [])
+
+    const handleBooking = async (e: React.FormEvent) => {
+        e.preventDefault()
+        if (!formData.patientId || !formData.title) {
+            toast.error("Veuillez remplir tous les champs obligatoires")
+            return
+        }
+
+        setIsSaving(true)
+        try {
+            const startStr = `${formData.date}T${formData.time}:00`
+            const startDateObj = new Date(startStr)
+            const endDateObj = new Date(startDateObj.getTime() + parseInt(formData.duration) * 60000)
+
+            const res = await fetch('/api/appointments', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    patientId: formData.patientId,
+                    title: formData.title,
+                    type: formData.type,
+                    start: startDateObj.toISOString(),
+                    end: endDateObj.toISOString(),
+                    isSurgery: formData.type === 'SURGERY'
+                })
+            })
+
+            if (res.ok) {
+                toast.success("Rendez-vous réservé avec succès")
+                setIsBookingOpen(false)
+                fetchAppointments()
+            } else {
+                toast.error("Erreur lors de la réservation")
+            }
+        } catch (e) {
+            toast.error("Erreur de connexion au serveur")
+        } finally {
+            setIsSaving(false)
+        }
+    }
 
     const getAppPosition = (app: any) => {
         const start = new Date(app.start)
@@ -138,9 +214,98 @@ export default function AgendaPage() {
                         </Button>
                     </div>
 
-                    <Button className="bg-slate-900 text-white font-black uppercase tracking-widest text-xs h-14 rounded-2xl px-8 shadow-xl hover:scale-105 transition-all">
-                        <Plus className="mr-2 h-5 w-5 text-gold" /> Réserver Créneau
-                    </Button>
+                    <Dialog open={isBookingOpen} onOpenChange={setIsBookingOpen}>
+                        <DialogTrigger asChild>
+                            <Button className="bg-slate-900 text-white font-black uppercase tracking-widest text-xs h-14 rounded-2xl px-8 shadow-xl hover:scale-105 transition-all">
+                                <Plus className="mr-2 h-5 w-5 text-gold" /> Réserver Créneau
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px] bg-white rounded-[2rem] border-none shadow-luxury">
+                            <DialogHeader>
+                                <DialogTitle className="text-2xl font-black tracking-tight text-slate-900">
+                                    Nouveau <span className="text-gold">Rendez-vous</span>
+                                </DialogTitle>
+                            </DialogHeader>
+                            <form onSubmit={handleBooking} className="space-y-4 py-4">
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Patient</label>
+                                    <Select value={formData.patientId} onValueChange={(v) => setFormData({ ...formData, patientId: v })}>
+                                        <SelectTrigger className="rounded-xl border-slate-100 bg-slate-50/50 h-12">
+                                            <SelectValue placeholder="Sélectionner un patient" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {patients.map(p => (
+                                                <SelectItem key={p.id} value={p.id}>
+                                                    {p.firstName} {p.lastName}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Titre / Motif</label>
+                                    <Input
+                                        value={formData.title}
+                                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                        placeholder="ex: Détartrage, Pose implant..."
+                                        className="rounded-xl border-slate-100 bg-slate-50/50 h-12"
+                                    />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Type de Soin</label>
+                                        <Select value={formData.type} onValueChange={(v) => setFormData({ ...formData, type: v })}>
+                                            <SelectTrigger className="rounded-xl border-slate-100 bg-slate-50/50 h-10">
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="CONSULTATION">Consultation</SelectItem>
+                                                <SelectItem value="SURGERY">Chirurgie</SelectItem>
+                                                <SelectItem value="ESTHETIC">Esthétique</SelectItem>
+                                                <SelectItem value="EMERGENCY">Urgence</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Durée (min)</label>
+                                        <Input
+                                            type="number"
+                                            value={formData.duration}
+                                            onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+                                            className="rounded-xl border-slate-100 bg-slate-50/50 h-10"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Date</label>
+                                        <Input
+                                            type="date"
+                                            value={formData.date}
+                                            onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                                            className="rounded-xl border-slate-100 bg-slate-50/50 h-10"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Heure</label>
+                                        <Input
+                                            type="time"
+                                            value={formData.time}
+                                            onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                                            className="rounded-xl border-slate-100 bg-slate-50/50 h-10"
+                                        />
+                                    </div>
+                                </div>
+                                <Button
+                                    type="submit"
+                                    disabled={isSaving}
+                                    className="w-full bg-slate-900 text-gold font-black uppercase tracking-widest h-14 rounded-2xl shadow-xl mt-4"
+                                >
+                                    {isSaving ? "Enregistrement..." : "Confirmer la Réservation"}
+                                </Button>
+                            </form>
+                        </DialogContent>
+                    </Dialog>
                 </div>
             </div>
 
