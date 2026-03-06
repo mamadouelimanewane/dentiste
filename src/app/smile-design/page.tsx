@@ -21,7 +21,8 @@ import {
     History,
     CheckCircle2,
     Camera,
-    X
+    X,
+    ArrowRight
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
