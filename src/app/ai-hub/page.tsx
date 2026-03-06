@@ -22,6 +22,7 @@ import {
     Mic
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
+import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 
 export default function AIHubPage() {
@@ -56,6 +57,24 @@ export default function AIHubPage() {
             setIsListening(false)
             setVoiceStatus("Session vocale interrompue")
         }
+    }
+
+    const executeCommand = () => {
+        if (!command) return toast.error("Veuillez entrer une commande")
+
+        setIsListening(true)
+        setVoiceStatus("Analyse sémantique...")
+
+        setTimeout(() => {
+            setVoiceStatus("Exécution en cours...")
+            setTimeout(() => {
+                setIsListening(false)
+                setVoiceStatus("Commande complétée avec succès")
+                toast.success(`Action IA terminée: "${command}"`)
+                setCommand("")
+                setTimeout(() => setVoiceStatus("En attente de commande..."), 3000)
+            }, 1500)
+        }, 1000)
     }
 
     const stats = [
@@ -151,7 +170,10 @@ export default function AIHubPage() {
                             >
                                 <Mic className="h-5 w-5" />
                             </Button>
-                            <Button className="bg-white text-indigo-900 font-black uppercase text-[10px] tracking-widest h-12 rounded-2xl px-6">
+                            <Button
+                                onClick={executeCommand}
+                                className="bg-white text-indigo-900 font-black uppercase text-[10px] tracking-widest h-12 rounded-2xl px-6 hover:bg-indigo-50 transition-colors"
+                            >
                                 Exécuter Command
                             </Button>
                         </div>
@@ -159,7 +181,13 @@ export default function AIHubPage() {
 
                     <div className="flex gap-6">
                         {['Analyse RDV', 'Rappel Patients', 'Audit Sté', 'Optimisation CA'].map((tag) => (
-                            <span key={tag} className="text-[10px] font-black uppercase tracking-widest text-indigo-400/60 hover:text-indigo-400 cursor-pointer transition-colors">#{tag}</span>
+                            <span
+                                key={tag}
+                                onClick={() => setCommand(`Lancer le module #${tag}`)}
+                                className="text-[10px] font-black uppercase tracking-widest text-indigo-400/60 hover:text-indigo-400 cursor-pointer transition-colors"
+                            >
+                                #{tag}
+                            </span>
                         ))}
                     </div>
                 </div>
