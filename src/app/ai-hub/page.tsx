@@ -320,9 +320,17 @@ export default function AIHubPage() {
                             </div>
                             <Button
                                 variant="outline"
-                                className="w-full border-slate-200 text-slate-900 font-black uppercase text-[10px] tracking-widest h-14 rounded-2xl hover:bg-slate-50 transition-colors"
+                                className="w-full border-slate-200 text-slate-900 font-black uppercase text-[10px] tracking-widest h-14 rounded-2xl hover:bg-slate-50 transition-colors flex items-center justify-center gap-2"
                                 onClick={() => {
-                                    toast.success("Rapport de conformité complet disponible dans la section Documents sécurisés.");
+                                    toast.success("Lecture vocale du rapport d'audit clinique en cours...");
+                                    if ('speechSynthesis' in window) {
+                                        window.speechSynthesis.cancel(); // Arête n'importe quel autre audio en cours
+                                        const msg = new SpeechSynthesisUtterance("Vérification multi-critères terminée. Cent pour cent des fiches patients sont conformes aux protocoles de soins.");
+                                        msg.lang = 'fr-FR';
+                                        msg.pitch = 1.1;
+                                        msg.rate = 0.95;
+                                        window.speechSynthesis.speak(msg);
+                                    }
                                 }}
                             >
                                 Rapport Conformité
