@@ -323,13 +323,30 @@ export default function AIHubPage() {
                                 className="w-full border-slate-200 text-slate-900 font-black uppercase text-[10px] tracking-widest h-14 rounded-2xl hover:bg-slate-50 transition-colors flex items-center justify-center gap-2"
                                 onClick={() => {
                                     toast.success("Lecture vocale du rapport d'audit clinique en cours...");
-                                    if ('speechSynthesis' in window) {
-                                        window.speechSynthesis.cancel(); // Arête n'importe quel autre audio en cours
-                                        const msg = new SpeechSynthesisUtterance("Vérification multi-critères terminée. Cent pour cent des fiches patients sont conformes aux protocoles de soins.");
-                                        msg.lang = 'fr-FR';
-                                        msg.pitch = 1.1;
-                                        msg.rate = 0.95;
-                                        window.speechSynthesis.speak(msg);
+                                    try {
+                                        if ('speechSynthesis' in window) {
+                                            window.speechSynthesis.cancel(); // Arrête l'audio précédent
+                                            const msg = new SpeechSynthesisUtterance("Vérification multi-critères terminée. Cent pour cent des fiches patients sont conformes aux protocoles de soins.");
+
+                                            // Tenter de forcer une voix française si chargée
+                                            const voices = window.speechSynthesis.getVoices();
+                                            const frVoice = voices.find(v => v.lang.startsWith('fr'));
+                                            if (frVoice) msg.voice = frVoice;
+
+                                            msg.lang = 'fr-FR';
+                                            msg.pitch = 1.0;
+                                            msg.rate = 1.0;
+                                            msg.volume = 1.0; // Volume maximal
+
+                                            msg.onerror = (e) => console.error("Erreur de synthèse vocale:", e);
+
+                                            window.speechSynthesis.speak(msg);
+                                        } else {
+                                            toast.error("Votre navigateur ne supporte pas la synthèse vocale.");
+                                        }
+                                    } catch (err) {
+                                        console.error(err);
+                                        toast.error("Erreur d'exécution audio.");
                                     }
                                 }}
                             >
