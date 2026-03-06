@@ -11,7 +11,7 @@ import {
 import { cn } from "@/lib/utils"
 
 type Priority = 'HIGH' | 'MEDIUM' | 'LOW'
-type ColumnId = 'VISIT_UPCOMING' | 'TREATMENT_PLAN' | 'PROCEDURE' | 'FOLLOW_UP'
+type ColumnId = 'VISIT_UPCOMING' | 'TREATMENT_PLAN' | 'PROCEDURE' | 'FOLLOW_UP' | 'COMPLETED'
 
 interface Patient {
     id: string
@@ -27,6 +27,7 @@ const COLUMNS: { id: ColumnId; title: string; color: string; bg: string }[] = [
     { id: 'TREATMENT_PLAN', title: 'Plan de Soin / Devis', color: 'bg-amber-500', bg: 'bg-amber-50/50' },
     { id: 'PROCEDURE', title: 'En Traitement', color: 'bg-teal-500', bg: 'bg-teal-50/50' },
     { id: 'FOLLOW_UP', title: 'Suivi Post-Op', color: 'bg-fuchsia-500', bg: 'bg-fuchsia-50/50' },
+    { id: 'COMPLETED', title: 'Terminé / Satisfaction', color: 'bg-emerald-500', bg: 'bg-emerald-50/50' },
 ]
 
 const PRIORITY_COLORS: Record<Priority, string> = {

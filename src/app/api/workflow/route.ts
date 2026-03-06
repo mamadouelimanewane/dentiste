@@ -52,6 +52,22 @@ export async function PATCH(req: Request) {
             console.log(`[ELITE CONNECT] Suivi Post-Op automatisé pour ${patient.firstName}`)
         }
 
+        // Déclencher le message de fin de traitement
+        if (workflowStatus === 'COMPLETED') {
+            const message = `Félicitations ${patient.firstName} ! Votre traitement est maintenant terminé. 🎉 Nous espérons que votre nouveau sourire vous comble de bonheur. Dans quelques jours, vous recevrez un petit lien pour nous donner votre avis. À très bientôt !`
+
+            await prisma.communicationLog.create({
+                data: {
+                    patientId: patient.id,
+                    type: 'WHATSAPP',
+                    category: 'EDUCATION',
+                    content: message,
+                    status: 'DELIVERED'
+                }
+            })
+            console.log(`[ELITE CONNECT] Fin de traitement célébrée pour ${patient.firstName}`)
+        }
+
         return NextResponse.json(patient)
     } catch (error) {
         console.error("Failed to update patient workflow:", error)

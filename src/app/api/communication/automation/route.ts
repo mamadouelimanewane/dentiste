@@ -19,6 +19,8 @@ export async function POST(req: Request) {
             return await sendAnnualRecall()
         } else if (action === 'send_pending_invoices') {
             return await sendPendingInvoices()
+        } else if (action === 'send_satisfaction_surveys') {
+            return await sendSatisfactionSurveys()
         }
 
         return NextResponse.json(
@@ -393,6 +395,64 @@ Dr. Aere Lao - Clinique Dentaire`
         summary: {
             total: results.length,
             totalAmount: results.reduce((sum, r) => sum + r.amount, 0)
+        },
+        results
+    })
+}
+
+// Envoyer des enquêtes de satisfaction J+7 après la fin du traitement
+async function sendSatisfactionSurveys() {
+    const results = []
+    const sevenDaysAgo = addDays(new Date(), -7)
+
+    // Récupérer les patients qui ont terminé leur parcours il y a 7 jours
+    const patientsFinished7DaysAgo = await prisma.patient.findMany({
+        where: {
+            workflowStatus: 'COMPLETED',
+            updatedAt: {
+                gte: startOfDay(sevenDaysAgo),
+                lte: endOfDay(sevenDaysAgo)
+            }
+        },
+        select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            phone: true
+        }
+    })
+
+    for (const patient of patientsFinished7DaysAgo) {
+        if (!patient.phone) continue
+
+        const message = `Bonjour ${patient.firstName}, cela fait une semaine que votre traitement est terminé. Votre avis compte beaucoup pour nous ! ⭐ Auriez-vous 30 secondes pour nous donner une note ? Cliquez ici : https://g.page/dentoprestige/review. Merci ! 🦷`
+
+        try {
+            await prisma.communicationLog.create({
+                data: {
+                    patientId: patient.id,
+                    type: 'WHATSAPP',
+                    category: 'RECALL',
+                    content: message,
+                    status: 'SENT'
+                }
+            })
+
+            results.push({
+                patientId: patient.id,
+                patientName: `${patient.firstName} ${patient.lastName}`,
+                status: 'SENT'
+            })
+        } catch (error) {
+            console.error(`Erreur envoi satisfaction pour ${patient.id}:`, error)
+        }
+    }
+
+    return NextResponse.json({
+        success: true,
+        action: 'send_satisfaction_surveys',
+        summary: {
+            total: results.length
         },
         results
     })
