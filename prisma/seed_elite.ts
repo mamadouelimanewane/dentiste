@@ -6,8 +6,9 @@ const prisma = new PrismaClient()
 async function main() {
     console.log('--- DEBUT DU SEED ELITE FULL (SENEGAL / FCFA) ---')
 
-    // Nettoyage préventif (Optionnel, attention en prod)
-    // await prisma.transaction.deleteMany() ...
+    // Nettoyage préventif
+    // Nettoyage des rendez-vous seulement pour le test agenda
+    await prisma.appointment.deleteMany()
 
     // 1. UTILISATEURS (Équipe Clinique)
     const drLao = await prisma.user.upsert({
@@ -70,28 +71,48 @@ async function main() {
     // 3. RENDEZ-VOUS & TRAITEMENTS
     const today = new Date()
 
-    // RDV Passé
-    await prisma.appointment.create({
-        data: {
+    // RDV Passé (Mercredi de cette semaine si on est vendredi)
+    const rdvPasseStart = new Date(today);
+    rdvPasseStart.setDate(today.getDate() - 2);
+    rdvPasseStart.setHours(10, 0, 0, 0);
+
+    const rdvPasseEnd = new Date(rdvPasseStart);
+    rdvPasseEnd.setHours(11, 0, 0, 0);
+
+    await prisma.appointment.upsert({
+        where: { id: 'seed-apt-1' },
+        update: {},
+        create: {
+            id: 'seed-apt-1',
             patientId: pMamadou.id,
             title: 'Consultation Initiale & Panoramique',
-            start: new Date(new Date().setDate(today.getDate() - 2)),
-            end: new Date(new Date().setDate(today.getDate() - 2)),
+            start: rdvPasseStart,
+            end: rdvPasseEnd,
             type: 'CONSULTATION',
             status: 'COMPLETED',
         }
     })
 
-    // RDV Futur
-    await prisma.appointment.create({
-        data: {
+    // RDV Futur (Lundi prochain)
+    const rdvFuturStart = new Date(today);
+    rdvFuturStart.setDate(today.getDate() + 3);
+    rdvFuturStart.setHours(14, 0, 0, 0);
+
+    const rdvFuturEnd = new Date(rdvFuturStart);
+    rdvFuturEnd.setHours(15, 30, 0, 0);
+
+    await prisma.appointment.upsert({
+        where: { id: 'seed-apt-2' },
+        update: {},
+        create: {
+            id: 'seed-apt-2',
             patientId: pMariama.id,
             title: 'Pose Facettes (Secteur Antérieur)',
-            start: new Date(new Date().setDate(today.getDate() + 3)),
-            end: new Date(new Date().setDate(today.getDate() + 3)),
+            start: rdvFuturStart,
+            end: rdvFuturEnd,
             type: 'ESTHETIC',
             status: 'CONFIRMED',
-            isSurgery: false
+            isSurgery: true
         }
     })
 
