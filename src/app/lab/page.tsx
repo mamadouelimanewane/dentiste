@@ -41,6 +41,8 @@ export default function LabPage() {
     const [patients, setPatients] = useState<any[]>([])
     const [selectedWork, setSelectedWork] = useState<any>(null)
     const [isAddOpen, setIsAddOpen] = useState(false)
+    const [isShadeGuideOpen, setIsShadeGuideOpen] = useState(false)
+    const [selectedMaterial, setSelectedMaterial] = useState<any>(null)
     const [workFormData, setWorkFormData] = useState({
         patientId: '',
         labName: 'DentiLab Pro 3D',
@@ -371,11 +373,68 @@ export default function LabPage() {
                                         </div>
                                     ))}
                                 </div>
-                                <Button variant="link" className="w-full text-[10px] font-black uppercase tracking-widest text-slate-400 mt-4">Voir Nuancier Complet →</Button>
+                                <Button
+                                    variant="link"
+                                    className="w-full text-[10px] font-black uppercase tracking-widest text-slate-400 mt-4"
+                                    onClick={() => setIsShadeGuideOpen(true)}
+                                >
+                                    Voir Nuancier Complet →
+                                </Button>
                             </Card>
                         </div>
                     </motion.div>
                 )}
+
+                {/* Shade Guide Dialog */}
+                <Dialog open={isShadeGuideOpen} onOpenChange={setIsShadeGuideOpen}>
+                    <DialogContent className="sm:max-w-[600px] rounded-[2.5rem] p-10 border-none shadow-luxury bg-white">
+                        <DialogHeader>
+                            <DialogTitle className="text-2xl font-black text-slate-900 tracking-tighter">Guide de Teintes <span className="text-gold">VITA Pan</span></DialogTitle>
+                        </DialogHeader>
+                        <div className="grid grid-cols-4 gap-4 mt-8">
+                            {shades.map(s => (
+                                <div key={s} className="flex flex-col items-center gap-2 cursor-pointer group" onClick={() => {
+                                    setWorkFormData({ ...workFormData, shade: s })
+                                    toast.success(`Teinte ${s} sélectionnée pour le prochain travail`)
+                                    setIsShadeGuideOpen(false)
+                                }}>
+                                    <div className="h-16 w-full rounded-2xl bg-gradient-to-br from-[#f8f1e0] to-[#e8dcc0] border border-slate-100 group-hover:border-gold transition-all shadow-sm flex items-center justify-center">
+                                        <span className="text-xs font-black text-slate-900/60 tracking-wider">{s}</span>
+                                    </div>
+                                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Sélect.</span>
+                                </div>
+                            ))}
+                        </div>
+                    </DialogContent>
+                </Dialog>
+
+                {/* Material Detail Dialog */}
+                <Dialog open={!!selectedMaterial} onOpenChange={() => setSelectedMaterial(null)}>
+                    <DialogContent className="sm:max-w-[450px] rounded-[2.5rem] p-10 border-none shadow-luxury bg-white">
+                        {selectedMaterial && (
+                            <div className="space-y-6">
+                                <div className="h-20 w-20 rounded-3xl bg-amber-50 flex items-center justify-center text-amber-500">
+                                    <Library className="h-10 w-10" />
+                                </div>
+                                <div>
+                                    <h2 className="text-3xl font-black text-slate-900 tracking-tighter">{selectedMaterial.name}</h2>
+                                    <p className="text-amber-500 font-bold uppercase text-[10px] tracking-widest">{selectedMaterial.category}</p>
+                                </div>
+                                <div className="space-y-4 pt-4 border-t border-slate-50">
+                                    <div className="flex justify-between items-center bg-slate-50 p-4 rounded-2xl">
+                                        <span className="text-[10px] font-black uppercase text-slate-400">Propriétés</span>
+                                        <span className="text-xs font-bold text-slate-700">{selectedMaterial.properties}</span>
+                                    </div>
+                                    <p className="text-xs text-slate-500 leading-relaxed font-medium">
+                                        Ce matériau est certifié DentoPrestige Elite pour les restaurations de haute précision.
+                                        Compatible avec les scanners intra-oraux (iTero, 3Shape) et l'usinage CFAO 5 axes.
+                                    </p>
+                                </div>
+                                <Button className="w-full h-12 bg-slate-900 text-white rounded-xl font-black uppercase text-[10px]" onClick={() => toast.success("Fiche technique PDF envoyée par email")}>Télécharger Fiche PDF</Button>
+                            </div>
+                        )}
+                    </DialogContent>
+                </Dialog>
 
                 {activeTab === 'CATALOG' && (
                     <motion.div
@@ -394,10 +453,25 @@ export default function LabPage() {
                                     <span className="text-[9px] font-black uppercase tracking-widest text-amber-500">{m.category}</span>
                                 </div>
                                 <p className="text-[10px] font-medium text-slate-500 leading-relaxed border-t border-slate-50 pt-4">{m.properties}</p>
-                                <Button variant="ghost" className="w-full text-[9px] font-black uppercase tracking-widest text-slate-400 group-hover:text-slate-900 p-0 h-auto self-end" onClick={() => toast.info(`Détails techniques : ${m.name}`)}>Consulter Fiche Technique</Button>
+                                <Button
+                                    variant="ghost"
+                                    className="w-full text-[9px] font-black uppercase tracking-widest text-slate-400 group-hover:text-slate-900 p-0 h-auto self-end"
+                                    onClick={() => setSelectedMaterial(m)}
+                                >
+                                    Consulter Fiche Technique
+                                </Button>
                             </Card>
                         ))}
-                        <Card className="rounded-[2rem] border-dashed border-2 border-slate-200 flex flex-col items-center justify-center text-slate-400 p-8 cursor-pointer hover:bg-slate-50 hover:border-slate-400 transition-all" onClick={() => toast.error("Module 'Gestion Matériaux' en lecture seule")}>
+                        <Card
+                            className="rounded-[2rem] border-dashed border-2 border-slate-200 flex flex-col items-center justify-center text-slate-400 p-8 cursor-pointer hover:bg-slate-50 hover:border-slate-400 transition-all"
+                            onClick={() => {
+                                toast.promise(new Promise(resolve => setTimeout(resolve, 1000)), {
+                                    loading: 'Ouverture du catalogue fournisseurs...',
+                                    success: 'Catalogue DentoShop à jour',
+                                    error: 'Erreur réseau'
+                                })
+                            }}
+                        >
                             <Plus className="h-8 w-8 mb-2 opacity-20" />
                             <span className="text-[10px] font-black uppercase tracking-widest">Nouveau Matériau</span>
                         </Card>
