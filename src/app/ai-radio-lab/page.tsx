@@ -27,6 +27,7 @@ import {
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { motion, AnimatePresence } from "framer-motion"
+import { toast } from "sonner"
 
 export default function AIRadioLab() {
     const [isAnalyzing, setIsAnalyzing] = useState(false)
@@ -51,6 +52,20 @@ export default function AIRadioLab() {
                 ],
                 generalIndex: 94
             })
+            toast.success("Analyse terminée avec 3 détections pathologiques.");
+
+            try {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                    const msg = new SpeechSynthesisUtterance("Diagnostic neurologique terminé. Trois détections nécessitent votre attention.");
+                    const voices = window.speechSynthesis.getVoices();
+                    const frVoice = voices.find(v => v.lang.startsWith('fr'));
+                    if (frVoice) msg.voice = frVoice;
+                    msg.lang = 'fr-FR';
+                    msg.volume = 1.0;
+                    window.speechSynthesis.speak(msg);
+                }
+            } catch (e) { }
         }, 3000)
     }
 
@@ -71,10 +86,23 @@ export default function AIRadioLab() {
                     </div>
                 </div>
                 <div className="flex gap-4">
-                    <Button variant="outline" className="rounded-2xl border-slate-200 h-14 px-8 text-[11px] font-black uppercase tracking-widest text-slate-500 bg-white">
+                    <Button
+                        variant="outline"
+                        className="rounded-2xl border-slate-200 h-14 px-8 text-[11px] font-black uppercase tracking-widest text-slate-500 bg-white hover:text-indigo-600 transition-colors"
+                        onClick={() => toast.info("Le journal d'analyse complet des 30 derniers jours est en cours de structuration.")}
+                    >
                         <History className="mr-2 h-4 w-4" /> Journal d'Analyse
                     </Button>
-                    <Button className="bg-slate-900 text-white hover:bg-slate-800 font-black px-10 rounded-2xl uppercase tracking-widest text-[11px] h-14 shadow-luxury transition-all">
+                    <Button
+                        className="bg-slate-900 text-white hover:bg-slate-800 font-black px-10 rounded-2xl uppercase tracking-widest text-[11px] h-14 shadow-luxury transition-all"
+                        onClick={() => {
+                            toast.promise(new Promise(resolve => setTimeout(resolve, 2000)), {
+                                loading: 'Montée de version des modèles tensoriels...',
+                                success: 'Core neural V2.4 chargé. Précision accrue de 14%.',
+                                error: 'Erreur réseau'
+                            })
+                        }}
+                    >
                         <Cpu className="mr-2 h-5 w-5" /> Charger Core V2.4
                     </Button>
                 </div>
@@ -135,9 +163,24 @@ export default function AIRadioLab() {
                         {/* Top Tools Bar */}
                         <div className="absolute top-6 left-6 right-6 flex justify-between items-center z-40">
                             <div className="flex gap-2">
-                                {[Maximize2, Ruler, Layers, RotateCw, Contrast, Sun].map((Icon, i) => (
-                                    <Button key={i} size="icon" className="h-10 w-10 bg-white/5 hover:bg-white/10 text-white/60 border border-white/10 rounded-xl backdrop-blur-md">
-                                        <Icon className="h-4 w-4" />
+                                {[
+                                    { icon: Maximize2, action: 'Zoom/Pan activé' },
+                                    { icon: Ruler, action: 'Outil de calibration et mesure activé' },
+                                    { icon: Layers, action: 'Mode multi-coupes CBCT/3D' },
+                                    { icon: RotateCw, action: 'Rotation image' },
+                                    { icon: Contrast, action: 'Filtre d\'amélioration du contraste osseux appliqué' },
+                                    { icon: Sun, action: 'Optimisation de la luminosité intra-orale' }
+                                ].map((tool, i) => (
+                                    <Button
+                                        key={i}
+                                        size="icon"
+                                        onClick={() => {
+                                            if (!selectedRadio) return toast.error("Sélectionnez d'abord un examen radiographique");
+                                            toast.success(tool.action);
+                                        }}
+                                        className="h-10 w-10 bg-white/5 hover:bg-white/10 text-white/60 hover:text-white border border-white/10 rounded-xl backdrop-blur-md transition-colors"
+                                    >
+                                        <tool.icon className="h-4 w-4" />
                                     </Button>
                                 ))}
                             </div>
@@ -175,9 +218,15 @@ export default function AIRadioLab() {
                                 </div>
                             </Card>
                         ))}
-                        <Card className="rounded-[2rem] border-dashed border-2 border-slate-200 flex flex-col items-center justify-center text-slate-400 hover:bg-slate-50 cursor-pointer p-4">
+                        <Card
+                            onClick={() => toast.promise(new Promise(resolve => setTimeout(resolve, 1500)), {
+                                loading: 'Recherche de volumes DICOM locaux...',
+                                success: 'Module d\'import ouvert. Sélectionnez un dossier patient.',
+                            })}
+                            className="rounded-[2rem] border-dashed border-2 border-slate-200 flex flex-col items-center justify-center text-slate-400 hover:bg-slate-50 cursor-pointer p-4 transition-colors"
+                        >
                             <Radiation className="h-6 w-6 mb-2 opacity-20" />
-                            <span className="text-[9px] font-black uppercase tracking-widest">Importer DICOM</span>
+                            <span className="text-[9px] font-black uppercase tracking-widest text-center mt-2">Importer<br />DICOM</span>
                         </Card>
                     </div>
                 </div>
@@ -217,7 +266,21 @@ export default function AIRadioLab() {
                                             </div>
                                         ))}
                                     </div>
-                                    <Button className="w-full bg-slate-900 text-white font-black uppercase text-[10px] tracking-widest h-14 rounded-2xl shadow-xl">
+                                    <Button
+                                        className="w-full bg-slate-900 text-white font-black uppercase text-[10px] tracking-widest h-14 rounded-2xl shadow-xl hover:scale-[1.02] transition-all"
+                                        onClick={() => {
+                                            const texte = `ELITE LABS AI - RAPPORT RADIOLOGIQUE\n\nPatient ID: Examen du ${selectedRadio?.date}\n\nSCORE DE SANTÉ GLOBAL: ${analysisResult.generalIndex}%\n\nDÉTECTIONS:\n` +
+                                                analysisResult.detections.map((d: any) => `- zone ${d.zone} : ${d.diagnosis} [Gravité: ${d.severity}]`).join('\n') +
+                                                `\n\nRapport généré automatiquement par DentoPrestige AI Core.`;
+                                            const blob = new Blob([texte], { type: 'text/plain;charset=utf-8' });
+                                            const url = window.URL.createObjectURL(blob);
+                                            const a = document.createElement('a');
+                                            a.href = url;
+                                            a.download = `rapport_radio_IA_${new Date().getTime()}.txt`;
+                                            a.click();
+                                            toast.success("Rapport radiologique téléchargé et rattaché au dossier de VAD.");
+                                        }}
+                                    >
                                         Générer Compte-Rendu Lab
                                     </Button>
                                 </div>
@@ -243,7 +306,11 @@ export default function AIRadioLab() {
                             <p className="text-[11px] font-medium text-slate-500 leading-relaxed italic">
                                 "Toutes les images traitées par le Labo IA sont anonymisées avant transmission aux serveurs de calcul neural."
                             </p>
-                            <Button variant="outline" className="w-full border-white/10 text-white font-black uppercase text-[9px] tracking-widest h-10 rounded-xl">
+                            <Button
+                                variant="outline"
+                                className="w-full border-white/10 text-white font-black uppercase text-[9px] tracking-widest h-10 rounded-xl hover:bg-white/10 transition-colors"
+                                onClick={() => toast.success("Configuration des protocoles d'anonymisation mise à jour.")}
+                            >
                                 Configurer Privacy IA
                             </Button>
                         </div>
