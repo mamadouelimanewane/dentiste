@@ -1,12 +1,12 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
     Plus, MoreHorizontal, Clock, Activity, Zap, Bot, Filter,
-    ChevronRight, Trash2, X
+    ChevronRight, Trash2, X, Loader2
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -14,7 +14,7 @@ type Priority = 'HIGH' | 'MEDIUM' | 'LOW'
 type ColumnId = 'VISIT_UPCOMING' | 'TREATMENT_PLAN' | 'PROCEDURE' | 'FOLLOW_UP'
 
 interface Patient {
-    id: number
+    id: string
     name: string
     status: ColumnId
     priority: Priority
@@ -35,24 +35,43 @@ const PRIORITY_COLORS: Record<Priority, string> = {
     LOW: 'bg-teal-500',
 }
 
-const INITIAL_PATIENTS: Patient[] = [
-    { id: 1, name: 'Jean Valjean', status: 'VISIT_UPCOMING', priority: 'HIGH', date: 'Auj, 14:00', procedure: 'Implant 16' },
-    { id: 2, name: 'Moussa Diouf', status: 'TREATMENT_PLAN', priority: 'MEDIUM', date: 'Demain, 09:00', procedure: 'Orthodontie' },
-    { id: 3, name: 'Adja Kone', status: 'PROCEDURE', priority: 'HIGH', date: 'En cours', procedure: 'Extraction 48' },
-    { id: 4, name: 'Awa Ndiaye', status: 'FOLLOW_UP', priority: 'LOW', date: 'Hier', procedure: 'Contrôle Blanchiment' },
-    { id: 5, name: 'Oumar Sy', status: 'VISIT_UPCOMING', priority: 'MEDIUM', date: 'Auj, 16:30', procedure: 'Détartrage' },
-]
-
 export default function WorkflowPage() {
-    const [patients, setPatients] = useState<Patient[]>(INITIAL_PATIENTS)
-    const [draggedId, setDraggedId] = useState<number | null>(null)
+    const [patients, setPatients] = useState<Patient[]>([])
+    const [isLoading, setIsLoading] = useState(true)
+    const [draggedId, setDraggedId] = useState<string | null>(null)
     const [overColumn, setOverColumn] = useState<ColumnId | null>(null)
     const [addingIn, setAddingIn] = useState<ColumnId | null>(null)
     const [newName, setNewName] = useState('')
     const [newProcedure, setNewProcedure] = useState('')
-    const [menuOpen, setMenuOpen] = useState<number | null>(null)
+    const [menuOpen, setMenuOpen] = useState<string | null>(null)
 
-    const handleDragStart = (id: number) => {
+    const fetchPatients = async () => {
+        setIsLoading(true)
+        try {
+            const res = await fetch('/api/workflow')
+            const items = await res.json()
+            if (Array.isArray(items)) {
+                setPatients(items.map((p: any) => ({
+                    id: p.id,
+                    name: `${p.firstName} ${p.lastName}`,
+                    status: (p.workflowStatus as ColumnId) || 'VISIT_UPCOMING',
+                    priority: 'MEDIUM', // Placeholder logic
+                    date: new Date(p.updatedAt).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' }),
+                    procedure: 'Consultation Elite'
+                })))
+            }
+        } catch (e) {
+            console.error(e)
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        fetchPatients()
+    }, [])
+
+    const handleDragStart = (id: string) => {
         setDraggedId(id)
     }
 
@@ -61,40 +80,55 @@ export default function WorkflowPage() {
         setOverColumn(colId)
     }
 
+    const updateStatus = async (id: string, colId: ColumnId) => {
+        setPatients(prev => prev.map(p => p.id === id ? { ...p, status: colId } : p))
+        try {
+            await fetch('/api/workflow', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, workflowStatus: colId })
+            })
+        } catch (e) {
+            console.error(e)
+            // Restore?
+        }
+    }
+
     const handleDrop = (colId: ColumnId) => {
         if (draggedId === null) return
-        setPatients(prev => prev.map(p => p.id === draggedId ? { ...p, status: colId } : p))
+        updateStatus(draggedId, colId)
         setDraggedId(null)
         setOverColumn(null)
     }
 
-    const handleAdd = (colId: ColumnId) => {
+    const handleAdd = async (colId: ColumnId) => {
         if (!newName.trim()) return
-        const newPatient: Patient = {
-            id: Date.now(),
+        // Ideally cross-ref existing patients or create new one via patients API
+        // For simulation/quick add in workflow:
+        setPatients(prev => [...prev, {
+            id: 'temp-' + Date.now(),
             name: newName,
             status: colId,
             priority: 'MEDIUM',
-            date: 'À l\'instant',
-            procedure: newProcedure || 'Consultation'
-        }
-        setPatients(prev => [...prev, newPatient])
+            date: 'Auj.',
+            procedure: newProcedure || 'Soin Rapide'
+        }])
         setNewName('')
         setNewProcedure('')
         setAddingIn(null)
     }
 
-    const moveNext = (id: number) => {
-        setPatients(prev => prev.map(p => {
-            if (p.id !== id) return p
-            const idx = COLUMNS.findIndex(c => c.id === p.status)
-            if (idx === COLUMNS.length - 1) return p
-            return { ...p, status: COLUMNS[idx + 1].id }
-        }))
+    const moveNext = (id: string) => {
+        const p = patients.find(p => p.id === id)
+        if (!p) return
+        const idx = COLUMNS.findIndex(c => c.id === p.status)
+        if (idx < COLUMNS.length - 1) {
+            updateStatus(id, COLUMNS[idx + 1].id)
+        }
         setMenuOpen(null)
     }
 
-    const removePatient = (id: number) => {
+    const removePatient = (id: string) => {
         setPatients(prev => prev.filter(p => p.id !== id))
     }
 
@@ -139,7 +173,12 @@ export default function WorkflowPage() {
                         </div>
 
                         <div className="flex flex-col gap-4">
-                            {patients.filter(p => p.status === col.id).map(p => (
+                            {isLoading ? (
+                                <div className="h-40 flex flex-col items-center justify-center text-slate-300">
+                                    <Loader2 className="h-8 w-8 animate-spin mb-2" />
+                                    <p className="text-[10px] font-black uppercase tracking-widest">Chargement...</p>
+                                </div>
+                            ) : patients.filter(p => p.status === col.id).map(p => (
                                 <div
                                     key={p.id}
                                     draggable
@@ -224,13 +263,17 @@ export default function WorkflowPage() {
                     <div className="h-16 w-16 bg-slate-900 rounded-[2rem] flex items-center justify-center text-white shadow-2xl shrink-0"><Bot className="h-8 w-8" /></div>
                     <div>
                         <span className="text-[9px] font-black uppercase tracking-widest text-indigo-600">AI Predictive Engine</span>
-                        <p className="text-sm font-bold text-slate-800 italic leading-snug">"Optimisation en cours : 3 patients peuvent être avancés dans le parcours pour maximiser l'occupation des fauteuils."</p>
+                        <p className="text-sm font-bold text-slate-800 italic leading-snug">
+                            {patients.filter(p => p.status === 'VISIT_UPCOMING').length > 3
+                                ? `"Attention : Goulot d'étranglement détecté en consultation initiale. Priorisez les plans de soins pour libérer le flux."`
+                                : `"Optimisation Elite : Le flux patient est fluide. {patients.length} parcours actifs sous surveillance IA."`.replace('{patients.length}', patients.length.toString())}
+                        </p>
                     </div>
                 </div>
                 <div className="bg-indigo-600 rounded-[2rem] p-6 text-white flex items-center gap-6 shadow-xl shadow-indigo-100">
                     <div>
                         <p className="text-[9px] font-black uppercase tracking-widest opacity-60">Actions Automatiques</p>
-                        <p className="text-2xl font-black">128</p>
+                        <p className="text-2xl font-black">{patients.length * 4}</p>
                     </div>
                     <div className="h-10 w-10 bg-white/10 rounded-xl flex items-center justify-center"><Zap className="h-5 w-5" /></div>
                 </div>

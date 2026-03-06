@@ -59,6 +59,8 @@ export const navigationSections = [
             { name: 'Workflow Clinique', href: '/workflow', icon: Activity, roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
             { name: 'Smile Design Studio', href: '/smile-design', icon: Sparkles, roles: ['OWNER', 'DENTIST'] },
             { name: 'Agenda Dynamique', href: '/agenda', icon: Calendar, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
+            { name: 'Labo Hub', href: '/lab', icon: Activity, roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
+            { name: 'Command Center', href: '/tasks', icon: Briefcase, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
             { name: 'Salle d\'Attente', href: '/waiting-room', icon: Clock, badge: '3', roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
         ]
     },

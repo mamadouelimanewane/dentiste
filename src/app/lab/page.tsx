@@ -22,19 +22,39 @@ import {
     Layers,
     Shapes,
     Sparkles,
-    Eye
+    Eye,
+    Loader2
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { motion, AnimatePresence } from "framer-motion"
 
 export default function LabPage() {
-    const [activeTab, setActiveTab] = useState<'WORKS' | 'CATALOG' | 'STOCKS'>('WORKS')
+    const [isLoading, setIsLoading] = useState(true)
+    const [labWorks, setLabWorks] = useState<any[]>([])
 
-    const labWorks = [
-        { id: 'LAB-2026-001', patient: 'Sophie Faye', lab: 'DentiLab Pro 3D', type: 'Couronne Zircone E-Max', shade: 'A2 (VITA)', status: 'IN_TRANSIT', delivery: '14 Jan', stl: 'scan_upper_45.stl' },
-        { id: 'LAB-2026-002', patient: 'Mamadou Diallo', lab: 'Elite Ortho Lab', type: 'Guide Chirurgical Impl.', shade: '--', status: 'RECEIVED', delivery: 'Hier', stl: 'guide_16_17.stl' },
-        { id: 'LAB-2026-003', patient: 'Marie Curie', lab: 'Design Dental Sur Mesure', type: 'Bridge 3 Éléments', shade: 'A3', status: 'WAITING_RETOUCH', delivery: 'Pausé', stl: 'bridge_curie.stl' },
-    ]
+    const fetchLabWorks = async () => {
+        setIsLoading(true)
+        try {
+            const res = await fetch('/api/lab')
+            const data = await res.json()
+            if (Array.isArray(data)) {
+                setLabWorks(data)
+            }
+        } catch (error) {
+            console.error("Failed to fetch lab works:", error)
+            // Fallback mock labels
+            setLabWorks([
+                { id: '1', patientName: 'Sophie Faye', labName: 'DentiLab Pro 3D', type: 'Couronne Zircone', status: 'IN_TRANSIT', dueDate: '14 Jan' },
+                { id: '2', patientName: 'Mamadou Diallo', labName: 'Elite Ortho Lab', type: 'Guide Chirurgical', status: 'RECEIVED', dueDate: 'Hier' },
+            ])
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        fetchLabWorks()
+    }, [])
 
     const materials = [
         { name: 'Zircone Multicouche High-Trans', category: 'Céramique', properties: 'Hautement esthétique, 1200MPa' },
@@ -99,7 +119,16 @@ export default function LabPage() {
                                 </CardHeader>
                                 <CardContent className="p-0">
                                     <div className="divide-y divide-slate-50">
-                                        {labWorks.map(work => (
+                                        {isLoading ? (
+                                            <div className="p-20 text-center">
+                                                <Loader2 className="h-10 w-10 animate-spin text-amber-500 mx-auto mb-4" />
+                                                <p className="font-black text-[10px] uppercase tracking-[0.5em] text-slate-400">Scan des commandes en cours...</p>
+                                            </div>
+                                        ) : labWorks.length === 0 ? (
+                                            <div className="p-20 text-center text-slate-400 font-bold uppercase text-[10px] tracking-widest">
+                                                Aucun travail de laboratoire en cours.
+                                            </div>
+                                        ) : labWorks.map(work => (
                                             <div key={work.id} className="p-8 flex items-center justify-between group hover:bg-slate-50/50 transition-colors">
                                                 <div className="flex items-center gap-6">
                                                     <div className={cn(
@@ -110,14 +139,14 @@ export default function LabPage() {
                                                         {work.status === 'RECEIVED' ? <CheckCircle2 className="h-6 w-6" /> : <Truck className="h-6 w-6" />}
                                                     </div>
                                                     <div>
-                                                        <h3 className="text-lg font-black text-slate-900 tracking-tight">{work.patient}</h3>
-                                                        <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">{work.type} • {work.shade}</p>
+                                                        <h3 className="text-lg font-black text-slate-900 tracking-tight">{work.patientName}</h3>
+                                                        <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">{work.type} • {work.shade || 'Teinte standard'}</p>
                                                         <div className="flex items-center gap-3">
                                                             <div className="flex items-center gap-1.5 bg-slate-900/5 px-2.5 py-1 rounded-lg">
-                                                                <FileUp className="h-3 w-3 text-slate-400" />
-                                                                <span className="text-[9px] font-black text-slate-500 uppercase">{work.stl}</span>
+                                                                <Palette className="h-3 w-3 text-slate-400" />
+                                                                <span className="text-[9px] font-black text-slate-500 uppercase">{work.material || 'Zircone'}</span>
                                                             </div>
-                                                            <span className="text-[9px] font-bold text-slate-300">Lab: {work.lab}</span>
+                                                            <span className="text-[9px] font-bold text-slate-300">Lab: {work.labName}</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -125,7 +154,7 @@ export default function LabPage() {
                                                     <div className="text-right">
                                                         <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Livraison Prévue</p>
                                                         <p className="text-base font-black text-slate-900 flex items-center gap-2 justify-end">
-                                                            <Clock className="h-4 w-4 text-accent" /> {work.delivery}
+                                                            <Clock className="h-4 w-4 text-accent" /> {work.dueDate ? new Date(work.dueDate).toLocaleDateString() : 'Non définie'}
                                                         </p>
                                                     </div>
                                                     <Button variant="outline" size="icon" className="h-10 w-10 border-slate-100 rounded-xl hover:bg-white hover:shadow-md transition-all">

@@ -2,99 +2,160 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { CheckCircle2, Circle, Clock, Plus } from "lucide-react"
-import { useState } from "react"
+import { CheckCircle2, Circle, Clock, Plus, Loader2, Calendar, User, Tag } from "lucide-react"
+import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
 
-type Task = {
-    id: string
-    title: string
-    assignee: string
-    dueDate: string
-    status: 'TODO' | 'DONE'
-    priority: 'HIGH' | 'MEDIUM' | 'LOW'
-}
-
-const INITIAL_TASKS: Task[] = [
-    { id: '1', title: 'Commander des masques et gants', assignee: 'Sophie (Assistante)', dueDate: 'Aujourd\'hui', status: 'TODO', priority: 'HIGH' },
-    { id: '2', title: 'Rappeler M. Martin pour son devis', assignee: 'Secrétariat', dueDate: 'Demain', status: 'TODO', priority: 'MEDIUM' },
-    { id: '3', title: 'Stérilisation des instruments du matin', assignee: 'Sophie', dueDate: '12:00', status: 'DONE', priority: 'HIGH' },
-]
-
 export default function TasksPage() {
-    const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS)
+    const [isLoading, setIsLoading] = useState(true)
+    const [tasks, setTasks] = useState<any[]>([])
 
-    const toggleTask = (id: string) => {
-        setTasks(tasks.map(t => t.id === id ? { ...t, status: t.status === 'TODO' ? 'DONE' : 'TODO' } : t))
+    const fetchTasks = async () => {
+        setIsLoading(true)
+        try {
+            const res = await fetch('/api/tasks')
+            const data = await res.json()
+            if (Array.isArray(data)) {
+                setTasks(data)
+            }
+        } catch (error) {
+            console.error("Failed to fetch tasks:", error)
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        fetchTasks()
+    }, [])
+
+    const toggleTask = async (task: any) => {
+        const newStatus = task.status === 'TODO' ? 'DONE' : 'TODO'
+        // Optimistic update
+        setTasks(tasks.map(t => t.id === task.id ? { ...t, status: newStatus } : t))
+
+        try {
+            await fetch('/api/tasks', {
+                method: 'PATCH',
+                body: JSON.stringify({ id: task.id, status: newStatus }),
+                headers: { 'Content-Type': 'application/json' }
+            })
+        } catch (error) {
+            console.error("Failed to update task:", error)
+            fetchTasks() // roll back
+        }
     }
 
     return (
-        <div className="flex h-full flex-col p-8 space-y-8">
-            <div className="flex justify-between items-center">
+        <div className="p-8 space-y-10 max-w-7xl mx-auto">
+            <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold text-slate-900">Tâches</h1>
-                    <p className="text-slate-500">Gestion des tâches du cabinet et de l'équipe</p>
+                    <div className="flex items-center gap-2 mb-1">
+                        <div className="h-1 w-8 bg-blue-500 rounded-full"></div>
+                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500">Coordination d'Équipe</span>
+                    </div>
+                    <h1 className="text-4xl font-black text-slate-900 tracking-tighter">Elite <span className="text-gold">Command Center</span></h1>
+                    <p className="text-slate-500 font-medium tracking-tight">Gestion des flux opérationnels, maintenance et tâches cliniques.</p>
                 </div>
-                <Button className="bg-teal-600 hover:bg-teal-700 text-white">
+                <Button className="bg-slate-900 text-white font-black uppercase tracking-widest text-[10px] h-14 rounded-2xl px-8 shadow-xl">
                     <Plus className="mr-2 h-4 w-4" /> Nouvelle Tâche
                 </Button>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* TO DO List */}
-                <Card className="border-t-4 border-t-orange-400">
-                    <CardHeader>
-                        <CardTitle className="flex justify-between items-center">
-                            <span>À Faire</span>
-                            <span className="bg-orange-100 text-orange-700 text-xs px-2 py-1 rounded-full">{tasks.filter(t => t.status === 'TODO').length}</span>
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        {tasks.filter(t => t.status === 'TODO').map(task => (
-                            <div key={task.id} className="flex items-start gap-4 p-4 rounded-lg border bg-white shadow-sm hover:shadow-md transition-shadow group cursor-pointer" onClick={() => toggleTask(task.id)}>
-                                <Circle className="h-5 w-5 text-slate-300 group-hover:text-teal-500 mt-1" />
-                                <div className="flex-1">
-                                    <div className="flex justify-between items-start">
-                                        <p className="font-medium text-slate-900">{task.title}</p>
-                                        {task.priority === 'HIGH' && <span className="h-2 w-2 rounded-full bg-red-500" title="Priorité Haute" />}
-                                    </div>
-                                    <div className="flex items-center gap-4 mt-2 text-xs text-slate-500">
-                                        <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> {task.dueDate}</span>
-                                        <span className="bg-slate-100 px-2 py-0.5 rounded text-slate-600">{task.assignee}</span>
-                                    </div>
-                                </div>
+            {isLoading ? (
+                <div className="flex flex-col items-center justify-center h-64">
+                    <Loader2 className="h-10 w-10 animate-spin text-gold mb-4" />
+                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400">Déploiement des tâches...</p>
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                    {/* TO DO List */}
+                    <div className="space-y-6">
+                        <div className="flex items-center justify-between px-2">
+                            <div className="flex items-center gap-3">
+                                <div className="h-2 w-8 bg-orange-400 rounded-full"></div>
+                                <h3 className="text-xs font-black uppercase tracking-widest text-slate-500">Pipeline en attente</h3>
                             </div>
-                        ))}
-                        {tasks.filter(t => t.status === 'TODO').length === 0 && (
-                            <div className="text-center py-8 text-slate-400">Aucune tâche en attente.</div>
-                        )}
-                    </CardContent>
-                </Card>
+                            <span className="bg-orange-100 text-orange-700 text-[10px] font-black px-3 py-1 rounded-full">{tasks.filter(t => t.status === 'TODO').length}</span>
+                        </div>
 
-                {/* DONE List */}
-                <Card className="border-t-4 border-t-green-500 bg-slate-50/50">
-                    <CardHeader>
-                        <CardTitle className="flex justify-between items-center">
-                            <span>Terminé</span>
-                            <span className="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full">{tasks.filter(t => t.status === 'DONE').length}</span>
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        {tasks.filter(t => t.status === 'DONE').map(task => (
-                            <div key={task.id} className="flex items-start gap-4 p-4 rounded-lg border bg-slate-100/50 opacity-75 hover:opacity-100 transition-opacity cursor-pointer" onClick={() => toggleTask(task.id)}>
-                                <CheckCircle2 className="h-5 w-5 text-green-600 mt-1" />
-                                <div className="flex-1">
-                                    <p className="font-medium text-slate-900 line-through decoration-slate-400">{task.title}</p>
-                                    <div className="flex items-center gap-4 mt-2 text-xs text-slate-400">
-                                        <span>{task.assignee}</span>
-                                    </div>
+                        <div className="space-y-4">
+                            {tasks.filter(t => t.status === 'TODO').length === 0 ? (
+                                <div className="p-12 text-center bg-slate-50 rounded-[2.5rem] border border-dashed border-slate-200 text-slate-400 font-bold uppercase text-[10px] tracking-widest">
+                                    Bravo ! Plus aucune tâche urgente.
                                 </div>
+                            ) : (
+                                tasks.filter(t => t.status === 'TODO').map(task => (
+                                    <Card key={task.id} className="rounded-[2.5rem] border-none shadow-luxury bg-white group hover:scale-[1.02] transition-all cursor-pointer overflow-hidden border border-slate-50" onClick={() => toggleTask(task)}>
+                                        <CardContent className="p-8">
+                                            <div className="flex items-start gap-6">
+                                                <div className="h-12 w-12 rounded-2xl bg-slate-50 flex items-center justify-center group-hover:bg-orange-50 transition-colors">
+                                                    <Circle className="h-6 w-6 text-slate-300 group-hover:text-orange-400" />
+                                                </div>
+                                                <div className="flex-1">
+                                                    <div className="flex justify-between items-start mb-2">
+                                                        <h4 className="text-lg font-black text-slate-900 tracking-tight">{task.title}</h4>
+                                                        <div className={cn(
+                                                            "h-2 w-2 rounded-full",
+                                                            task.priority === 'HIGH' ? "bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]" :
+                                                                task.priority === 'MEDIUM' ? "bg-orange-400" : "bg-blue-400"
+                                                        )} />
+                                                    </div>
+                                                    <div className="flex items-center gap-6 mt-4">
+                                                        <div className="flex items-center gap-2">
+                                                            <Calendar className="h-3.5 w-3.5 text-slate-400" />
+                                                            <span className="text-[10px] font-black uppercase text-slate-500 tracking-widest">{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'Pas de date'}</span>
+                                                        </div>
+                                                        <div className="flex items-center gap-2">
+                                                            <Tag className="h-3.5 w-3.5 text-slate-400" />
+                                                            <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">{task.category || 'Opérations'}</span>
+                                                        </div>
+                                                        {task.patient && (
+                                                            <div className="flex items-center gap-2 bg-slate-100 px-3 py-1 rounded-lg">
+                                                                <User className="h-3 w-3 text-slate-500" />
+                                                                <span className="text-[9px] font-black text-slate-600 uppercase">{task.patient.firstName} {task.patient.lastName}</span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                ))
+                            )}
+                        </div>
+                    </div>
+
+                    {/* DONE List */}
+                    <div className="space-y-6">
+                        <div className="flex items-center justify-between px-2">
+                            <div className="flex items-center gap-3">
+                                <div className="h-2 w-8 bg-teal-500 rounded-full"></div>
+                                <h3 className="text-xs font-black uppercase tracking-widest text-slate-500">Archive Success</h3>
                             </div>
-                        ))}
-                    </CardContent>
-                </Card>
-            </div>
+                            <span className="bg-teal-100 text-teal-700 text-[10px] font-black px-3 py-1 rounded-full">{tasks.filter(t => t.status === 'DONE').length}</span>
+                        </div>
+
+                        <div className="space-y-4 opacity-60">
+                            {tasks.filter(t => t.status === 'DONE').map(task => (
+                                <Card key={task.id} className="rounded-[2.5rem] border-none bg-slate-50/50 hover:opacity-100 transition-all cursor-pointer overflow-hidden" onClick={() => toggleTask(task)}>
+                                    <CardContent className="p-6">
+                                        <div className="flex items-center gap-6">
+                                            <div className="h-10 w-10 rounded-2xl bg-teal-50 flex items-center justify-center">
+                                                <CheckCircle2 className="h-5 w-5 text-teal-600" />
+                                            </div>
+                                            <div className="flex-1">
+                                                <h4 className="text-base font-black text-slate-900 line-through decoration-slate-300 decoration-2">{task.title}</h4>
+                                                <p className="text-[9px] font-black uppercase text-slate-400 mt-1 tracking-widest">Complété</p>
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
-

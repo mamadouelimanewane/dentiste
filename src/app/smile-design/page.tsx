@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
@@ -19,7 +19,9 @@ import {
     Layers,
     Smile,
     History,
-    CheckCircle2
+    CheckCircle2,
+    Camera,
+    X
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
@@ -29,6 +31,8 @@ export default function SmileDesignStudio() {
     const [isAnalyzing, setIsAnalyzing] = useState(false)
     const [comparisonView, setComparisonView] = useState(0.5) // Slider for before/after
     const [selectedTreatment, setSelectedTreatment] = useState('VENEERS')
+    const [uploadedImage, setUploadedImage] = useState<string | null>(null)
+    const fileInputRef = useRef<HTMLInputElement>(null)
 
     const treatments = [
         { id: 'VENEERS', name: 'Facettes Porcelaine', color: 'bg-gold', icon: Sparkles },
@@ -37,7 +41,19 @@ export default function SmileDesignStudio() {
         { id: 'ORTHO', name: 'Aligneurs Invisibles', color: 'bg-teal-500', icon: Smile },
     ]
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (file) {
+            const reader = new FileReader()
+            reader.onloadend = () => {
+                setUploadedImage(reader.result as string)
+            }
+            reader.readAsDataURL(file)
+        }
+    }
+
     const handleStartAnalysis = () => {
+        if (!uploadedImage) return
         setIsAnalyzing(true)
         setTimeout(() => {
             setIsAnalyzing(false)
@@ -72,11 +88,45 @@ export default function SmileDesignStudio() {
                     <Card className="rounded-[4rem] border-none shadow-2xl bg-white overflow-hidden relative min-h-[600px] flex flex-col">
                         {step === 1 ? (
                             <div className="flex-1 flex flex-col items-center justify-center p-20 text-center space-y-10">
+                                <input
+                                    id="smile-design-upload"
+                                    type="file"
+                                    ref={fileInputRef}
+                                    className="hidden"
+                                    accept="image/*"
+                                    onChange={handleFileChange}
+                                />
                                 <div className="relative">
-                                    <div className="h-40 w-40 bg-slate-50 border-2 border-dashed border-slate-200 rounded-[3rem] flex items-center justify-center group hover:border-gold transition-all cursor-pointer overflow-hidden">
-                                        <div className="absolute inset-0 bg-gold/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                        <Upload className="h-10 w-10 text-slate-300 group-hover:text-gold transition-colors" />
-                                    </div>
+                                    <label
+                                        htmlFor="smile-design-upload"
+                                        className={cn(
+                                            "h-48 w-48 bg-slate-50 border-2 border-dashed rounded-[3rem] flex items-center justify-center group transition-all cursor-pointer overflow-hidden relative",
+                                            uploadedImage ? "border-gold border-solid" : "border-slate-200 hover:border-gold"
+                                        )}
+                                    >
+                                        {uploadedImage ? (
+                                            <div className="absolute inset-0">
+                                                <img src={uploadedImage} alt="Portrait" className="h-full w-full object-cover" />
+                                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                    <Camera className="h-8 w-8 text-white" />
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <>
+                                                <div className="absolute inset-0 bg-gold/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                                <Upload className="h-10 w-10 text-slate-300 group-hover:text-gold transition-colors" />
+                                            </>
+                                        )}
+                                    </label>
+                                    {uploadedImage && (
+                                        <button
+                                            type="button"
+                                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setUploadedImage(null) }}
+                                            className="absolute -top-2 -right-2 h-8 w-8 bg-rose-500 text-white rounded-full flex items-center justify-center shadow-lg border-2 border-white hover:scale-110 transition-all z-10"
+                                        >
+                                            <X className="h-4 w-4" />
+                                        </button>
+                                    )}
                                     <div className="absolute -bottom-4 -right-4 h-12 w-12 bg-white rounded-2xl shadow-xl flex items-center justify-center border border-slate-100">
                                         <ImageIcon className="h-5 w-5 text-indigo-600" />
                                     </div>
@@ -89,8 +139,11 @@ export default function SmileDesignStudio() {
                                 </div>
                                 <Button
                                     onClick={handleStartAnalysis}
-                                    disabled={isAnalyzing}
-                                    className="bg-slate-900 text-white font-black uppercase text-[11px] tracking-widest h-14 px-12 rounded-2xl shadow-xl active:scale-95 transition-all"
+                                    disabled={isAnalyzing || !uploadedImage}
+                                    className={cn(
+                                        "font-black uppercase text-[11px] tracking-widest h-14 px-12 rounded-2xl shadow-xl active:scale-95 transition-all text-white",
+                                        uploadedImage ? "bg-slate-900" : "bg-slate-300 cursor-not-allowed"
+                                    )}
                                 >
                                     {isAnalyzing ? <RefreshCw className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
                                     {isAnalyzing ? "Analyse Neurale..." : "Lancer l'Analyse IA"}
@@ -101,12 +154,19 @@ export default function SmileDesignStudio() {
                                 {/* Split Comparison View */}
                                 <div className="relative flex-1 bg-slate-100">
                                     {/* SIMULATION BEFORE (Left side) */}
-                                    <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1590650153855-d9e808231d41?auto=format&fit=crop&q=80&w=1200')] bg-center bg-cover" />
+                                    <div
+                                        className="absolute inset-0 bg-center bg-cover"
+                                        style={{ backgroundImage: `url(${uploadedImage})` }}
+                                    />
 
                                     {/* SIMULATION AFTER (Right side - masked) */}
                                     <div
-                                        className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1542610123-e813979d3e56?auto=format&fit=crop&q=80&w=1200')] bg-center bg-cover border-l-2 border-gold shadow-[-10px_0_30px_rgba(0,0,0,0.3)]"
-                                        style={{ clipPath: `inset(0 0 0 ${comparisonView * 100}%)` }}
+                                        className="absolute inset-0 bg-center bg-cover border-gold shadow-[-10px_0_30px_rgba(0,0,0,0.3)] filter-after-simulation"
+                                        style={{
+                                            backgroundImage: `url(${uploadedImage})`,
+                                            clipPath: `inset(0 0 0 ${comparisonView * 100}%)`,
+                                            filter: selectedTreatment === 'WHITENING' ? 'brightness(1.1) contrast(1.1) saturate(0.95)' : 'none'
+                                        }}
                                     >
                                         <div className="absolute top-8 right-8 bg-gold text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl">Simulation Digitale</div>
                                     </div>

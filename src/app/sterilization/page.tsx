@@ -28,7 +28,9 @@ import {
     Wind,
     Bell,
     Settings,
-    Gauge
+    Gauge,
+    Printer,
+    Loader2
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { motion, AnimatePresence } from "framer-motion"
@@ -48,11 +50,27 @@ export default function IoTSterilizationHub() {
         return () => clearInterval(interval)
     }, [])
 
-    const recentCycles = [
-        { id: 'CY-2026-X41', type: 'Prion Cycle 134°', status: 'COMPLETED', assistant: 'Fatou D.', date: 'Aujourd\'hui 09:12', result: 'VALID' },
-        { id: 'CY-2026-X40', type: 'Normal Cycle 121°', status: 'COMPLETED', assistant: 'Mamadou S.', date: 'Hier 16:45', result: 'VALID' },
-        { id: 'CY-2026-X39', type: 'Prion Cycle 134°', status: 'FAILED', assistant: 'Fatou D.', date: 'Hier 11:20', result: 'INTERRUPTED' },
-    ]
+    const [isLoading, setIsLoading] = useState(true)
+    const [recentCycles, setRecentCycles] = useState<any[]>([])
+
+    const fetchCycles = async () => {
+        setIsLoading(true)
+        try {
+            const res = await fetch('/api/sterilization')
+            const data = await res.json()
+            if (Array.isArray(data)) {
+                setRecentCycles(data)
+            }
+        } catch (error) {
+            console.error("Failed to fetch cycles:", error)
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        fetchCycles()
+    }, [])
 
     return (
         <div className="p-4 md:p-8 space-y-6 md:space-y-10 max-w-7xl mx-auto pb-40">
@@ -284,18 +302,29 @@ export default function IoTSterilizationHub() {
                             <CardTitle className="text-xs font-black uppercase tracking-widest text-slate-400">Journal d'Audit Rapide</CardTitle>
                         </CardHeader>
                         <div className="p-0">
-                            {recentCycles.map((cycle, i) => (
+                            {isLoading ? (
+                                <div className="p-10 text-center">
+                                    <Loader2 className="h-8 w-8 animate-spin text-teal-500 mx-auto mb-2" />
+                                    <p className="text-[9px] font-black uppercase text-slate-400">Lecture eeprom...</p>
+                                </div>
+                            ) : recentCycles.length === 0 ? (
+                                <div className="p-10 text-center text-slate-400 text-[10px] font-bold uppercase tracking-widest">
+                                    Aucun cycle enregistré.
+                                </div>
+                            ) : recentCycles.map((cycle, i) => (
                                 <div key={i} className="p-6 flex items-center justify-between hover:bg-slate-50 transition-colors cursor-pointer border-b border-slate-50 last:border-0">
                                     <div className="flex items-center gap-4">
                                         <div className={cn(
                                             "h-10 w-10 rounded-2xl flex items-center justify-center",
-                                            cycle.result === 'VALID' ? "bg-teal-50 text-teal-600" : "bg-rose-50 text-rose-600"
+                                            cycle.status === 'SUCCESS' ? "bg-teal-50 text-teal-600" : "bg-rose-50 text-rose-600"
                                         )}>
                                             <ShieldCheck className="h-5 w-5" />
                                         </div>
                                         <div>
-                                            <p className="text-[11px] font-black text-slate-900">{cycle.id}</p>
-                                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{cycle.date}</p>
+                                            <p className="text-[11px] font-black text-slate-900">CYCLE #{cycle.cycleNumber || 'IOT'}</p>
+                                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                                                {new Date(cycle.date).toLocaleString()} • {cycle.operator || 'Système'}
+                                            </p>
                                         </div>
                                     </div>
                                     <FileText className="h-4 w-4 text-slate-300" />

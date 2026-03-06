@@ -1,0 +1,6 @@
+Liens directs pour votre démo :
+🌐 Plateforme : dentiste-nine.vercel.app
+💳 Admin : admin@dentoprestige.sn / admin123
+💰 Comptable : compta@dentoprestige.sn / compta123
+📱 Mobile Comptable : /mobile/comptable
+👤 Patient VIP : /portal

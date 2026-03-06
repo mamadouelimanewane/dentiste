@@ -34,6 +34,7 @@ model Patient {
   address     String?
   source      String?   
   status      String    @default("ACTIVE") 
+  workflowStatus String?   @default("VISIT_UPCOMING")
   isRestricted Boolean  @default(false) 
   portalActive Boolean  @default(false) 
   portalPassword String? 
