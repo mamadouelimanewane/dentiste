@@ -31,11 +31,13 @@ import {
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { toast } from "sonner"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 
 export default function AgendaPage() {
     const [currentDate, setCurrentDate] = useState(new Date())
     const [activeLocation, setActiveLocation] = useState('CABINET_DAKAR')
     const [isLoading, setIsLoading] = useState(true)
+    const [appointments, setAppointments] = useState<any[]>([])
     const [currentTime, setCurrentTime] = useState(new Date())
     const [view, setView] = useState<'CALENDAR' | 'WAITING_LIST' | 'RESOURCES'>('CALENDAR')
 
