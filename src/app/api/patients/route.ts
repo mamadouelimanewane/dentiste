@@ -13,6 +13,7 @@ export async function GET() {
                 phone: true,
                 updatedAt: true,
                 dob: true,
+                workflowStatus: true,
             },
             orderBy: {
                 lastName: 'asc'
@@ -38,8 +39,9 @@ export async function POST(request: Request) {
             data: {
                 firstName,
                 lastName,
-                email: email || null, // Ensure empty string doesn't trigger unique constraint
+                email: email || null,
                 phone: phone || null,
+                workflowStatus: body.workflowStatus || null
             }
         })
 

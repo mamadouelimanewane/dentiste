@@ -104,19 +104,33 @@ export default function WorkflowPage() {
 
     const handleAdd = async (colId: ColumnId) => {
         if (!newName.trim()) return
-        // Ideally cross-ref existing patients or create new one via patients API
-        // For simulation/quick add in workflow:
-        setPatients(prev => [...prev, {
-            id: 'temp-' + Date.now(),
-            name: newName,
-            status: colId,
-            priority: 'MEDIUM',
-            date: 'Auj.',
-            procedure: newProcedure || 'Soin Rapide'
-        }])
-        setNewName('')
-        setNewProcedure('')
-        setAddingIn(null)
+        setIsLoading(true)
+        try {
+            const names = newName.split(' ')
+            const firstName = names[0]
+            const lastName = names.slice(1).join(' ') || 'Patient'
+
+            const res = await fetch('/api/patients', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    firstName,
+                    lastName,
+                    workflowStatus: colId
+                })
+            })
+
+            if (res.ok) {
+                await fetchPatients()
+                setNewName('')
+                setNewProcedure('')
+                setAddingIn(null)
+            }
+        } catch (e) {
+            console.error(e)
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     const moveNext = (id: string) => {

@@ -30,7 +30,7 @@ export async function POST(req: Request) {
         const body = await req.json()
 
         // 1. Création du rendez-vous
-        const appointment = await prisma.appointment.create({
+        const appointment = (await prisma.appointment.create({
             data: {
                 patientId: body.patientId,
                 title: body.title,
@@ -39,12 +39,13 @@ export async function POST(req: Request) {
                 type: body.type,
                 status: body.status || 'CONFIRMED',
                 notes: body.notes,
-                isSurgery: !!body.isSurgery
+                isSurgery: !!body.isSurgery,
+                siteId: body.siteId || 'CABINET_DAKAR'
             },
             include: {
                 patient: true
             }
-        })
+        })) as any
 
         // 2. Génération automatique du rappel (Simulation Elite Connect)
         const patientName = `${appointment.patient.firstName} ${appointment.patient.lastName}`

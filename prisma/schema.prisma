@@ -267,6 +267,7 @@ model Appointment {
   meetingId String?  
   isSurgery Boolean  @default(false)
   checklist String?  
+  siteId    String?  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
