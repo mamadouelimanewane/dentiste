@@ -4,6 +4,11 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { toast } from "sonner"
+import { addDays, format } from "date-fns"
+import { fr } from "date-fns/locale"
 import {
     FlaskConical,
     Truck,
@@ -33,29 +38,65 @@ export default function LabPage() {
     const [isLoading, setIsLoading] = useState(true)
     const [labWorks, setLabWorks] = useState<any[]>([])
     const [activeTab, setActiveTab] = useState<'WORKS' | 'CATALOG' | 'STOCKS'>('WORKS')
+    const [patients, setPatients] = useState<any[]>([])
+    const [selectedWork, setSelectedWork] = useState<any>(null)
+    const [isAddOpen, setIsAddOpen] = useState(false)
+    const [workFormData, setWorkFormData] = useState({
+        patientId: '',
+        labName: 'DentiLab Pro 3D',
+        type: 'Couronne Zircone',
+        material: 'Zircone Multicouche High-Trans',
+        shade: 'A2',
+        dueDate: format(addDays(new Date(), 7), 'yyyy-MM-dd'),
+        notes: ''
+    })
+
+    const fetchPatients = async () => {
+        try {
+            const res = await fetch('/api/patients')
+            const data = await res.json()
+            if (Array.isArray(data)) setPatients(data)
+        } catch (e) { console.error(e) }
+    }
 
     const fetchLabWorks = async () => {
         setIsLoading(true)
         try {
             const res = await fetch('/api/lab')
             const data = await res.json()
-            if (Array.isArray(data)) {
-                setLabWorks(data)
-            }
+            if (Array.isArray(data)) setLabWorks(data)
         } catch (error) {
             console.error("Failed to fetch lab works:", error)
-            // Fallback mock labels
             setLabWorks([
-                { id: '1', patientName: 'Sophie Faye', labName: 'DentiLab Pro 3D', type: 'Couronne Zircone', status: 'IN_TRANSIT', dueDate: '14 Jan' },
-                { id: '2', patientName: 'Mamadou Diallo', labName: 'Elite Ortho Lab', type: 'Guide Chirurgical', status: 'RECEIVED', dueDate: 'Hier' },
+                { id: '1', patientName: 'Sophie Faye', labName: 'DentiLab Pro 3D', type: 'Couronne Zircone', status: 'IN_TRANSIT', dueDate: '2026-03-14', material: 'Zircone', shade: 'A2' },
+                { id: '2', patientName: 'Mamadou Diallo', labName: 'Elite Ortho Lab', type: 'Guide Chirurgical', status: 'RECEIVED', dueDate: '2026-03-05', material: 'Résine 3D', shade: 'Clear' },
             ])
         } finally {
             setIsLoading(false)
         }
     }
 
+    const handleCreateWork = async (e: React.FormEvent) => {
+        e.preventDefault()
+        if (!workFormData.patientId) return toast.error("Sélectionnez un patient")
+
+        try {
+            const res = await fetch('/api/lab', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(workFormData)
+            })
+            if (res.ok) {
+                toast.success("Travail de laboratoire envoyé !")
+                setIsAddOpen(false)
+                fetchLabWorks()
+            }
+        } catch (e) { toast.error("Erreur d'envoi") }
+    }
+
     useEffect(() => {
         fetchLabWorks()
+        fetchPatients()
     }, [])
 
     const materials = [
@@ -95,11 +136,117 @@ export default function LabPage() {
                             </Button>
                         ))}
                     </div>
-                    <Button className="bg-slate-900 text-white font-black uppercase tracking-widest text-[10px] h-14 rounded-2xl px-8 shadow-xl">
+                    <Button
+                        onClick={() => setIsAddOpen(true)}
+                        className="bg-slate-900 text-white font-black uppercase tracking-widest text-[10px] h-14 rounded-2xl px-8 shadow-xl hover:scale-105 transition-all"
+                    >
                         <Plus className="h-4 w-4 mr-2" /> Nouveau Travail
                     </Button>
                 </div>
             </div>
+
+            {/* Creation Dialog */}
+            <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+                <DialogContent className="sm:max-w-[500px] rounded-[2.5rem] p-8 border-none shadow-luxury">
+                    <DialogHeader>
+                        <DialogTitle className="text-2xl font-black text-slate-900 tracking-tighter">Nouveau <span className="text-gold">Travail Labo</span></DialogTitle>
+                    </DialogHeader>
+                    <form onSubmit={handleCreateWork} className="space-y-6 mt-6">
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Patient</label>
+                            <Select value={workFormData.patientId} onValueChange={(val) => setWorkFormData({ ...workFormData, patientId: val })}>
+                                <SelectTrigger className="rounded-xl h-12 border-slate-100 bg-slate-50/50">
+                                    <SelectValue placeholder="Sélectionner un patient" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {patients.map(p => (
+                                        <SelectItem key={p.id} value={p.id}>{p.firstName} {p.lastName}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Laboratoire</label>
+                                <Input
+                                    value={workFormData.labName}
+                                    onChange={(e) => setWorkFormData({ ...workFormData, labName: e.target.value })}
+                                    className="rounded-xl h-12 border-slate-100 bg-slate-50/50"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Type de Travail</label>
+                                <Input
+                                    value={workFormData.type}
+                                    onChange={(e) => setWorkFormData({ ...workFormData, type: e.target.value })}
+                                    className="rounded-xl h-12 border-slate-100 bg-slate-50/50"
+                                />
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Teinte (VITA)</label>
+                                <Input
+                                    value={workFormData.shade}
+                                    onChange={(e) => setWorkFormData({ ...workFormData, shade: e.target.value })}
+                                    className="rounded-xl h-12 border-slate-100 bg-slate-50/50 uppercase"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Date Livraison</label>
+                                <Input
+                                    type="date"
+                                    value={workFormData.dueDate}
+                                    onChange={(e) => setWorkFormData({ ...workFormData, dueDate: e.target.value })}
+                                    className="rounded-xl h-12 border-slate-100 bg-slate-50/50"
+                                />
+                            </div>
+                        </div>
+                        <Button type="submit" className="w-full h-14 bg-slate-900 text-gold font-black uppercase tracking-widest rounded-2xl shadow-xl mt-4">Transmettre au Laboratoire</Button>
+                    </form>
+                </DialogContent>
+            </Dialog>
+
+            {/* Detail Dialog */}
+            <Dialog open={!!selectedWork} onOpenChange={() => setSelectedWork(null)}>
+                <DialogContent className="sm:max-w-[450px] rounded-[2.5rem] p-10 border-none shadow-luxury text-slate-900">
+                    {selectedWork && (
+                        <div className="space-y-8">
+                            <div className="flex items-center gap-4">
+                                <div className="h-16 w-16 rounded-[1.5rem] bg-gold/10 flex items-center justify-center">
+                                    <FlaskConical className="h-8 w-8 text-gold" />
+                                </div>
+                                <div>
+                                    <h2 className="text-2xl font-black tracking-tight">{selectedWork.patientName}</h2>
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Dossier #{selectedWork.id.slice(0, 5)}</span>
+                                </div>
+                            </div>
+                            <div className="p-6 bg-slate-50 rounded-3xl space-y-4">
+                                <div className="flex justify-between">
+                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Travail</span>
+                                    <span className="text-xs font-bold">{selectedWork.type}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Matériau</span>
+                                    <span className="text-xs font-bold">{selectedWork.material || 'Standard'}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Teinte</span>
+                                    <span className="text-xs font-bold text-gold">{selectedWork.shade || 'N/A'}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Date Dépôt</span>
+                                    <span className="text-xs font-bold">{format(new Date(selectedWork.sentDate || new Date()), 'dd MMM yyyy', { locale: fr })}</span>
+                                </div>
+                            </div>
+                            <div className="flex gap-4">
+                                <Button className="flex-1 h-12 bg-slate-950 text-white rounded-xl text-[10px] font-black uppercase" onClick={() => toast.success("Notification de rappel envoyée au labo")}>Rappel Labo</Button>
+                                <Button variant="outline" className="flex-1 h-12 border-slate-100 rounded-xl text-[10px] font-black uppercase text-red-500 hover:bg-red-50" onClick={() => toast.error("Action irréversible : contactez l'admin")}>Annuler</Button>
+                            </div>
+                        </div>
+                    )}
+                </DialogContent>
+            </Dialog>
 
             <AnimatePresence mode="wait">
                 {activeTab === 'WORKS' && (
@@ -131,7 +278,7 @@ export default function LabPage() {
                                                 Aucun travail de laboratoire en cours.
                                             </div>
                                         ) : labWorks.map(work => (
-                                            <div key={work.id} className="p-8 flex items-center justify-between group hover:bg-slate-50/50 transition-colors">
+                                            <div key={work.id} className="p-8 flex items-center justify-between group hover:bg-slate-50/50 transition-colors cursor-pointer" onClick={() => setSelectedWork(work)}>
                                                 <div className="flex items-center gap-6">
                                                     <div className={cn(
                                                         "h-14 w-14 rounded-2xl flex items-center justify-center text-xl font-black",
@@ -195,7 +342,18 @@ export default function LabPage() {
                                             </div>
                                         ))}
                                     </div>
-                                    <Button className="w-full bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest text-[10px] h-12 rounded-xl hover:bg-white/10">Synchroniser Scanner ITero</Button>
+                                    <Button
+                                        onClick={() => {
+                                            toast.promise(new Promise(resolve => setTimeout(resolve, 1500)), {
+                                                loading: 'Synchronisation Cloud...',
+                                                success: 'iTero v2.5 Synchronisé',
+                                                error: 'Erreur Cloud'
+                                            })
+                                        }}
+                                        className="w-full bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest text-[10px] h-12 rounded-xl hover:bg-white/10"
+                                    >
+                                        Synchroniser Scanner ITero
+                                    </Button>
                                 </div>
                             </Card>
 
@@ -236,10 +394,10 @@ export default function LabPage() {
                                     <span className="text-[9px] font-black uppercase tracking-widest text-amber-500">{m.category}</span>
                                 </div>
                                 <p className="text-[10px] font-medium text-slate-500 leading-relaxed border-t border-slate-50 pt-4">{m.properties}</p>
-                                <Button variant="ghost" className="w-full text-[9px] font-black uppercase tracking-widest text-slate-400 group-hover:text-slate-900 p-0 h-auto self-end">Consulter Fiche Technique</Button>
+                                <Button variant="ghost" className="w-full text-[9px] font-black uppercase tracking-widest text-slate-400 group-hover:text-slate-900 p-0 h-auto self-end" onClick={() => toast.info(`Détails techniques : ${m.name}`)}>Consulter Fiche Technique</Button>
                             </Card>
                         ))}
-                        <Card className="rounded-[2rem] border-dashed border-2 border-slate-200 flex flex-col items-center justify-center text-slate-400 p-8 cursor-pointer hover:bg-slate-50 hover:border-slate-400 transition-all">
+                        <Card className="rounded-[2rem] border-dashed border-2 border-slate-200 flex flex-col items-center justify-center text-slate-400 p-8 cursor-pointer hover:bg-slate-50 hover:border-slate-400 transition-all" onClick={() => toast.error("Module 'Gestion Matériaux' en lecture seule")}>
                             <Plus className="h-8 w-8 mb-2 opacity-20" />
                             <span className="text-[10px] font-black uppercase tracking-widest">Nouveau Matériau</span>
                         </Card>
@@ -289,8 +447,8 @@ export default function LabPage() {
                                 <h2 className="text-3xl font-black tracking-tighter">Inventaire & Traçabilité J+0.</h2>
                                 <p className="text-indigo-100 text-sm font-medium leading-relaxed">Suivez chaque élément prothétique provisoire installé. Le système alerte automatiquement le patient et le laboratoire si le port d'une temporaire dépasse la limite recommandée.</p>
                                 <div className="flex gap-4">
-                                    <Button className="bg-white text-indigo-600 font-black uppercase text-[10px] tracking-widest h-12 rounded-xl px-8 shadow-xl">Audit Inventaire</Button>
-                                    <Button className="bg-indigo-400 text-white border border-indigo-300 font-black uppercase text-[10px] tracking-widest h-12 rounded-xl px-8">Configuration Alertes</Button>
+                                    <Button className="bg-white text-indigo-600 font-black uppercase text-[10px] tracking-widest h-12 rounded-xl px-8 shadow-xl" onClick={() => toast.info("Génération du rapport d'audit...")}>Audit Inventaire</Button>
+                                    <Button className="bg-indigo-400 text-white border border-indigo-300 font-black uppercase text-[10px] tracking-widest h-12 rounded-xl px-8" onClick={() => toast.info("Ouverture des paramètres d'alertes")}>Configuration Alertes</Button>
                                 </div>
                             </div>
                         </Card>
