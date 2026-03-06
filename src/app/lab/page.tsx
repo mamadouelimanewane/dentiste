@@ -62,6 +62,12 @@ export default function LabPage() {
     const [isAuditOpen, setIsAuditOpen] = useState(false)
     const [isAlertsOpen, setIsAlertsOpen] = useState(false)
     const [isPdfOpen, setIsPdfOpen] = useState(false)
+    const [alertThreshold, setAlertThreshold] = useState(15)
+    const [notificationChannels, setNotificationChannels] = useState([
+        { id: 'email', label: 'E-mail Labo Pro', desc: 'Rapports hebdomadaires', active: true },
+        { id: 'whatsapp', label: 'WhatsApp Elite', desc: 'Alertes critiques J+0', active: true },
+        { id: 'sms', label: 'SMS Fournisseur', desc: 'Commandes en attente', active: false },
+    ])
     const [workFormData, setWorkFormData] = useState({
         patientId: '',
         labName: 'DentiLab Pro 3D',
@@ -658,36 +664,62 @@ export default function LabPage() {
                                         <p className="font-black text-slate-900 text-xs">Seuil de Réapprovisionnement</p>
                                         <p className="text-[10px] font-medium text-slate-500 italic">Déclenche un bon de commande auto.</p>
                                     </div>
-                                    <span className="bg-slate-100 px-3 py-1 rounded-lg font-black text-xs text-slate-900 underline decoration-amber-500 decoration-2 underline-offset-4">15% restants</span>
+                                    <span className="bg-slate-100 px-3 py-1 rounded-lg font-black text-xs text-slate-900 underline decoration-amber-500 decoration-2 underline-offset-4">{alertThreshold}% restants</span>
                                 </div>
-                                <Progress value={15} className="h-2 bg-slate-100" />
+                                <div
+                                    className="h-2 bg-slate-100 rounded-full overflow-hidden cursor-pointer cursor-ew-resize relative"
+                                    onClick={(e) => {
+                                        const bounds = e.currentTarget.getBoundingClientRect();
+                                        const percent = Math.round(((e.clientX - bounds.left) / bounds.width) * 100);
+                                        setAlertThreshold(Math.max(5, Math.min(95, percent)));
+                                    }}
+                                >
+                                    <div
+                                        className="h-full bg-slate-900 transition-all duration-150"
+                                        style={{ width: `${alertThreshold}%` }}
+                                    />
+                                </div>
                             </div>
 
                             <div className="space-y-4">
                                 <p className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mb-4">Canaux de Notification</p>
-                                {[
-                                    { label: 'E-mail Labo Pro', desc: 'Rapports hebdomadaires', active: true },
-                                    { label: 'WhatsApp Elite', desc: 'Alertes critiques J+0', active: true },
-                                    { label: 'SMS Fournisseur', desc: 'Commandes en attente', active: false },
-                                ].map((channel, i) => (
-                                    <div key={i} className="flex items-center justify-between p-4 rounded-2xl bg-slate-50/50 border border-slate-100 group hover:border-amber-200 transition-all">
+                                {notificationChannels.map((channel) => (
+                                    <div
+                                        key={channel.id}
+                                        className="flex items-center justify-between p-4 rounded-2xl bg-slate-50/50 border border-slate-100 group hover:border-amber-200 transition-all cursor-pointer"
+                                        onClick={() => {
+                                            setNotificationChannels(prev => prev.map(c =>
+                                                c.id === channel.id ? { ...c, active: !c.active } : c
+                                            ))
+                                        }}
+                                    >
                                         <div>
                                             <p className="text-[11px] font-black text-slate-900 tracking-tight">{channel.label}</p>
                                             <p className="text-[9px] font-medium text-slate-400">{channel.desc}</p>
                                         </div>
                                         <div className={cn(
-                                            "h-5 w-10 rounded-full p-1 transition-colors cursor-pointer",
+                                            "h-5 w-10 rounded-full p-1 transition-colors",
                                             channel.active ? "bg-amber-500" : "bg-slate-200"
                                         )}>
                                             <div className={cn(
-                                                "h-3 w-3 bg-white rounded-full transition-transform",
+                                                "h-3 w-3 bg-white rounded-full transition-transform shadow-sm",
                                                 channel.active ? "translate-x-5" : "translate-x-0"
                                             )} />
                                         </div>
                                     </div>
                                 ))}
                             </div>
-                            <Button className="w-full h-14 bg-slate-900 text-gold font-black uppercase tracking-widest rounded-2xl shadow-xl hover:scale-[1.02] transition-all">
+                            <Button
+                                className="w-full h-14 bg-slate-900 text-gold font-black uppercase tracking-widest rounded-2xl shadow-xl hover:scale-[1.02] transition-all"
+                                onClick={() => {
+                                    toast.promise(new Promise(resolve => setTimeout(resolve, 800)), {
+                                        loading: 'Sauvegarde des préférences...',
+                                        success: 'Configuration Smart Alert enregistrée',
+                                        error: 'Erreur lors de la sauvegarde'
+                                    })
+                                    setTimeout(() => setIsAlertsOpen(false), 900)
+                                }}
+                            >
                                 Sauvegarder Config
                             </Button>
                         </div>
