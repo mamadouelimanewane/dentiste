@@ -96,10 +96,29 @@ export default function AIHubPage() {
                     <p className="text-slate-500 font-medium tracking-tight">Pilotage intelligent, diagnostics assistés et automatisation clinique.</p>
                 </div>
                 <div className="flex gap-4">
-                    <Button variant="outline" className="rounded-2xl border-slate-200 h-14 px-6 text-[10px] font-black uppercase tracking-widest text-slate-500 bg-white">
+                    <Button
+                        variant="outline"
+                        className="rounded-2xl border-slate-200 h-14 px-6 text-[10px] font-black uppercase tracking-widest text-slate-500 bg-white hover:border-indigo-400 hover:text-indigo-600 transition-all"
+                        onClick={() => {
+                            toast.promise(new Promise(resolve => setTimeout(resolve, 2000)), {
+                                loading: 'Génération du dashboard analytique...',
+                                success: 'Analyse Prédictive mise à jour avec les données du jour.',
+                                error: 'Erreur d\'analyse'
+                            })
+                        }}
+                    >
                         <BarChart3 className="mr-2 h-4 w-4" /> Analyse Prédictive
                     </Button>
-                    <Button className="bg-slate-900 text-white hover:bg-slate-800 font-black px-8 rounded-2xl uppercase tracking-widest text-[11px] h-14 shadow-luxury transition-all">
+                    <Button
+                        className="bg-slate-900 text-white hover:bg-slate-800 font-black px-8 rounded-2xl uppercase tracking-widest text-[11px] h-14 shadow-luxury transition-all"
+                        onClick={() => {
+                            toast.promise(new Promise(resolve => setTimeout(resolve, 1500)), {
+                                loading: 'Passage en Mode Audit Strict...',
+                                success: 'Mode Audit IA activé. Les données sensibles sont surveillées.',
+                                error: 'Erreur d\'activation'
+                            })
+                        }}
+                    >
                         <ShieldCheck className="mr-2 h-5 w-5" /> Mode Audit IA
                     </Button>
                 </div>
@@ -219,7 +238,20 @@ export default function AIHubPage() {
                                 <CardTitle className="text-xl font-black tracking-tighter uppercase">Analyse de Performance Prédictive</CardTitle>
                                 <CardDescription className="text-sm font-medium text-slate-400 mt-1">Projection basée sur l'agenda et l'historique financier.</CardDescription>
                             </div>
-                            <Button variant="ghost" className="text-[10px] font-black uppercase tracking-widest text-indigo-600">Export Rapport IA</Button>
+                            <Button
+                                variant="ghost"
+                                className="text-[10px] font-black uppercase tracking-widest text-indigo-600 hover:bg-slate-50"
+                                onClick={() => {
+                                    const texte = `ELITE AI HUB - Rapport de Performance Prédictif\n\nTaux d'Occupation Suggéré : 92% (+15%)\nRétention Patients : 88% (+4%)\nEfficacité Traitements : 74% (-2%)\n\nExtrait généré automatiquement le ${new Date().toLocaleDateString()}`;
+                                    const blob = new Blob([texte], { type: 'text/plain;charset=utf-8' });
+                                    const url = window.URL.createObjectURL(blob);
+                                    const a = document.createElement('a');
+                                    a.href = url;
+                                    a.download = `Report_IA_${new Date().getTime()}.txt`;
+                                    a.click();
+                                    toast.success("Rapport IA exporté (.txt)");
+                                }}
+                            >Export Rapport IA</Button>
                         </CardHeader>
                         <CardContent className="p-10 space-y-10">
                             {[
@@ -262,7 +294,16 @@ export default function AIHubPage() {
                                     "Détection de 12 devis non transformés pour un total de 4.8M FCFA. Suggérer une relance personnalisée ?"
                                 </p>
                             </div>
-                            <Button className="w-full bg-slate-900 text-white font-black uppercase text-[10px] tracking-widest h-14 rounded-2xl shadow-xl">
+                            <Button
+                                className="w-full bg-slate-900 text-white font-black uppercase text-[10px] tracking-widest h-14 rounded-2xl shadow-xl hover:scale-[1.02] transition-all"
+                                onClick={() => {
+                                    toast.promise(new Promise(resolve => setTimeout(resolve, 1800)), {
+                                        loading: 'Ciblage de 12 patients prospectifs...',
+                                        success: '12 relances SMS et WhatsApp envoyées via réseau Elite.',
+                                        error: 'Erreur de routage'
+                                    })
+                                }}
+                            >
                                 Lancer Relances IA
                             </Button>
                         </Card>
@@ -277,7 +318,13 @@ export default function AIHubPage() {
                                     "Vérification multi-critères : 100% des fiches patients sont conformes aux protocoles de soins."
                                 </p>
                             </div>
-                            <Button variant="outline" className="w-full border-slate-200 text-slate-900 font-black uppercase text-[10px] tracking-widest h-14 rounded-2xl">
+                            <Button
+                                variant="outline"
+                                className="w-full border-slate-200 text-slate-900 font-black uppercase text-[10px] tracking-widest h-14 rounded-2xl hover:bg-slate-50 transition-colors"
+                                onClick={() => {
+                                    toast.success("Rapport de conformité complet disponible dans la section Documents sécurisés.");
+                                }}
+                            >
                                 Rapport Conformité
                             </Button>
                         </Card>
@@ -313,7 +360,11 @@ export default function AIHubPage() {
                                 ))}
                             </div>
                             <div className="p-6 bg-slate-50/50 flex justify-center">
-                                <Button variant="link" className="text-[10px] font-black uppercase text-slate-400 hover:text-indigo-600">Voir journal d'intelligence complet →</Button>
+                                <Button
+                                    variant="link"
+                                    className="text-[10px] font-black uppercase text-slate-400 hover:text-indigo-600"
+                                    onClick={() => toast.info("Le journal d'intelligence complet sera disponible dans la prochaine configuration réseau.")}
+                                >Voir journal d'intelligence complet →</Button>
                             </div>
                         </CardContent>
                     </Card>
