@@ -623,7 +623,19 @@ export default function LabPage() {
                                     </TableBody>
                                 </Table>
                             </div>
-                            <Button className="w-full h-14 bg-indigo-600 text-white font-black uppercase tracking-widest rounded-2xl shadow-xl hover:bg-indigo-700 transition-all hover:scale-[1.02]">
+                            <Button
+                                className="w-full h-14 bg-indigo-600 text-white font-black uppercase tracking-widest rounded-2xl shadow-xl hover:bg-indigo-700 transition-all hover:scale-[1.02]"
+                                onClick={() => {
+                                    const texte = `ELITE LABS PRO - Audit d'Inventaire\n\nTaux de Rotation: 84%\nValeur Stock: 4.2M (+12% / m-1)\nAlertes Actives: 03\n\n- Blocs Zircone : Stable (70%)\n- Résine Guide 3D : Critique (92% consommé)\n\nDocument Confidentiel - Généré le ${format(new Date(), 'dd/MM/yyyy')}`;
+                                    const blob = new Blob([texte], { type: 'text/plain;charset=utf-8' });
+                                    const url = window.URL.createObjectURL(blob);
+                                    const a = document.createElement('a');
+                                    a.href = url;
+                                    a.download = `Audit_Labo_${format(new Date(), 'dd_MM_yyyy')}.txt`;
+                                    a.click();
+                                    toast.success("Rapport d'audit téléchargé avec succès");
+                                }}
+                            >
                                 Générer Rapport PDF Complet
                             </Button>
                         </div>
