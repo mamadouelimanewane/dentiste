@@ -9,6 +9,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner"
 import { addDays, format } from "date-fns"
 import { fr } from "date-fns/locale"
+import { Progress } from "@/components/ui/progress"
+import { Badge } from "@/components/ui/badge"
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table"
 import {
     FlaskConical,
     Truck,
@@ -29,7 +39,13 @@ import {
     Sparkles,
     Eye,
     Loader2,
-    Plus
+    Plus,
+    FileText,
+    Settings,
+    Shield,
+    BarChart3,
+    ArrowDownToLine,
+    Download
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { motion, AnimatePresence } from "framer-motion"
@@ -43,6 +59,9 @@ export default function LabPage() {
     const [isAddOpen, setIsAddOpen] = useState(false)
     const [isShadeGuideOpen, setIsShadeGuideOpen] = useState(false)
     const [selectedMaterial, setSelectedMaterial] = useState<any>(null)
+    const [isAuditOpen, setIsAuditOpen] = useState(false)
+    const [isAlertsOpen, setIsAlertsOpen] = useState(false)
+    const [isPdfOpen, setIsPdfOpen] = useState(false)
     const [workFormData, setWorkFormData] = useState({
         patientId: '',
         labName: 'DentiLab Pro 3D',
@@ -430,9 +449,212 @@ export default function LabPage() {
                                         Compatible avec les scanners intra-oraux (iTero, 3Shape) et l'usinage CFAO 5 axes.
                                     </p>
                                 </div>
-                                <Button className="w-full h-12 bg-slate-900 text-white rounded-xl font-black uppercase text-[10px]" onClick={() => toast.success("Fiche technique PDF envoyée par email")}>Télécharger Fiche PDF</Button>
+                                <Button className="w-full h-12 bg-slate-900 text-white rounded-xl font-black uppercase text-[10px]" onClick={() => setIsPdfOpen(true)}>Visualiser Fiche PDF</Button>
                             </div>
                         )}
+                    </DialogContent>
+                </Dialog>
+
+                {/* PDF Preview Dialog */}
+                <Dialog open={isPdfOpen} onOpenChange={setIsPdfOpen}>
+                    <DialogContent className="sm:max-w-[800px] h-[85vh] rounded-[2.5rem] p-0 border-none shadow-luxury bg-slate-100 overflow-hidden flex flex-col">
+                        <div className="bg-slate-900 p-6 flex items-center justify-between shrink-0">
+                            <div className="flex items-center gap-4">
+                                <FileText className="h-6 w-6 text-gold" />
+                                <div>
+                                    <h3 className="text-white font-black uppercase tracking-widest text-xs">Aperçu du Document Technique</h3>
+                                    <p className="text-slate-400 text-[9px] font-bold uppercase tracking-tight">{selectedMaterial?.name || 'Fiche Technique'}.pdf</p>
+                                </div>
+                            </div>
+                            <div className="flex gap-2">
+                                <Button size="sm" variant="ghost" className="text-white hover:bg-white/10" onClick={() => toast.success("Impression lancée...")}>
+                                    <Download className="h-4 w-4 mr-2" /> Télécharger
+                                </Button>
+                                <Button size="sm" className="bg-gold text-slate-900 font-black" onClick={() => setIsPdfOpen(false)}>Fermer</Button>
+                            </div>
+                        </div>
+                        <div className="flex-1 p-12 overflow-y-auto bg-white m-4 rounded-2xl shadow-inner scrollbar-hide">
+                            <div className="max-w-2xl mx-auto space-y-12">
+                                <div className="flex justify-between items-start border-b-4 border-slate-900 pb-8">
+                                    <div>
+                                        <h1 className="text-4xl font-black text-slate-900 tracking-tighter">ELITE LABS <span className="text-gold">PRO</span></h1>
+                                        <p className="font-bold text-slate-400 text-[10px] uppercase tracking-[0.3em]">Certification & Standards Digitaux</p>
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="bg-slate-900 text-white px-3 py-1 text-[8px] font-black rounded-full mb-2">REF: EL-PRO-{selectedMaterial?.name.slice(0, 3).toUpperCase()}-2026</p>
+                                        <p className="text-[10px] font-bold text-slate-500">{format(new Date(), 'dd MMMM yyyy', { locale: fr })}</p>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-6">
+                                    <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-3">
+                                        <Shield className="h-6 w-6 text-gold" />
+                                        Fiche Spécifications : {selectedMaterial?.name}
+                                    </h2>
+                                    <div className="grid grid-cols-2 gap-8">
+                                        <div className="space-y-4">
+                                            <p className="text-[10px] font-black uppercase text-slate-400 border-l-2 border-gold pl-3">Paramètres Physiques</p>
+                                            <ul className="space-y-2 text-xs font-medium text-slate-600">
+                                                <li className="flex justify-between"><span>Résistance Flexion :</span> <span className="font-black text-slate-900">1200 MPa</span></li>
+                                                <li className="flex justify-between"><span>Translucidité :</span> <span className="font-black text-slate-900">49% (Gradient)</span></li>
+                                                <li className="flex justify-between"><span>Coefficient Expansion :</span> <span className="font-black text-slate-900">10.5 x 10^-6/K</span></li>
+                                            </ul>
+                                        </div>
+                                        <div className="space-y-4">
+                                            <p className="text-[10px] font-black uppercase text-slate-400 border-l-2 border-gold pl-3">Compatibilité Système</p>
+                                            <div className="flex flex-wrap gap-2">
+                                                <Badge variant="secondary" className="bg-slate-50">iTero Certified</Badge>
+                                                <Badge variant="secondary" className="bg-slate-50">Cerec Connect</Badge>
+                                                <Badge variant="secondary" className="bg-slate-50">3Shape Ready</Badge>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="p-8 bg-slate-50 rounded-3xl space-y-4 border border-dashed border-slate-200">
+                                    <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest text-center">Description du Protocole</p>
+                                    <p className="text-sm text-slate-700 leading-relaxed text-center font-medium">
+                                        Le {selectedMaterial?.name} utilise une technologie multicouche avancée pour reproduire les gradients naturels de l'émail à la dentine.
+                                        Usinage recommandé sous irrigation avec fraises diamantées grain fin. Frittage à 1530°C pour une stabilité optimale.
+                                    </p>
+                                </div>
+
+                                <div className="grid grid-cols-3 gap-4 pt-8">
+                                    {[1, 2, 3].map(i => (
+                                        <div key={i} className="aspect-square bg-slate-100 rounded-2xl flex items-center justify-center border-2 border-white shadow-sm overflow-hidden relative group">
+                                            <FlaskConical className="h-10 w-10 text-slate-200" />
+                                            <div className="absolute inset-0 bg-gold/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="pt-12 border-t border-slate-100 flex justify-between items-center opacity-50">
+                                    <div className="flex items-center gap-2">
+                                        <div className="h-2 w-2 bg-gold rounded-full" />
+                                        <span className="text-[8px] font-black uppercase tracking-widest text-slate-400">Elite Dental Network</span>
+                                    </div>
+                                    <span className="text-[8px] font-black text-slate-400 italic">Document Confidentiel - Usage Professionnel Uniquement</span>
+                                </div>
+                            </div>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+
+                {/* Audit Inventory Dialog */}
+                <Dialog open={isAuditOpen} onOpenChange={setIsAuditOpen}>
+                    <DialogContent className="sm:max-w-[700px] rounded-[2.5rem] p-10 border-none shadow-luxury bg-white">
+                        <DialogHeader>
+                            <DialogTitle className="text-3xl font-black text-slate-900 tracking-tighter flex items-center gap-4">
+                                <BarChart3 className="h-8 w-8 text-indigo-500" />
+                                Audit de <span className="text-indigo-500">l'Inventaire Labo</span>
+                            </DialogTitle>
+                        </DialogHeader>
+                        <div className="mt-8 space-y-8">
+                            <div className="grid grid-cols-3 gap-4">
+                                <Card className="p-6 rounded-3xl bg-slate-50 border-none shadow-none">
+                                    <p className="text-[10px] font-black uppercase text-slate-400 mb-2">Taux Rotation</p>
+                                    <p className="text-2xl font-black text-slate-900 tracking-tight">84%</p>
+                                    <Progress value={84} className="h-1 mt-3 bg-slate-200" />
+                                </Card>
+                                <Card className="p-6 rounded-3xl bg-slate-50 border-none shadow-none">
+                                    <p className="text-[10px] font-black uppercase text-slate-400 mb-2">Valeur Stock</p>
+                                    <p className="text-2xl font-black text-slate-900 tracking-tight">4.2M</p>
+                                    <Badge className="bg-teal-50 text-teal-600 border-none mt-2 shadow-none text-[8px]">+12% / m-1</Badge>
+                                </Card>
+                                <Card className="p-6 rounded-3xl bg-slate-50 border-none shadow-none">
+                                    <p className="text-[10px] font-black uppercase text-slate-400 mb-2">Alertes Actives</p>
+                                    <p className="text-2xl font-black text-red-600 tracking-tight">03</p>
+                                    <p className="text-[8px] font-bold text-red-400 mt-2 uppercase tracking-wide">Action Requise</p>
+                                </Card>
+                            </div>
+
+                            <div className="rounded-3xl border border-slate-100 overflow-hidden">
+                                <Table>
+                                    <TableHeader className="bg-slate-50">
+                                        <TableRow className="border-slate-100 hover:bg-transparent">
+                                            <TableHead className="text-[10px] font-black uppercase text-slate-400 px-6 py-4">Matériau</TableHead>
+                                            <TableHead className="text-[10px] font-black uppercase text-slate-400 px-6 py-4">Consommation</TableHead>
+                                            <TableHead className="text-[10px] font-black uppercase text-slate-400 px-6 py-4">Status</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        <TableRow className="border-slate-50 hover:bg-slate-50/50 transition-colors">
+                                            <TableCell className="px-6 py-4 font-black text-slate-900 text-xs">Blocs Zircone</TableCell>
+                                            <TableCell className="px-6 py-4">
+                                                <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                                                    <div className="bg-teal-500 h-full w-[70%]" />
+                                                </div>
+                                            </TableCell>
+                                            <TableCell className="px-6 py-4"><Badge className="bg-teal-50 text-teal-600 border-none shadow-none text-[9px]">Stable</Badge></TableCell>
+                                        </TableRow>
+                                        <TableRow className="border-slate-50 hover:bg-slate-50/50 transition-colors">
+                                            <TableCell className="px-6 py-4 font-black text-slate-900 text-xs">Résine Guide 3D</TableCell>
+                                            <TableCell className="px-6 py-4">
+                                                <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                                                    <div className="bg-red-500 h-full w-[92%]" />
+                                                </div>
+                                            </TableCell>
+                                            <TableCell className="px-6 py-4"><Badge className="bg-red-50 text-red-600 border-none shadow-none text-[9px]">Critique</Badge></TableCell>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>
+                            </div>
+                            <Button className="w-full h-14 bg-indigo-600 text-white font-black uppercase tracking-widest rounded-2xl shadow-xl hover:bg-indigo-700 transition-all hover:scale-[1.02]">
+                                Générer Rapport PDF Complet
+                            </Button>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+
+                {/* Alerts Configuration Dialog */}
+                <Dialog open={isAlertsOpen} onOpenChange={setIsAlertsOpen}>
+                    <DialogContent className="sm:max-w-[450px] rounded-[2.5rem] p-10 border-none shadow-luxury bg-white">
+                        <DialogHeader>
+                            <DialogTitle className="text-3xl font-black text-slate-900 tracking-tighter flex items-center gap-4">
+                                <Settings className="h-8 w-8 text-amber-500" />
+                                Config <span className="text-amber-500">Smart Alert</span>
+                            </DialogTitle>
+                        </DialogHeader>
+                        <div className="mt-8 space-y-8">
+                            <div className="space-y-6">
+                                <div className="flex justify-between items-center">
+                                    <div>
+                                        <p className="font-black text-slate-900 text-xs">Seuil de Réapprovisionnement</p>
+                                        <p className="text-[10px] font-medium text-slate-500 italic">Déclenche un bon de commande auto.</p>
+                                    </div>
+                                    <span className="bg-slate-100 px-3 py-1 rounded-lg font-black text-xs text-slate-900 underline decoration-amber-500 decoration-2 underline-offset-4">15% restants</span>
+                                </div>
+                                <Progress value={15} className="h-2 bg-slate-100" />
+                            </div>
+
+                            <div className="space-y-4">
+                                <p className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mb-4">Canaux de Notification</p>
+                                {[
+                                    { label: 'E-mail Labo Pro', desc: 'Rapports hebdomadaires', active: true },
+                                    { label: 'WhatsApp Elite', desc: 'Alertes critiques J+0', active: true },
+                                    { label: 'SMS Fournisseur', desc: 'Commandes en attente', active: false },
+                                ].map((channel, i) => (
+                                    <div key={i} className="flex items-center justify-between p-4 rounded-2xl bg-slate-50/50 border border-slate-100 group hover:border-amber-200 transition-all">
+                                        <div>
+                                            <p className="text-[11px] font-black text-slate-900 tracking-tight">{channel.label}</p>
+                                            <p className="text-[9px] font-medium text-slate-400">{channel.desc}</p>
+                                        </div>
+                                        <div className={cn(
+                                            "h-5 w-10 rounded-full p-1 transition-colors cursor-pointer",
+                                            channel.active ? "bg-amber-500" : "bg-slate-200"
+                                        )}>
+                                            <div className={cn(
+                                                "h-3 w-3 bg-white rounded-full transition-transform",
+                                                channel.active ? "translate-x-5" : "translate-x-0"
+                                            )} />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <Button className="w-full h-14 bg-slate-900 text-gold font-black uppercase tracking-widest rounded-2xl shadow-xl hover:scale-[1.02] transition-all">
+                                Sauvegarder Config
+                            </Button>
+                        </div>
                     </DialogContent>
                 </Dialog>
 
@@ -521,8 +743,12 @@ export default function LabPage() {
                                 <h2 className="text-3xl font-black tracking-tighter">Inventaire & Traçabilité J+0.</h2>
                                 <p className="text-indigo-100 text-sm font-medium leading-relaxed">Suivez chaque élément prothétique provisoire installé. Le système alerte automatiquement le patient et le laboratoire si le port d'une temporaire dépasse la limite recommandée.</p>
                                 <div className="flex gap-4">
-                                    <Button className="bg-white text-indigo-600 font-black uppercase text-[10px] tracking-widest h-12 rounded-xl px-8 shadow-xl" onClick={() => toast.info("Génération du rapport d'audit...")}>Audit Inventaire</Button>
-                                    <Button className="bg-indigo-400 text-white border border-indigo-300 font-black uppercase text-[10px] tracking-widest h-12 rounded-xl px-8" onClick={() => toast.info("Ouverture des paramètres d'alertes")}>Configuration Alertes</Button>
+                                    <Button className="bg-white text-indigo-600 font-black uppercase text-[10px] tracking-widest h-12 rounded-xl px-8 shadow-xl hover:bg-slate-50 transition-all" onClick={() => setIsAuditOpen(true)}>
+                                        <BarChart3 className="h-4 w-4 mr-2" /> Audit Inventaire
+                                    </Button>
+                                    <Button className="bg-indigo-400 text-white border border-indigo-300 font-black uppercase text-[10px] tracking-widest h-12 rounded-xl px-8 hover:bg-indigo-500 transition-all" onClick={() => setIsAlertsOpen(true)}>
+                                        <Settings className="h-4 w-4 mr-2" /> Configuration Alertes
+                                    </Button>
                                 </div>
                             </div>
                         </Card>
