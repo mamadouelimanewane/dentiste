@@ -41,6 +41,10 @@ export default function SmileDesignStudio() {
         { id: 'ORTHO', name: 'Aligneurs Invisibles', color: 'bg-teal-500', icon: Smile },
     ]
 
+    const loadDemoImage = () => {
+        setUploadedImage('https://images.unsplash.com/photo-1590650153855-d9e808231d41?auto=format&fit=crop&q=80&w=1200')
+    }
+
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
         if (file) {
@@ -73,48 +77,47 @@ export default function SmileDesignStudio() {
                     <p className="text-slate-500 font-medium tracking-tight">Simulation esthétique par IA : Montrez le futur sourire à vos patients.</p>
                 </div>
                 <div className="flex gap-4">
-                    <Button variant="outline" className="rounded-2xl border-slate-200 h-14 px-6 text-[10px] font-black uppercase tracking-widest text-slate-500 bg-white">
-                        <History className="mr-2 h-4 w-4" /> Historique Simulations
+                    <Button variant="outline" className="rounded-2xl border-slate-200 h-14 px-6 text-[10px] font-black uppercase tracking-widest text-slate-500 bg-white shadow-sm">
+                        <History className="mr-2 h-4 w-4" /> Historique
                     </Button>
-                    <Button className="bg-slate-900 text-white hover:bg-slate-800 font-black px-8 rounded-2xl uppercase tracking-widest text-[11px] h-14 shadow-luxury transition-all">
-                        <Download className="mr-2 h-5 w-5" /> Exporter le Design
+                    <Button className="bg-slate-900 text-white hover:bg-slate-800 font-black px-8 rounded-2xl uppercase tracking-widest text-[11px] h-14 shadow-lg transition-all">
+                        <Download className="mr-2 h-5 w-5" /> Exporter
                     </Button>
                 </div>
             </div>
 
             <div className="grid grid-cols-12 gap-10">
-                {/* Main Interaction Area */}
                 <div className="col-span-12 lg:col-span-8 space-y-8">
                     <Card className="rounded-[4rem] border-none shadow-2xl bg-white overflow-hidden relative min-h-[600px] flex flex-col">
                         {step === 1 ? (
                             <div className="flex-1 flex flex-col items-center justify-center p-20 text-center space-y-10">
                                 <input
-                                    id="smile-design-upload"
+                                    id="smile-design-input-file"
                                     type="file"
-                                    ref={fileInputRef}
                                     className="hidden"
                                     accept="image/*"
                                     onChange={handleFileChange}
                                 />
-                                <div className="relative">
+                                <div className="relative group">
                                     <label
-                                        htmlFor="smile-design-upload"
+                                        htmlFor="smile-design-input-file"
                                         className={cn(
-                                            "h-48 w-48 bg-slate-50 border-2 border-dashed rounded-[3rem] flex items-center justify-center group transition-all cursor-pointer overflow-hidden relative",
-                                            uploadedImage ? "border-gold border-solid" : "border-slate-200 hover:border-gold"
+                                            "h-56 w-56 bg-white border-4 border-dashed rounded-[4rem] flex flex-col items-center justify-center transition-all cursor-pointer overflow-hidden relative shadow-inner",
+                                            uploadedImage ? "border-gold border-solid" : "border-slate-100 hover:border-gold hover:bg-gold/5"
                                         )}
                                     >
                                         {uploadedImage ? (
                                             <div className="absolute inset-0">
                                                 <img src={uploadedImage} alt="Portrait" className="h-full w-full object-cover" />
-                                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                                    <Camera className="h-8 w-8 text-white" />
+                                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white gap-2">
+                                                    <Camera className="h-8 w-8" />
+                                                    <span className="text-[10px] font-black uppercase tracking-widest">Changer de photo</span>
                                                 </div>
                                             </div>
                                         ) : (
                                             <>
-                                                <div className="absolute inset-0 bg-gold/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                                <Upload className="h-10 w-10 text-slate-300 group-hover:text-gold transition-colors" />
+                                                <Upload className="h-12 w-12 text-slate-200 group-hover:text-gold transition-colors mb-4" />
+                                                <p className="text-[11px] font-black uppercase tracking-widest text-slate-400 group-hover:text-gold">Cliquez pour importer</p>
                                             </>
                                         )}
                                     </label>
@@ -122,32 +125,44 @@ export default function SmileDesignStudio() {
                                         <button
                                             type="button"
                                             onClick={(e) => { e.preventDefault(); e.stopPropagation(); setUploadedImage(null) }}
-                                            className="absolute -top-2 -right-2 h-8 w-8 bg-rose-500 text-white rounded-full flex items-center justify-center shadow-lg border-2 border-white hover:scale-110 transition-all z-10"
+                                            className="absolute -top-3 -right-3 h-10 w-10 bg-rose-500 text-white rounded-2xl flex items-center justify-center shadow-xl border-4 border-white hover:scale-110 transition-all z-20"
                                         >
-                                            <X className="h-4 w-4" />
+                                            <X className="h-5 w-5" />
                                         </button>
                                     )}
-                                    <div className="absolute -bottom-4 -right-4 h-12 w-12 bg-white rounded-2xl shadow-xl flex items-center justify-center border border-slate-100">
-                                        <ImageIcon className="h-5 w-5 text-indigo-600" />
+                                    <div className="absolute -bottom-4 -right-4 h-14 w-14 bg-white rounded-2xl shadow-2xl flex items-center justify-center border border-slate-50 z-10">
+                                        <ImageIcon className="h-6 w-6 text-indigo-600 animate-pulse" />
                                     </div>
                                 </div>
                                 <div className="space-y-4 max-w-md">
-                                    <h2 className="text-2xl font-black text-slate-900 tracking-tight">Importez le Portrait Patient</h2>
-                                    <p className="text-sm font-medium text-slate-500 leading-relaxed italic">
-                                        Téléchargez une photo de face avec sourire apparent. Notre IA analysera la symétrie faciale et la ligne gingivale.
+                                    <h2 className="text-3xl font-black text-slate-900 tracking-tighter uppercase">Portrait Patient</h2>
+                                    <p className="text-sm font-bold text-slate-400 leading-relaxed italic">
+                                        Importez une photo de face. Notre IA analysera automatiquement les paramètres esthétiques.
                                     </p>
                                 </div>
-                                <Button
-                                    onClick={handleStartAnalysis}
-                                    disabled={isAnalyzing || !uploadedImage}
-                                    className={cn(
-                                        "font-black uppercase text-[11px] tracking-widest h-14 px-12 rounded-2xl shadow-xl active:scale-95 transition-all text-white",
-                                        uploadedImage ? "bg-slate-900" : "bg-slate-300 cursor-not-allowed"
+                                <div className="flex flex-col gap-4 w-full max-w-xs">
+                                    <Button
+                                        onClick={handleStartAnalysis}
+                                        disabled={isAnalyzing || !uploadedImage}
+                                        className={cn(
+                                            "font-black uppercase text-[12px] tracking-widest h-16 w-full rounded-2xl shadow-xl transition-all",
+                                            uploadedImage ? "bg-slate-900 text-white hover:bg-slate-800 scale-105" : "bg-slate-100 text-slate-400 cursor-not-allowed"
+                                        )}
+                                    >
+                                        {isAnalyzing ? <RefreshCw className="mr-3 h-5 w-5 animate-spin" /> : <Sparkles className="mr-3 h-5 w-5 text-gold" />}
+                                        {isAnalyzing ? "Analyse Neurale..." : "Générer Simulation IA"}
+                                    </Button>
+
+                                    {!uploadedImage && (
+                                        <Button
+                                            variant="ghost"
+                                            onClick={loadDemoImage}
+                                            className="text-[10px] font-black uppercase tracking-widest text-indigo-500 hover:bg-indigo-50"
+                                        >
+                                            Essayer avec une démo <ArrowRight className="ml-2 h-3 w-3" />
+                                        </Button>
                                     )}
-                                >
-                                    {isAnalyzing ? <RefreshCw className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
-                                    {isAnalyzing ? "Analyse Neurale..." : "Lancer l'Analyse IA"}
-                                </Button>
+                                </div>
                             </div>
                         ) : (
                             <div className="flex-1 flex flex-col relative h-full">
