@@ -36,8 +36,8 @@ export default function AgendaPage() {
     const [currentDate, setCurrentDate] = useState(new Date())
     const [activeLocation, setActiveLocation] = useState('CABINET_DAKAR')
     const [isLoading, setIsLoading] = useState(true)
-    const [appointments, setAppointments] = useState<any[]>([])
     const [currentTime, setCurrentTime] = useState(new Date())
+    const [view, setView] = useState<'CALENDAR' | 'WAITING_LIST' | 'RESOURCES'>('CALENDAR')
 
     // Booking form state
     const [isBookingOpen, setIsBookingOpen] = useState(false)
@@ -234,6 +234,43 @@ export default function AgendaPage() {
                         </Button>
                     </div>
 
+                    <div className="bg-white border-none shadow-luxury rounded-2xl p-1 flex items-center gap-1">
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className={cn(
+                                "rounded-xl px-4 text-[10px] font-black uppercase tracking-widest h-9",
+                                view === 'CALENDAR' ? "bg-slate-900 text-white" : "text-slate-400 hover:text-slate-900"
+                            )}
+                            onClick={() => setView('CALENDAR')}
+                        >
+                            Vue Calendrier
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            id="btn-waiting-list"
+                            className={cn(
+                                "rounded-xl px-4 text-[10px] font-black uppercase tracking-widest h-9",
+                                view === 'WAITING_LIST' ? "bg-gold text-white" : "text-slate-400 hover:text-gold"
+                            )}
+                            onClick={() => setView('WAITING_LIST')}
+                        >
+                            Liste d'Attente
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className={cn(
+                                "rounded-xl px-4 text-[10px] font-black uppercase tracking-widest h-9",
+                                view === 'RESOURCES' ? "bg-indigo-600 text-white" : "text-slate-400 hover:text-indigo-600"
+                            )}
+                            onClick={() => setView('RESOURCES')}
+                        >
+                            Ressources
+                        </Button>
+                    </div>
+
                     <Button
                         onClick={() => setIsBookingOpen(true)}
                         className="bg-slate-900 text-white font-black uppercase tracking-widest text-xs h-14 rounded-2xl px-8 shadow-xl hover:scale-105 transition-all"
@@ -335,180 +372,219 @@ export default function AgendaPage() {
             </Dialog>
 
             <div className="flex-1 flex gap-8 min-h-0">
-                {/* Left Sidebar: Waiting List */}
-                <div className="w-80 flex flex-col gap-6 shrink-0">
-                    <div className="bg-white p-6 rounded-[2.5rem] shadow-luxury border border-slate-100 flex-1 flex flex-col overflow-hidden">
-                        <div className="flex items-center gap-2 mb-6 shrink-0">
-                            <Zap className="h-4 w-4 text-gold animate-pulse" />
-                            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Liste d'Attente</h3>
-                        </div>
-
-                        <div className="flex-1 overflow-y-auto pr-2 no-scrollbar space-y-4">
-                            {waitingList.length === 0 ? (
-                                <div className="text-center py-12 px-4 italic text-slate-300 text-[10px] font-bold uppercase">
-                                    Aucun patient en attente de rendez-vous
-                                </div>
-                            ) : waitingList.map(p => (
-                                <button
-                                    key={p.id}
-                                    className="w-full text-left p-4 bg-slate-50 rounded-2xl border border-slate-100 group hover:border-gold hover:bg-white transition-all active:scale-95 flex flex-col gap-1"
-                                    onClick={() => {
-                                        setFormData({
-                                            ...formData,
-                                            patientId: p.id,
-                                            title: `Consultation ${p.firstName}`,
-                                            date: format(new Date(), 'yyyy-MM-dd')
-                                        })
-                                        setIsBookingOpen(true)
-                                        toast.info(`Planification de ${p.firstName}...`, {
-                                            description: "Complétez le formulaire pour valider le créneau.",
-                                            duration: 3000
-                                        })
-                                    }}
-                                >
-                                    <div className="flex justify-between items-start">
-                                        <p className="text-xs font-black text-slate-800">{p.firstName} {p.lastName}</p>
-                                        <div className="h-6 px-2 rounded-full bg-gold/10 flex items-center justify-center text-[7px] font-black text-gold group-hover:bg-gold group-hover:text-white transition-colors uppercase tracking-widest">
-                                            Planifier
-                                        </div>
-                                    </div>
-                                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
-                                        {p.phone || 'Pas de numéro'}
-                                    </p>
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className="bg-slate-900 p-6 rounded-[3rem] text-white flex flex-col gap-4 shadow-2xl">
-                        <div className="flex justify-between items-start">
-                            <div className="flex flex-col gap-1">
-                                <span className="text-[9px] font-black uppercase tracking-widest opacity-60">Volume Hebdo</span>
-                                <div className="flex items-end gap-2">
-                                    <span className="text-4xl font-black text-gold">{visibleAppointments.length}</span>
-                                    <span className="text-[10px] font-bold uppercase opacity-60 mb-2">RDV</span>
-                                </div>
+                {/* Left Sidebar: Visibility depends on view */}
+                {view === 'CALENDAR' && (
+                    <div className="w-80 flex flex-col gap-6 shrink-0 animate-in slide-in-from-left duration-500">
+                        <div className="bg-white p-6 rounded-[2.5rem] shadow-luxury border border-slate-100 flex-1 flex flex-col overflow-hidden">
+                            <div className="flex items-center gap-2 mb-6 shrink-0">
+                                <Zap className="h-4 w-4 text-gold animate-pulse" />
+                                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Accès Rapide</h3>
                             </div>
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-10 w-10 text-white/20 hover:text-gold hover:bg-white/5 rounded-xl transition-all"
-                                onClick={() => { fetchAppointments(); fetchPatients(); }}
-                            >
-                                <RefreshCw className={cn("h-4 w-4", isLoading && "animate-spin")} />
-                            </Button>
-                        </div>
 
-                        <div className="pt-4 border-t border-white/5 space-y-2">
-                            <div className="flex justify-between text-[10px] font-bold">
-                                <span className="text-white/40 uppercase">Total Base</span>
-                                <span className="text-white/80">{appointments.length}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Calendar Grid */}
-                <div className="flex-1 border-none rounded-[3rem] bg-white shadow-luxury overflow-hidden flex flex-col relative border border-slate-100">
-                    {/* Day Headers */}
-                    <div className="flex border-b border-slate-50 bg-slate-50/10 shrink-0">
-                        <div className="w-24 border-r border-slate-50 flex flex-col items-center justify-center p-6 shrink-0 bg-slate-50/20">
-                            <CalendarIcon className="h-5 w-5 text-slate-300" />
-                        </div>
-                        {weekDays.map(day => {
-                            const isToday = format(day, 'ddMMyyyy') === format(new Date(), 'ddMMyyyy')
-                            return (
-                                <div key={day.toISOString()} className={cn("flex-1 p-6 text-center border-r border-slate-50 last:border-0", isToday ? "bg-gold/5" : "hover:bg-slate-50/30 transition-colors")}>
-                                    <div className={cn("text-[10px] font-black uppercase tracking-[0.3em] mb-1.5", isToday ? "text-gold" : "text-slate-400")}>
-                                        {format(day, 'EEE', { locale: fr }).replace('.', '')}
-                                    </div>
-                                    <div className={cn("text-3xl font-black tracking-tighter", isToday ? "text-slate-900" : "text-slate-700")}>
-                                        {format(day, 'd', { locale: fr })}
-                                    </div>
-                                </div>
-                            )
-                        })}
-                    </div>
-
-                    {/* Content Area */}
-                    <div className="flex-1 overflow-y-auto no-scrollbar relative">
-                        {isLoading && (
-                            <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-white/70 backdrop-blur-md">
-                                <RefreshCw className="h-12 w-12 animate-spin text-gold mb-4" />
-                                <p className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-400">Initialisation Elite Planner...</p>
-                            </div>
-                        )}
-
-                        <div className="relative min-h-[1920px]">
-                            {hours.map(hour => (
-                                <div key={hour} className="flex h-40 border-b border-slate-50 last:border-0 relative group">
-                                    <div className="w-24 border-r border-slate-50 bg-slate-50/20 flex flex-col items-center justify-start pt-8 text-[11px] text-slate-400 sticky left-0 font-black z-30 shrink-0">
-                                        <span className="text-slate-900">{hour}:00</span>
-                                    </div>
-
-                                    {weekDays.map((_, dayIndex) => (
-                                        <div key={dayIndex} className="flex-1 border-r border-slate-50 last:border-0 relative">
-                                            <div className="absolute top-1/2 w-full border-t border-dashed border-slate-100 pointer-events-none" />
-                                        </div>
-                                    ))}
-                                </div>
-                            ))}
-
-                            {/* Appointments Overlay */}
-                            {visibleAppointments.map(app => {
-                                const pos = getAppPosition(app)
-                                if (!pos) return null
-                                const isSurgery = app.isSurgery
-
-                                return (
-                                    <motion.div
-                                        key={app.id}
-                                        initial={{ opacity: 0, scale: 0.95 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        className={cn(
-                                            "absolute rounded-[2.5rem] p-6 z-20 cursor-pointer shadow-xl border-2 overflow-hidden group transition-all hover:scale-[1.02] hover:shadow-2xl hover:z-30",
-                                            isSurgery ? "bg-slate-950 text-white border-gold/50" : "bg-white text-slate-900 border-slate-100"
-                                        )}
-                                        style={{
-                                            left: `calc(${pos.left} + 12px)`,
-                                            width: `calc(${pos.width} - 24px)`,
-                                            height: `${pos.height - 8}px`,
-                                            top: `${(pos.hourStart - 8) * 160 + pos.top + 4}px`
+                            <div className="flex-1 overflow-y-auto pr-2 no-scrollbar space-y-4">
+                                {waitingList.slice(0, 5).map(p => (
+                                    <button
+                                        key={p.id}
+                                        className="w-full text-left p-4 bg-slate-50 rounded-2xl border border-slate-100 group hover:border-gold hover:bg-white transition-all active:scale-95 flex flex-col gap-1"
+                                        onClick={() => {
+                                            setFormData({
+                                                ...formData,
+                                                patientId: p.id,
+                                                title: `Consultation ${p.firstName}`,
+                                                date: format(new Date(), 'yyyy-MM-dd')
+                                            })
+                                            setIsBookingOpen(true)
+                                            toast.info(`Planification de ${p.firstName}...`)
                                         }}
                                     >
-                                        <div className="absolute right-[-20px] top-[-20px] opacity-10 group-hover:scale-150 transition-transform duration-700">
-                                            {isSurgery ? <Activity className="h-24 w-24 text-gold" /> : <Stethoscope className="h-24 w-24 text-slate-200" />}
+                                        <div className="flex justify-between items-start">
+                                            <p className="text-xs font-black text-slate-800">{p.firstName} {p.lastName}</p>
+                                            <div className="h-5 w-5 rounded-full bg-gold/10 flex items-center justify-center text-[10px] text-gold">+</div>
                                         </div>
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <div className={cn("h-2 w-2 rounded-full", isSurgery ? "bg-gold animate-pulse" : "bg-indigo-400")} />
-                                            <span className={cn("text-[8px] font-black uppercase tracking-widest", isSurgery ? "text-gold" : "text-slate-400")}>
-                                                {app.type || 'Soin'}
-                                            </span>
-                                        </div>
-                                        <div className="font-black text-sm tracking-tight mb-1 truncate">
-                                            {app.patient ? `${app.patient.firstName} ${app.patient.lastName}` : 'Patient VIP'}
-                                        </div>
-                                        <div className={cn("text-[9px] font-bold line-clamp-1 opacity-70", isSurgery ? "text-slate-400" : "text-slate-500")}>
-                                            {app.title}
-                                        </div>
-                                    </motion.div>
-                                )
-                            })}
-
-                            {/* Current Time Line */}
-                            {currentTimePos !== null && (
-                                <div
-                                    className="absolute left-24 right-0 h-[3px] bg-red-500 z-40 pointer-events-none transition-all duration-1000"
-                                    style={{ top: `${currentTimePos}px` }}
+                                    </button>
+                                ))}
+                                <Button
+                                    variant="ghost"
+                                    className="w-full text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-gold"
+                                    onClick={() => setView('WAITING_LIST')}
                                 >
-                                    <div className="absolute -left-1.5 -top-1.5 h-4 w-4 bg-red-500 rounded-full border-4 border-white shadow-xl" />
-                                    <div className="absolute left-6 top-2 bg-red-500 text-white text-[8px] font-black px-2 py-0.5 rounded-full shadow-lg">
-                                        {format(currentTime, 'HH:mm')}
+                                    Voir toute la liste
+                                </Button>
+                            </div>
+                        </div>
+
+                        <div className="bg-slate-900 p-6 rounded-[3rem] text-white flex flex-col gap-4 shadow-2xl">
+                            <div className="flex justify-between items-start">
+                                <div className="flex flex-col gap-1">
+                                    <span className="text-[9px] font-black uppercase tracking-widest opacity-60">Volume Hebdo</span>
+                                    <div className="flex items-end gap-2">
+                                        <span className="text-4xl font-black text-gold">{visibleAppointments.length}</span>
+                                        <span className="text-[10px] font-bold uppercase opacity-60 mb-2">RDV</span>
                                     </div>
                                 </div>
-                            )}
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-10 w-10 text-white/20 hover:text-gold hover:bg-white/5 rounded-xl transition-all"
+                                    onClick={() => { fetchAppointments(); fetchPatients(); }}
+                                >
+                                    <RefreshCw className={cn("h-4 w-4", isLoading && "animate-spin")} />
+                                </Button>
+                            </div>
+
+                            <div className="pt-4 border-t border-white/5 space-y-2">
+                                <div className="flex justify-between text-[10px] font-bold">
+                                    <span className="text-white/40 uppercase">Total Base</span>
+                                    <span className="text-white/80">{appointments.length}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                )}
+
+                {/* Main Content Area */}
+                <div className="flex-1 flex flex-col min-h-0 bg-white rounded-[3rem] shadow-luxury border border-slate-100 overflow-hidden relative">
+                    {view === 'CALENDAR' && (
+                        <div className="flex flex-col h-full animate-in fade-in duration-700">
+                            {/* Day Headers */}
+                            <div className="flex border-b border-slate-50 bg-slate-50/10 shrink-0">
+                                <div className="w-24 border-r border-slate-50 flex flex-col items-center justify-center p-6 shrink-0 bg-slate-50/20">
+                                    <CalendarIcon className="h-5 w-5 text-slate-300" />
+                                </div>
+                                {weekDays.map(day => {
+                                    const isToday = format(day, 'ddMMyyyy') === format(new Date(), 'ddMMyyyy')
+                                    return (
+                                        <div key={day.toISOString()} className={cn("flex-1 p-6 text-center border-r border-slate-50 last:border-0", isToday ? "bg-gold/5" : "hover:bg-slate-50/30 transition-colors")}>
+                                            <div className={cn("text-[10px] font-black uppercase tracking-[0.3em] mb-1.5", isToday ? "text-gold" : "text-slate-400")}>
+                                                {format(day, 'EEE', { locale: fr }).replace('.', '')}
+                                            </div>
+                                            <div className={cn("text-3xl font-black tracking-tighter", isToday ? "text-slate-900" : "text-slate-700")}>
+                                                {format(day, 'd', { locale: fr })}
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+
+                            {/* Content Area */}
+                            <div className="flex-1 overflow-y-auto no-scrollbar relative">
+                                {isLoading && (
+                                    <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-white/70 backdrop-blur-md">
+                                        <RefreshCw className="h-12 w-12 animate-spin text-gold mb-4" />
+                                        <p className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-400">Synchronisation Elite...</p>
+                                    </div>
+                                )}
+
+                                <div className="relative min-h-[1920px]">
+                                    {hours.map(hour => (
+                                        <div key={hour} className="flex h-40 border-b border-slate-50 last:border-0 relative group">
+                                            <div className="w-24 border-r border-slate-50 bg-slate-50/20 flex flex-col items-center justify-start pt-8 text-[11px] text-slate-400 sticky left-0 font-black z-30 shrink-0">
+                                                <span className="text-slate-900">{hour}:00</span>
+                                            </div>
+
+                                            {weekDays.map((_, dayIndex) => (
+                                                <div key={dayIndex} className="flex-1 border-r border-slate-50 last:border-0 relative">
+                                                    <div className="absolute top-1/2 w-full border-t border-dashed border-slate-100 pointer-events-none" />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ))}
+
+                                    {/* Appointments Overlay */}
+                                    {visibleAppointments.map(app => {
+                                        const pos = getAppPosition(app)
+                                        if (!pos) return null
+                                        const isSurgery = app.isSurgery
+
+                                        return (
+                                            <motion.div
+                                                key={app.id}
+                                                initial={{ opacity: 0, scale: 0.95 }}
+                                                animate={{ opacity: 1, scale: 1 }}
+                                                className={cn(
+                                                    "absolute rounded-[2.5rem] p-6 z-20 cursor-pointer shadow-xl border-2 overflow-hidden group transition-all hover:scale-[1.02] hover:shadow-2xl hover:z-30",
+                                                    isSurgery ? "bg-slate-950 text-white border-gold/50" : "bg-white text-slate-900 border-slate-100"
+                                                )}
+                                                style={{
+                                                    left: `calc(${pos.left} + 12px)`,
+                                                    width: `calc(${pos.width} - 24px)`,
+                                                    height: `${pos.height - 8}px`,
+                                                    top: `${(pos.hourStart - 8) * 160 + pos.top + 4}px`
+                                                }}
+                                            >
+                                                <div className="font-black text-sm tracking-tight mb-1 truncate">
+                                                    {app.patient ? `${app.patient.firstName} ${app.patient.lastName}` : 'Patient VIP'}
+                                                </div>
+                                                <div className={cn("text-[9px] font-bold line-clamp-1 opacity-70", isSurgery ? "text-slate-400" : "text-slate-500")}>
+                                                    {app.title}
+                                                </div>
+                                            </motion.div>
+                                        )
+                                    })}
+
+                                    {/* Current Time Line */}
+                                    {currentTimePos !== null && (
+                                        <div
+                                            className="absolute left-24 right-0 h-[3px] bg-red-500 z-40 pointer-events-none transition-all duration-1000"
+                                            style={{ top: `${currentTimePos}px` }}
+                                        >
+                                            <div className="absolute -left-1.5 -top-1.5 h-4 w-4 bg-red-500 rounded-full border-4 border-white shadow-xl" />
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {view === 'WAITING_LIST' && (
+                        <div className="flex flex-col h-full bg-slate-50 animate-in slide-in-from-bottom duration-500">
+                            <div className="p-12 space-y-8">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <h2 className="text-4xl font-black text-slate-900 tracking-tighter">Liste d'Attente <span className="text-gold">Prioritaire</span></h2>
+                                        <p className="text-slate-500 font-medium">Patients en attente de planification de soins.</p>
+                                    </div>
+                                    <div className="h-20 w-20 rounded-[2.5rem] bg-gold/10 flex items-center justify-center">
+                                        <Zap className="h-10 w-10 text-gold" />
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {waitingList.map(p => (
+                                        <Card key={p.id} className="rounded-[2.5rem] border-none shadow-luxury bg-white p-8 group hover:scale-[1.02] transition-all cursor-pointer" onClick={() => {
+                                            setFormData({
+                                                ...formData,
+                                                patientId: p.id,
+                                                title: `Consultation ${p.firstName}`,
+                                                date: format(new Date(), 'yyyy-MM-dd')
+                                            })
+                                            setIsBookingOpen(true)
+                                        }}>
+                                            <div className="flex justify-between items-start mb-6">
+                                                <div className="h-12 w-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-gold group-hover:text-white transition-colors">
+                                                    <Stethoscope className="h-6 w-6" />
+                                                </div>
+                                                <span className="text-[10px] font-black uppercase tracking-widest text-slate-300">#EA-{p.id.slice(0, 4)}</span>
+                                            </div>
+                                            <h3 className="text-xl font-black text-slate-900 tracking-tight">{p.firstName} {p.lastName}</h3>
+                                            <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mt-2 mb-6">{p.phone || 'Pas de numéro'}</p>
+                                            <Button className="w-full bg-slate-900 text-gold font-black uppercase tracking-widest text-[10px] h-12 rounded-2xl">
+                                                Planifier ce patient
+                                            </Button>
+                                        </Card>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {view === 'RESOURCES' && (
+                        <div className="flex flex-col h-full items-center justify-center p-20 text-center animate-in zoom-in duration-500">
+                            <Activity className="h-20 w-20 text-indigo-600 mb-8 animate-pulse" />
+                            <h2 className="text-3xl font-black text-slate-900 tracking-tighter">Vue <span className="text-indigo-600">Ressources Multi-Sites</span></h2>
+                            <p className="text-slate-400 font-medium max-w-md mx-auto mt-4">Optimisation de l'occupation des fauteuils et gestion du personnel en temps réel. Module en cours de synchronisation.</p>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
