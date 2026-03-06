@@ -4,11 +4,32 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { CheckCircle2, Circle, Clock, Plus, Loader2, Calendar, User, Tag } from "lucide-react"
 import { useState, useEffect } from "react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 
 export default function TasksPage() {
     const [isLoading, setIsLoading] = useState(true)
     const [tasks, setTasks] = useState<any[]>([])
+    const [patients, setPatients] = useState<any[]>([])
+    const [isAddOpen, setIsAddOpen] = useState(false)
+    const [taskFormData, setTaskFormData] = useState({
+        title: '',
+        priority: 'MEDIUM',
+        category: 'Opérations',
+        patientId: '',
+        dueDate: ''
+    })
+
+    const fetchPatients = async () => {
+        try {
+            const res = await fetch('/api/patients')
+            const data = await res.json()
+            if (Array.isArray(data)) setPatients(data)
+        } catch (e) { console.error(e) }
+    }
 
     const fetchTasks = async () => {
         setIsLoading(true)
@@ -27,6 +48,7 @@ export default function TasksPage() {
 
     useEffect(() => {
         fetchTasks()
+        fetchPatients()
     }, [])
 
     const toggleTask = async (task: any) => {
@@ -46,6 +68,27 @@ export default function TasksPage() {
         }
     }
 
+    const handleCreateTask = async (e: React.FormEvent) => {
+        e.preventDefault()
+        if (!taskFormData.title) return toast.error("Le titre est requis")
+
+        try {
+            const res = await fetch('/api/tasks', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(taskFormData)
+            })
+            if (res.ok) {
+                toast.success("Tâche créée avec succès !")
+                setIsAddOpen(false)
+                setTaskFormData({ title: '', priority: 'MEDIUM', category: 'Opérations', patientId: '', dueDate: '' })
+                fetchTasks()
+            }
+        } catch (error) {
+            toast.error("Erreur lors de la création de la tâche")
+        }
+    }
+
     return (
         <div className="p-8 space-y-10 max-w-7xl mx-auto">
             <div className="flex items-center justify-between">
@@ -57,10 +100,83 @@ export default function TasksPage() {
                     <h1 className="text-4xl font-black text-slate-900 tracking-tighter">Elite <span className="text-gold">Command Center</span></h1>
                     <p className="text-slate-500 font-medium tracking-tight">Gestion des flux opérationnels, maintenance et tâches cliniques.</p>
                 </div>
-                <Button className="bg-slate-900 text-white font-black uppercase tracking-widest text-[10px] h-14 rounded-2xl px-8 shadow-xl">
+                <Button
+                    className="bg-slate-900 text-white font-black uppercase tracking-widest text-[10px] h-14 rounded-2xl px-8 shadow-xl hover:scale-[1.02] transition-all"
+                    onClick={() => setIsAddOpen(true)}
+                >
                     <Plus className="mr-2 h-4 w-4" /> Nouvelle Tâche
                 </Button>
             </div>
+
+            {/* Creation Dialog */}
+            <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+                <DialogContent className="sm:max-w-[500px] rounded-[2.5rem] p-8 border-none shadow-luxury">
+                    <DialogHeader>
+                        <DialogTitle className="text-2xl font-black text-slate-900 tracking-tighter">Nouvelle <span className="text-gold">Tâche</span></DialogTitle>
+                    </DialogHeader>
+                    <form onSubmit={handleCreateTask} className="space-y-6 mt-6">
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Titre de la tâche</label>
+                            <Input
+                                value={taskFormData.title}
+                                onChange={(e) => setTaskFormData({ ...taskFormData, title: e.target.value })}
+                                className="rounded-xl h-12 border-slate-100 bg-slate-50/50"
+                                placeholder="ex: Commander du matériel, Rappeler M. Dupont..."
+                            />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Priorité</label>
+                                <Select value={taskFormData.priority} onValueChange={(val) => setTaskFormData({ ...taskFormData, priority: val })}>
+                                    <SelectTrigger className="rounded-xl h-12 border-slate-100 bg-slate-50/50">
+                                        <SelectValue placeholder="Sélectionner" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="LOW">Basse (Bleu)</SelectItem>
+                                        <SelectItem value="MEDIUM">Moyenne (Orange)</SelectItem>
+                                        <SelectItem value="HIGH">Haute (Rouge)</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Catégorie</label>
+                                <Input
+                                    value={taskFormData.category}
+                                    onChange={(e) => setTaskFormData({ ...taskFormData, category: e.target.value })}
+                                    className="rounded-xl h-12 border-slate-100 bg-slate-50/50"
+                                    placeholder="ex: Opérations, Admin, Clinique"
+                                />
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Date (Optionnel)</label>
+                                <Input
+                                    type="date"
+                                    value={taskFormData.dueDate}
+                                    onChange={(e) => setTaskFormData({ ...taskFormData, dueDate: e.target.value })}
+                                    className="rounded-xl h-12 border-slate-100 bg-slate-50/50"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Patient Associé (Optionnel)</label>
+                                <Select value={taskFormData.patientId} onValueChange={(val) => setTaskFormData({ ...taskFormData, patientId: val })}>
+                                    <SelectTrigger className="rounded-xl h-12 border-slate-100 bg-slate-50/50">
+                                        <SelectValue placeholder="Aucun" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="none">Aucun</SelectItem>
+                                        {patients.map(p => (
+                                            <SelectItem key={p.id} value={p.id}>{p.firstName} {p.lastName}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
+                        <Button type="submit" className="w-full h-14 bg-slate-900 text-gold font-black uppercase tracking-widest rounded-2xl shadow-xl mt-4 hover:scale-[1.02] transition-all">Créer la Tâche</Button>
+                    </form>
+                </DialogContent>
+            </Dialog>
 
             {isLoading ? (
                 <div className="flex flex-col items-center justify-center h-64">
