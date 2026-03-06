@@ -482,16 +482,17 @@ export default function LabPage() {
                                     variant="ghost"
                                     className="text-white hover:bg-white/10"
                                     onClick={() => {
-                                        const blob = new Blob([`Fiche Technique: ${selectedMaterial?.name}\nPropriétés: ${selectedMaterial?.properties}`], { type: 'text/plain' });
+                                        const textContent = `ELITE LABS PRO - Certification & Standards Digitaux\n\nFiche Spécifications : ${selectedMaterial?.name}\nCatégorie : ${selectedMaterial?.category}\nPropriétés : ${selectedMaterial?.properties}\n\nRésistance flexure : 1200 MPa\nTranslucidité : 49% (Gradient)\nCompatibilité: iTero, Cerec, 3Shape\n\nDocument Confidentiel - Usage Professionnel Uniquement`;
+                                        const blob = new Blob([textContent], { type: 'text/plain;charset=utf-8' });
                                         const url = window.URL.createObjectURL(blob);
                                         const a = document.createElement('a');
                                         a.href = url;
-                                        a.download = `${selectedMaterial?.name.replace(/\s+/g, '_')}_Elite_Spec.pdf`;
+                                        a.download = `${selectedMaterial?.name.replace(/\s+/g, '_')}_Elite_Spec.txt`;
                                         a.click();
-                                        toast.success("Génération du PDF Elite terminée");
+                                        toast.success("Document exporté au format Texte (.txt)");
                                     }}
                                 >
-                                    <Download className="h-4 w-4 mr-2" /> Télécharger
+                                    <Download className="h-4 w-4 mr-2" /> Télécharger (.txt)
                                 </Button>
                                 <Button size="sm" className="bg-gold text-slate-900 font-black" onClick={() => setIsPdfOpen(false)}>Fermer</Button>
                             </div>
