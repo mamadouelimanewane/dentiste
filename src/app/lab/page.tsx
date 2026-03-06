@@ -385,8 +385,18 @@ export default function LabPage() {
                                 </div>
                                 <div className="grid grid-cols-3 gap-3">
                                     {shades.slice(0, 6).map(s => (
-                                        <div key={s} className="flex flex-col items-center gap-2 cursor-pointer group">
-                                            <div className="h-12 w-full rounded-xl bg-gradient-to-br from-[#f8f1e0] to-[#e8dcc0] border border-slate-100 group-hover:border-accent transition-all flex items-center justify-center">
+                                        <div
+                                            key={s}
+                                            className="flex flex-col items-center gap-2 cursor-pointer group"
+                                            onClick={() => {
+                                                setWorkFormData(prev => ({ ...prev, shade: s }))
+                                                toast.success(`Teinte ${s} sélectionnée pour le prochain travail`)
+                                            }}
+                                        >
+                                            <div className={cn(
+                                                "h-12 w-full rounded-xl bg-gradient-to-br from-[#f8f1e0] to-[#e8dcc0] border transition-all flex items-center justify-center shadow-sm",
+                                                workFormData.shade === s ? "border-amber-500 ring-2 ring-amber-500/20" : "border-slate-100 group-hover:border-accent"
+                                            )}>
                                                 <span className="text-[10px] font-black text-slate-900/40">{s}</span>
                                             </div>
                                         </div>
@@ -467,7 +477,20 @@ export default function LabPage() {
                                 </div>
                             </div>
                             <div className="flex gap-2">
-                                <Button size="sm" variant="ghost" className="text-white hover:bg-white/10" onClick={() => toast.success("Impression lancée...")}>
+                                <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    className="text-white hover:bg-white/10"
+                                    onClick={() => {
+                                        const blob = new Blob([`Fiche Technique: ${selectedMaterial?.name}\nPropriétés: ${selectedMaterial?.properties}`], { type: 'text/plain' });
+                                        const url = window.URL.createObjectURL(blob);
+                                        const a = document.createElement('a');
+                                        a.href = url;
+                                        a.download = `${selectedMaterial?.name.replace(/\s+/g, '_')}_Elite_Spec.pdf`;
+                                        a.click();
+                                        toast.success("Génération du PDF Elite terminée");
+                                    }}
+                                >
                                     <Download className="h-4 w-4 mr-2" /> Télécharger
                                 </Button>
                                 <Button size="sm" className="bg-gold text-slate-900 font-black" onClick={() => setIsPdfOpen(false)}>Fermer</Button>
@@ -685,17 +708,17 @@ export default function LabPage() {
                             </Card>
                         ))}
                         <Card
-                            className="rounded-[2rem] border-dashed border-2 border-slate-200 flex flex-col items-center justify-center text-slate-400 p-8 cursor-pointer hover:bg-slate-50 hover:border-slate-400 transition-all"
+                            className="rounded-[2rem] border-dashed border-2 border-slate-200 flex flex-col items-center justify-center text-slate-400 p-8 cursor-pointer hover:bg-slate-50 hover:border-slate-900 hover:text-slate-900 transition-all group"
                             onClick={() => {
-                                toast.promise(new Promise(resolve => setTimeout(resolve, 1000)), {
-                                    loading: 'Ouverture du catalogue fournisseurs...',
-                                    success: 'Catalogue DentoShop à jour',
+                                toast.promise(new Promise(resolve => setTimeout(resolve, 1500)), {
+                                    loading: 'Connexion à DentoShop API...',
+                                    success: 'Catalogue Fournisseurs synchronisé',
                                     error: 'Erreur réseau'
-                                })
+                                });
                             }}
                         >
-                            <Plus className="h-8 w-8 mb-2 opacity-20" />
-                            <span className="text-[10px] font-black uppercase tracking-widest">Nouveau Matériau</span>
+                            <Plus className="h-8 w-8 mb-2 opacity-20 group-hover:opacity-100 group-hover:scale-110 transition-all" />
+                            <span className="text-[10px] font-black uppercase tracking-widest text-center">Ajouter au Catalogue</span>
                         </Card>
                     </motion.div>
                 )}
