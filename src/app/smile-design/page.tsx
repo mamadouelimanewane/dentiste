@@ -24,13 +24,14 @@ import {
     X,
     ArrowRight
 } from "lucide-react"
-import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
+import { useRouter } from "next/navigation"
 
 export default function SmileDesignStudio() {
+    const router = useRouter()
     const [step, setStep] = useState(1)
     const [isAnalyzing, setIsAnalyzing] = useState(false)
-    const [comparisonView, setComparisonView] = useState(0.5) // Slider for before/after
+    const [comparisonView, setComparisonView] = useState(0.5)
     const [selectedTreatment, setSelectedTreatment] = useState('VENEERS')
     const [uploadedImage, setUploadedImage] = useState<string | null>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
@@ -347,7 +348,7 @@ export default function SmileDesignStudio() {
                         </div>
                         <Button
                             className="bg-indigo-600 text-white font-black uppercase text-[9px] tracking-widest h-10 px-6 rounded-xl shadow-lg"
-                            onClick={() => window.location.href = '/quotes/create'}
+                            onClick={() => router.push('/quotes/create')}
                         >
                             Créer Devis Multi-Option
                         </Button>
