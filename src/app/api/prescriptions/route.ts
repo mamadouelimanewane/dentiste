@@ -30,6 +30,21 @@ export async function POST(req: Request) {
             }
         })
 
+        // 2. Automatisme Elite Connect : Instructions Post-Op immédiates
+        const message = `Bonjour ${prescription.patient.firstName}, votre ordonnance a été générée. 💊 Suivez bien les posologies indiquées. Instructions : appliquez de la glace 10min/h et privilégiez une alimentation froide. Bon rétablissement !`
+
+        await prisma.communicationLog.create({
+            data: {
+                patientId: prescription.patientId,
+                type: 'WHATSAPP',
+                category: 'POST_OP',
+                content: message,
+                status: 'DELIVERED'
+            }
+        })
+
+        console.log(`[ELITE CONNECT] Instructions post-op envoyées à ${prescription.patient.firstName}`)
+
         return NextResponse.json(prescription)
     } catch (error) {
         console.error("Failed to create prescription:", error)

@@ -32,8 +32,25 @@ export async function PATCH(req: Request) {
 
         const patient = await prisma.patient.update({
             where: { id },
-            data: { workflowStatus }
+            data: { workflowStatus },
+            include: { communications: true }
         })
+
+        // Déclencher le suivi Post-Op si le patient passe dans cette étape
+        if (workflowStatus === 'SUIVI_POST_OP') {
+            const message = `Bonjour ${patient.firstName}, nous avons bien noté votre passage en phase de suivi. Un assistant vous contactera demain pour s'assurer que votre cicatrisation se passe bien. En attendant, n'oubliez pas vos soins ! 🦷`
+
+            await prisma.communicationLog.create({
+                data: {
+                    patientId: patient.id,
+                    type: 'WHATSAPP',
+                    category: 'POST_OP',
+                    content: message,
+                    status: 'DELIVERED'
+                }
+            })
+            console.log(`[ELITE CONNECT] Suivi Post-Op automatisé pour ${patient.firstName}`)
+        }
 
         return NextResponse.json(patient)
     } catch (error) {
