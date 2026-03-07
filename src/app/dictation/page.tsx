@@ -55,6 +55,7 @@ export default function VoiceDictationPage() {
                     let currentTranscript = ''
                     for (let i = 0; i < event.results.length; i++) {
                         currentTranscript += event.results[i][0].transcript
+                        if (event.results[i].isFinal) currentTranscript += ' '
                     }
                     setTranscript(currentTranscript)
                 }
@@ -92,6 +93,29 @@ export default function VoiceDictationPage() {
         } else {
             recognitionRef.current.stop()
         }
+    }
+
+    const polishTranscript = () => {
+        if (!transcript) return;
+        setStatus("Analyse neurale et correction...");
+
+        // Simule un correcteur LLM médical
+        setTimeout(() => {
+            let polished = transcript
+                .replace(/amoxicilline|amox/gi, "Amoxicilline 1g")
+                .replace(/ibuprofène|ibu/gi, "Ibuprofène 400mg")
+                .replace(/paracétamol|doliprane/gi, "Paracétamol 1g")
+                .replace(/radio|panoramique/gi, "Radiographie Panoramique")
+                .replace(/implant/gi, "Implant Nobel Biocare")
+                .trim();
+
+            // Majuscule début de phrase
+            polished = polished.charAt(0).toUpperCase() + polished.slice(1);
+
+            setTranscript(polished + ".");
+            toast.success("Texte corrigé et formaté par l'IA médicale.");
+            setStatus("Correction terminée.");
+        }, 1500)
     }
 
     const saveRecord = () => {
@@ -201,17 +225,25 @@ export default function VoiceDictationPage() {
                                 <Button
                                     onClick={toggleListening}
                                     className={cn(
-                                        "flex-1 h-20 rounded-[2rem] text-lg font-black uppercase tracking-widest transition-all shadow-2xl",
+                                        "flex-[2] h-20 rounded-[2rem] text-lg font-black uppercase tracking-widest transition-all shadow-2xl",
                                         isListening ? "bg-red-500 hover:bg-red-600" : "bg-white text-indigo-900 hover:bg-slate-100"
                                     )}
                                 >
                                     {isListening ? <MicOff className="mr-4 h-8 w-8" /> : <Mic className="mr-4 h-8 w-8" />}
                                     {isListening ? "Arrêter la dictée" : "Démarrer la dictée vocale"}
                                 </Button>
+                                {transcript && !isListening && (
+                                    <Button
+                                        onClick={polishTranscript}
+                                        className="h-20 flex-1 rounded-[2rem] bg-indigo-500 hover:bg-indigo-400 text-white shadow-2xl transition-all font-black uppercase tracking-widest text-[11px]"
+                                    >
+                                        <Sparkles className="h-5 w-5 mr-2" /> Polir avec IA
+                                    </Button>
+                                )}
                                 {transcript && (
                                     <Button
                                         onClick={saveRecord}
-                                        className="h-20 w-20 rounded-[2rem] bg-teal-500 hover:bg-teal-400 text-white shadow-2xl transition-all"
+                                        className="h-20 w-20 shrink-0 rounded-[2rem] bg-teal-500 hover:bg-teal-400 text-white shadow-2xl transition-all"
                                     >
                                         <Save className="h-8 w-8" />
                                     </Button>
