@@ -1,7 +1,8 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Button } from "@/components/ui/button"
+import { toast } from "sonner"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import {
@@ -34,24 +35,62 @@ export default function VoiceDictationPage() {
         { id: 2, type: 'PRESCRIPTION', text: 'Amoxicilline 1g, 2 fois par jour pendant 7 jours. Ibuprofène 400mg si douleur.', date: 'Il y a 4h' }
     ])
 
-    const toggleListening = () => {
-        if (!isListening) {
-            setIsListening(true)
-            setStatus("Dictée en cours...")
-            // Simulated dictation sequence
-            setTimeout(() => {
-                const mockTexts = {
-                    'PRESCRIPTION': "Paracétamol 1g, 3 fois par jour pendant 5 jours. Bain de bouche sans alcool matin et soir.",
-                    'NOTE': "Extraction de la 48 effectuée sans complication. Sutures résorbables mises en place. Contrôle dans 10 jours.",
-                    'TREATMENT': "Plan de traitement validé : Pose de deux implants Nobel en secteur 2. Devis signé numériquement."
+    const recognitionRef = useRef<any>(null)
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+            if (SpeechRecognition) {
+                const recognition = new SpeechRecognition()
+                recognition.continuous = true
+                recognition.interimResults = true
+                recognition.lang = 'fr-FR'
+
+                recognition.onstart = () => {
+                    setIsListening(true)
+                    setStatus("Écoute active...")
                 }
-                setTranscript(mockTexts[mode])
-                setIsListening(false)
-                setStatus("Dictée terminée. Prêt pour enregistrement.")
-            }, 3000)
+
+                recognition.onresult = (event: any) => {
+                    let currentTranscript = ''
+                    for (let i = 0; i < event.results.length; i++) {
+                        currentTranscript += event.results[i][0].transcript
+                    }
+                    setTranscript(currentTranscript)
+                }
+
+                recognition.onend = () => {
+                    setIsListening(false)
+                    setStatus("Dictée terminée. Prêt pour enregistrement.")
+                }
+
+                recognition.onerror = (event: any) => {
+                    console.error(event.error)
+                    setIsListening(false)
+                    setStatus("Erreur de microphone.")
+                    if (event.error !== 'no-speech') {
+                        toast.error("Erreur micro : " + event.error)
+                    }
+                }
+
+                recognitionRef.current = recognition
+            }
+        }
+    }, [])
+
+    const toggleListening = () => {
+        if (!recognitionRef.current) {
+            return toast.error("Votre navigateur ne supporte pas la dictée vocale intégrée.")
+        }
+        if (!isListening) {
+            setTranscript("")
+            try {
+                recognitionRef.current.start()
+            } catch (e) {
+                console.error(e)
+            }
         } else {
-            setIsListening(false)
-            setStatus("Interrompu")
+            recognitionRef.current.stop()
         }
     }
 
