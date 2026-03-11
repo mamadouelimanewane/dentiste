@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
+import { createPatientSchema, formatZodErrors } from "@/lib/validations"
 
 export async function GET() {
     try {
@@ -29,11 +30,17 @@ export async function GET() {
 export async function POST(request: Request) {
     try {
         const body = await request.json()
-        const { firstName, lastName, email, phone } = body
 
-        if (!firstName || !lastName) {
-            return NextResponse.json({ error: "First name and last name are required" }, { status: 400 })
+        // Validation Zod
+        const parsed = createPatientSchema.safeParse(body)
+        if (!parsed.success) {
+            return NextResponse.json(
+                { error: "Données invalides", details: formatZodErrors(parsed.error) },
+                { status: 400 }
+            )
         }
+
+        const { firstName, lastName, email, phone, workflowStatus } = parsed.data
 
         const patient = await prisma.patient.create({
             data: {
@@ -41,14 +48,13 @@ export async function POST(request: Request) {
                 lastName,
                 email: email || null,
                 phone: phone || null,
-                workflowStatus: body.workflowStatus || null
+                workflowStatus: workflowStatus || null
             }
         })
 
         return NextResponse.json(patient)
     } catch (error: any) {
         console.error("Failed to create patient:", error)
-        // Return a more descriptive error for debugging
         const message = error.code === 'P2002'
             ? "Cet email est déjà utilisé par un autre patient."
             : error.message || "Erreur inconnue lors de la création du patient."

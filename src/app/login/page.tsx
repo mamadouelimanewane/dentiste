@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from 'react'
+import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { Diamond, Eye, EyeOff, Lock, Mail, Sparkles, Shield, Stethoscope, Users, ClipboardList, DollarSign } from 'lucide-react'
 
@@ -26,12 +27,15 @@ export default function LoginPage() {
         setLoading(true)
         setError('')
 
-        await new Promise(r => setTimeout(r, 800))
+        const result = await signIn('credentials', {
+            email,
+            password,
+            redirect: false,
+        })
 
-        const account = DEMO_ACCOUNTS.find(a => a.email === email && a.password === password)
-        if (account) {
-            localStorage.setItem('dp_user', JSON.stringify({ name: account.name, role: account.role, email: account.email }))
+        if (result?.ok) {
             router.push('/dashboard')
+            router.refresh()
         } else {
             setError('Identifiants incorrects. Utilisez un compte de démonstration ci-dessous.')
         }

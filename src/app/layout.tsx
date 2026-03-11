@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { LayoutWrapper } from "@/components/layout/LayoutWrapper";
 import { Toaster } from "@/components/ui/sonner"
+import { NextAuthProvider } from "@/components/providers/NextAuthProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,10 +20,12 @@ export default function RootLayout({
   return (
     <html lang="fr" className="h-full">
       <body className={`${inter.className} h-full bg-slate-50 text-slate-900 overflow-hidden`}>
-        <LayoutWrapper>
-          {children}
-        </LayoutWrapper>
-        <Toaster />
+        <NextAuthProvider>
+          <LayoutWrapper>
+            {children}
+          </LayoutWrapper>
+          <Toaster />
+        </NextAuthProvider>
       </body>
     </html>
   );

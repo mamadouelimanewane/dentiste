@@ -1,20 +1,15 @@
 export const dynamic = 'force-dynamic'
 import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
+import { createLabWorkSchema, formatZodErrors } from "@/lib/validations"
 
 export async function GET() {
     try {
         const labWorks = await prisma.labWork.findMany({
-            include: {
-                // Add relation if exists, but LabWork in schema doesn't have a direct relation to Patient in the model definition currently
-            },
             orderBy: {
                 sentDate: 'desc'
             }
         })
-
-        // Since LabWork doesn't have a direct relation in schema (only patientId), we might need to fetch patient names manually or adjust schema
-        // For now, let's fetch patients to join names if necessary, or just return as is
 
         const patientIds = Array.from(new Set(labWorks.map(lw => lw.patientId)))
         const patients = await prisma.patient.findMany({
@@ -40,16 +35,28 @@ export async function GET() {
 export async function POST(req: Request) {
     try {
         const body = await req.json()
+
+        // Validation Zod
+        const parsed = createLabWorkSchema.safeParse(body)
+        if (!parsed.success) {
+            return NextResponse.json(
+                { error: "Données invalides", details: formatZodErrors(parsed.error) },
+                { status: 400 }
+            )
+        }
+
+        const data = parsed.data
+
         const work = await prisma.labWork.create({
             data: {
-                patientId: body.patientId,
-                labName: body.labName,
-                type: body.type,
-                material: body.material,
-                shade: body.shade,
-                status: body.status || 'SENT',
-                dueDate: body.dueDate ? new Date(body.dueDate) : null,
-                notes: body.notes
+                patientId: data.patientId,
+                labName: data.labName,
+                type: data.type,
+                material: data.material,
+                shade: data.shade,
+                status: data.status || 'SENT',
+                dueDate: data.dueDate ? new Date(data.dueDate) : null,
+                notes: data.notes
             }
         })
         return NextResponse.json(work)

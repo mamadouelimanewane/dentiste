@@ -581,10 +581,69 @@ export default function AgendaPage() {
                     )}
 
                     {view === 'RESOURCES' && (
-                        <div className="flex flex-col h-full items-center justify-center p-20 text-center animate-in zoom-in duration-500">
-                            <Activity className="h-20 w-20 text-indigo-600 mb-8 animate-pulse" />
-                            <h2 className="text-3xl font-black text-slate-900 tracking-tighter">Vue <span className="text-indigo-600">Ressources Multi-Sites</span></h2>
-                            <p className="text-slate-400 font-medium max-w-md mx-auto mt-4">Optimisation de l'occupation des fauteuils et gestion du personnel en temps réel. Module en cours de synchronisation.</p>
+                        <div className="flex flex-col h-full bg-slate-50 animate-in slide-in-from-bottom duration-500 overflow-hidden">
+                            <div className="p-8 border-b border-slate-200 bg-white shrink-0 flex items-center justify-between">
+                                <div>
+                                    <h2 className="text-3xl font-black text-slate-900 tracking-tighter">Vue <span className="text-indigo-600">Ressources & Staff</span></h2>
+                                    <p className="text-slate-500 font-medium text-sm mt-1">Occupation des fauteuils et assignation clinique pour la journée en cours.</p>
+                                </div>
+                                <div className="h-16 w-16 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center">
+                                    <Activity className="h-8 w-8 text-indigo-600" />
+                                </div>
+                            </div>
+
+                            <div className="flex-1 overflow-y-auto p-8 space-y-6">
+                                {/* Simulated Resources based on Real Data Mapping */}
+                                {[
+                                    { id: 'R1', name: 'Fauteuil Principal', type: 'Soins', icon: Stethoscope, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+                                    { id: 'R2', name: 'Bloc Chirurgical', type: 'Chirurgie', icon: Activity, color: 'text-rose-600', bg: 'bg-rose-50' },
+                                    { id: 'R3', name: 'Salle Radio', type: 'Imagerie', icon: Zap, color: 'text-teal-600', bg: 'bg-teal-50' }
+                                ].map((resource, i) => {
+                                    // Map appointments artificially to resources based on type to simulate the view
+                                    const resourceApts = visibleAppointments.filter(app => {
+                                        const isToday = format(new Date(app.start), 'ddMMyyyy') === format(currentDate, 'ddMMyyyy')
+                                        if (!isToday) return false
+                                        if (resource.id === 'R2' && app.isSurgery) return true
+                                        if (resource.id === 'R1' && !app.isSurgery && app.type !== 'EMERGENCY') return true
+                                        if (resource.id === 'R3' && app.type === 'EMERGENCY') return true
+                                        return false
+                                    })
+
+                                    return (
+                                        <Card key={resource.id} className="rounded-[2rem] border-none shadow-sm bg-white overflow-hidden">
+                                            <div className="flex flex-col md:flex-row h-full">
+                                                <div className="w-full md:w-64 bg-slate-50/50 p-6 border-r border-slate-100 flex flex-col justify-center">
+                                                    <div className={cn("h-12 w-12 rounded-xl flex items-center justify-center mb-4", resource.bg)}>
+                                                        <resource.icon className={cn("h-6 w-6", resource.color)} />
+                                                    </div>
+                                                    <h3 className="font-black text-slate-900 text-lg uppercase tracking-tight">{resource.name}</h3>
+                                                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Capacité: 1 Patient</span>
+                                                    <div className="mt-4 pt-4 border-t border-slate-200">
+                                                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{resourceApts.length} RDV assignés</span>
+                                                    </div>
+                                                </div>
+                                                <div className="flex-1 p-6 flex items-center gap-4 overflow-x-auto no-scrollbar">
+                                                    {resourceApts.length > 0 ? resourceApts.map(app => (
+                                                        <div key={app.id} className="shrink-0 w-64 p-4 rounded-2xl border border-slate-100 hover:border-slate-300 transition-all bg-white shadow-sm">
+                                                            <div className="flex items-center gap-2 mb-3">
+                                                                <Clock className="h-4 w-4 text-slate-400" />
+                                                                <span className="text-xs font-black text-slate-900">{format(new Date(app.start), 'HH:mm')} - {format(new Date(app.end), 'HH:mm')}</span>
+                                                            </div>
+                                                            <p className="text-sm font-black tracking-tight text-slate-900 line-clamp-1">{app.patient?.firstName} {app.patient?.lastName}</p>
+                                                            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1 line-clamp-1">{app.title}</p>
+                                                        </div>
+                                                    )) : (
+                                                        <div className="flex-1 flex flex-col items-center justify-center py-8 text-slate-300">
+                                                            <LayoutGrid className="h-8 w-8 mb-2 opacity-20" />
+                                                            <p className="text-[10px] font-black uppercase tracking-widest">Ressource Disponible</p>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </Card>
+                                    )
+                                })}
+                            </div>
                         </div>
                     )}
                 </div>

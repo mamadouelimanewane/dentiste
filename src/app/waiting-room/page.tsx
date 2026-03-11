@@ -2,15 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Clock, Users, CheckCircle, AlertCircle, QrCode, Bell, ChevronRight, Wifi, Activity } from 'lucide-react'
-
-const INITIAL_QUEUE = [
-    { id: 1, name: 'Amadou Diallo', time: '09:00', type: 'Détartrage', status: 'in-progress', waitTime: 0, room: 'Salle 1' },
-    { id: 2, name: 'Fatou Mbaye', time: '09:30', type: 'Consultation', status: 'waiting', waitTime: 5, room: 'Salle 2' },
-    { id: 3, name: 'Ibrahima Sow', time: '10:00', type: 'Extraction', status: 'waiting', waitTime: 25, room: 'Salle 1' },
-    { id: 4, name: 'Mariama Diop', time: '10:30', type: 'Orthodontie', status: 'waiting', waitTime: 55, room: 'Salle 3' },
-    { id: 5, name: 'Ousmane Ndiaye', time: '11:00', type: 'Blanchiment', status: 'waiting', waitTime: 85, room: 'Salle 2' },
-    { id: 6, name: 'Aissatou Ba', time: '11:30', type: 'Contrôle', status: 'arrived', waitTime: 0, room: '-' },
-]
+import { cn } from '@/lib/utils'
 
 const ANNOUNCEMENTS = [
     "Bienvenue à la Clinique DentoPrestige — Votre santé bucco-dentaire est notre priorité",
@@ -21,10 +13,54 @@ const ANNOUNCEMENTS = [
 
 export default function WaitingRoomPage() {
     const [currentTime, setCurrentTime] = useState(new Date())
-    const [queue, setQueue] = useState(INITIAL_QUEUE)
+    const [queue, setQueue] = useState<any[]>([])
     const [announcementIdx, setAnnouncementIdx] = useState(0)
     const [showQR, setShowQR] = useState(false)
+    const [isUpdating, setIsUpdating] = useState(false)
 
+    // Check if the appointment is today
+    const isToday = (dateString: string) => {
+        const d = new Date(dateString);
+        const today = new Date();
+        return d.getDate() === today.getDate() &&
+            d.getMonth() === today.getMonth() &&
+            d.getFullYear() === today.getFullYear();
+    };
+
+    const fetchQueue = async () => {
+        try {
+            const res = await fetch('/api/appointments')
+            const data = await res.json()
+            if (Array.isArray(data)) {
+                // Map the data to only show today's appointments that are not fully completed for tracking, or show all for tracking.
+                const todayApps = data
+                    .filter(app => isToday(app.start))
+                    .map(app => {
+                        // Calculate wait time based on difference from start time and current time
+                        const start = new Date(app.start)
+                        const diffInMin = Math.round((new Date().getTime() - start.getTime()) / 60000)
+
+                        return {
+                            id: app.id,
+                            name: app.patient ? `${app.patient.firstName} ${app.patient.lastName}` : 'Patient',
+                            time: start.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+                            type: app.type,
+                            // Map normal db status to local ui statuses
+                            status: app.status === 'IN_PROGRESS' ? 'in-progress' :
+                                app.status === 'DONE' ? 'done' :
+                                    app.status === 'ARRIVED' ? 'arrived' : 'waiting',
+                            waitTime: diffInMin > 0 ? diffInMin : 0,
+                            room: app.siteId || 'Cabinet'
+                        }
+                    })
+                setQueue(todayApps)
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    // Polling and live timers
     useEffect(() => {
         const timer = setInterval(() => setCurrentTime(new Date()), 1000)
         return () => clearInterval(timer)
@@ -37,15 +73,49 @@ export default function WaitingRoomPage() {
         return () => clearInterval(timer)
     }, [])
 
-    const callNext = () => {
-        setQueue(prev => {
-            const updated = [...prev]
-            const inProgress = updated.findIndex(p => p.status === 'in-progress')
-            if (inProgress !== -1) updated[inProgress].status = 'done'
-            const nextWaiting = updated.findIndex(p => p.status === 'waiting')
-            if (nextWaiting !== -1) updated[nextWaiting].status = 'in-progress'
-            return updated
-        })
+    useEffect(() => {
+        fetchQueue()
+        const polling = setInterval(fetchQueue, 5000) // Poll every 5s for realtime updates
+        return () => clearInterval(polling)
+    }, [])
+
+    const callNext = async () => {
+        if (isUpdating) return
+        setIsUpdating(true)
+        try {
+            // Find current in-progress and mark as done
+            const inProgress = queue.find(p => p.status === 'in-progress')
+            if (inProgress) {
+                await fetch(`/api/appointments/${inProgress.id}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: 'DONE' })
+                })
+            }
+
+            // Find next waiting and mark as in-progress
+            const nextWaiting = queue.find(p => p.status === 'waiting' || p.status === 'arrived')
+            if (nextWaiting) {
+                await fetch(`/api/appointments/${nextWaiting.id}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: 'IN_PROGRESS' })
+                })
+
+                // Play notification sound
+                try {
+                    const speech = new SpeechSynthesisUtterance(`${nextWaiting.name}, veuillez vous rendre en ${nextWaiting.room}.`);
+                    speech.lang = 'fr-FR';
+                    window.speechSynthesis.speak(speech);
+                } catch (e) { }
+            }
+
+            await fetchQueue()
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setIsUpdating(false)
+        }
     }
 
     const activePatients = queue.filter(p => p.status === 'in-progress')
@@ -67,9 +137,13 @@ export default function WaitingRoomPage() {
                         className="flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-800 transition-all">
                         <QrCode className="h-4 w-4" /> QR Check-in
                     </button>
-                    <button onClick={callNext}
-                        className="flex items-center gap-2 px-6 py-3 bg-teal-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-teal-700 transition-all">
-                        <Bell className="h-4 w-4" /> Appeler Suivant
+                    <button onClick={callNext} disabled={isUpdating}
+                        className={cn(
+                            "flex items-center gap-2 px-6 py-3 text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-all",
+                            isUpdating ? "bg-teal-400 cursor-not-allowed" : "bg-teal-600 hover:bg-teal-700"
+                        )}>
+                        {isUpdating ? <Activity className="h-4 w-4 animate-spin" /> : <Bell className="h-4 w-4" />}
+                        Appeler Suivant
                     </button>
                 </div>
             </div>

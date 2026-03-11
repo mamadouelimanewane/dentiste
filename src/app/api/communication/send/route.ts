@@ -1,28 +1,23 @@
 export const dynamic = 'force-dynamic'
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { sendCommunicationSchema, formatZodErrors } from "@/lib/validations"
 
 // Cette route gère l'envoi de messages WhatsApp, SMS et Email
 export async function POST(req: Request) {
     try {
         const body = await req.json()
-        const { type, recipients, content, category, scheduledAt } = body
 
-        if (!type || !recipients || !content) {
+        // Validation Zod
+        const parsed = sendCommunicationSchema.safeParse(body)
+        if (!parsed.success) {
             return NextResponse.json(
-                { error: "Type, recipients et content sont requis" },
+                { error: "Données invalides", details: formatZodErrors(parsed.error) },
                 { status: 400 }
             )
         }
 
-        // Validation du type de message
-        const validTypes = ['SMS', 'WHATSAPP', 'EMAIL']
-        if (!validTypes.includes(type)) {
-            return NextResponse.json(
-                { error: "Type de message invalide" },
-                { status: 400 }
-            )
-        }
+        const { type, recipients, content, category } = parsed.data
 
         const results = []
 
@@ -93,7 +88,7 @@ export async function POST(req: Request) {
                 sent: successCount,
                 failed: failedCount,
                 totalCost,
-                costPerMessage: totalCost / results.length
+                costPerMessage: results.length > 0 ? totalCost / results.length : 0
             },
             results
         })
@@ -107,12 +102,13 @@ export async function POST(req: Request) {
     }
 }
 
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY || 're_dummy_key');
+
 // Fonction pour simuler l'envoi de message
 // En production, intégrer avec Twilio, WhatsApp Business API, SendGrid, etc.
 async function sendMessage(type: string, patient: any, content: string) {
-    // Simulation d'envoi
-    await new Promise(resolve => setTimeout(resolve, 100))
-
     // Vérifier que le patient a les coordonnées nécessaires
     if (type === 'SMS' || type === 'WHATSAPP') {
         if (!patient.phone) {
@@ -124,52 +120,58 @@ async function sendMessage(type: string, patient: any, content: string) {
         if (!patient.email) {
             return { success: false, error: 'Email manquant' }
         }
+
+        try {
+            // Intégration Resend réelle
+            if (process.env.RESEND_API_KEY) {
+                const data = await resend.emails.send({
+                    from: 'DentoPrestige <noreply@dentoprestige.sn>',
+                    to: patient.email,
+                    subject: 'Message de votre cabinet DentoPrestige',
+                    html: `
+                        <div style="font-family: sans-serif; max-w-xl mx-auto p-6 bg-slate-50 rounded-2xl">
+                            <h2 style="color: #0f172a; margin-bottom: 20px;">DentoPrestige Elite</h2>
+                            <p style="color: #334155; line-height: 1.6; font-size: 16px;">
+                                ${content.replace(/\n/g, '<br/>')}
+                            </p>
+                            <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;"/>
+                            <p style="color: #94a3b8; font-size: 12px; text-align: center;">
+                                Cabinet DentoPrestige - Dakar Plateau
+                            </p>
+                        </div>
+                    `,
+                });
+
+                if (data.error) {
+                    console.error("Erreur Resend:", data.error);
+                    return { success: false, error: data.error.message }
+                }
+
+                return { success: true }
+            } else {
+                console.log("[MOCK EMAIL] Envoi simulé à", patient.email, "=>", content)
+                await new Promise(resolve => setTimeout(resolve, 500))
+                return { success: true }
+            }
+        } catch (error: any) {
+            console.error("Crash lors de l'envoi Email:", error)
+            return { success: false, error: error.message }
+        }
     }
 
-    // En production, appeler l'API appropriée :
-    // - Twilio pour SMS
-    // - WhatsApp Business API pour WhatsApp
-    // - SendGrid/Resend pour Email
-
-    /*
-    Exemple avec Twilio (SMS):
-    const twilio = require('twilio')(accountSid, authToken)
-    await twilio.messages.create({
-        body: content,
-        from: '+221XXXXXXXXX',
-        to: patient.phone
-    })
-
-    Exemple avec WhatsApp Business API:
-    await fetch('https://graph.facebook.com/v18.0/PHONE_NUMBER_ID/messages', {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${WHATSAPP_TOKEN}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            messaging_product: 'whatsapp',
-            to: patient.phone,
-            type: 'text',
-            text: { body: content }
-        })
-    })
-    */
-
+    // Simulation d'envoi pour SMS / WhatsApp pour le moment
+    await new Promise(resolve => setTimeout(resolve, 500))
     return { success: true }
 }
 
 // Fonction pour calculer le coût d'un message
 function calculateCost(type: string, content: string): number {
     if (type === 'WHATSAPP') {
-        // WhatsApp: ~15 FCFA par message
         return 15
     } else if (type === 'SMS') {
-        // SMS: ~25 FCFA par SMS de 160 caractères
         const smsCount = Math.ceil(content.length / 160)
         return smsCount * 25
     } else if (type === 'EMAIL') {
-        // Email: gratuit ou très faible coût
         return 0
     }
     return 0

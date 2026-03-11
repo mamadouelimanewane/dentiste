@@ -24,7 +24,8 @@ import {
     Sparkles,
     Smartphone,
     Mail,
-    PenTool
+    PenTool,
+    Dna
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
@@ -161,21 +162,53 @@ export default function MarketingHub() {
                             </div>
                         </Card>
 
-                        <Card className="rounded-[3rem] border-none shadow-luxury bg-indigo-950 text-white p-10 space-y-8 text-center relative overflow-hidden">
+                        {/* Neural Campaign Architect */}
+                        <Card className="rounded-[4rem] border-none shadow-2xl bg-slate-950 text-white p-10 flex flex-col justify-between group overflow-hidden relative">
+                            <div className="absolute top-0 right-0 p-8 opacity-20 group-hover:scale-125 transition-transform duration-700">
+                                <Dna className="h-40 w-40 text-indigo-500" />
+                            </div>
+                            <div className="relative z-10 space-y-6">
+                                <div className="flex items-center gap-3">
+                                    <div className="h-1.5 w-8 bg-indigo-500 rounded-full"></div>
+                                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-indigo-400">Neural Intelligence</span>
+                                </div>
+                                <h3 className="text-3xl font-black tracking-tighter leading-tight italic">
+                                    Architecte de Campagne <span className="text-indigo-500">Prédictif</span>
+                                </h3>
+                                <p className="text-sm font-medium text-slate-400 leading-relaxed">
+                                    Analyse automatique des "Gaps Cliniques" : 24 patients éligibles pour implants suite à extractions récentes.
+                                </p>
+                                <div className="p-4 bg-white/5 border border-white/10 rounded-2xl flex items-center gap-4">
+                                    <div className="h-10 w-10 rounded-xl bg-indigo-500/20 flex items-center justify-center text-indigo-400">
+                                        <TrendingUp className="h-5 w-5" />
+                                    </div>
+                                    <div>
+                                        <p className="text-[9px] font-black text-indigo-400 uppercase tracking-widest">ROI Estimé</p>
+                                        <p className="text-lg font-black text-white">+8,400,000 FCFA</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <Button className="relative z-10 w-full h-16 rounded-[2rem] bg-indigo-600 text-white hover:bg-indigo-500 font-black uppercase text-[11px] tracking-widest mt-8 shadow-2xl shadow-indigo-600/30">
+                                Générer Stratégie de Rappel
+                            </Button>
+                        </Card>
+
+                        {/* WhatsApp VIP Broadcast */}
+                        <Card className="md:col-span-2 rounded-[3.5rem] border-none shadow-luxury bg-indigo-950 text-white p-12 flex flex-col md:flex-row items-center gap-10 relative overflow-hidden">
                             <div className="absolute -bottom-10 -right-10 opacity-10">
                                 <Megaphone className="h-40 w-40" />
                             </div>
-                            <div className="relative z-10 space-y-8">
-                                <div className="h-16 w-16 bg-white/10 rounded-3xl flex items-center justify-center mx-auto border border-white/20">
-                                    <MessageSquare className="h-8 w-8 text-gold" />
-                                </div>
-                                <div className="space-y-4">
-                                    <h3 className="text-2xl font-black tracking-tighter uppercase italic">WhatsApp VIP Broadcast</h3>
-                                    <p className="text-sm font-medium text-indigo-200">
-                                        Envoyez en un clic une campagne VIP de rappel de détartrage à 45 patients "Haut de Gamme" dont le dernier rdv date de 12 mois.
-                                    </p>
-                                </div>
-                                <div className="bg-white/5 border border-white/10 px-6 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-gold animate-pulse">
+                            <div className="h-20 w-20 bg-white/10 rounded-[2.5rem] flex items-center justify-center shrink-0 border border-white/20">
+                                <MessageSquare className="h-10 w-10 text-gold" />
+                            </div>
+                            <div className="relative z-10 flex-1 space-y-4">
+                                <h3 className="text-2xl font-black tracking-tighter uppercase italic">WhatsApp VIP Broadcast</h3>
+                                <p className="text-sm font-medium text-indigo-200 line-clamp-2">
+                                    Envoyez en un clic une campagne VIP de rappel de détartrage à 45 patients "Haut de Gamme" dont le dernier rdv date de 12 mois.
+                                </p>
+                            </div>
+                            <div className="relative z-10 shrink-0 space-y-4 min-w-[200px]">
+                                <div className="bg-white/5 border border-white/10 px-6 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-gold text-center">
                                     Potentiel CA : +1,250,000 FCFA
                                 </div>
                                 <Button className="w-full h-14 rounded-2xl bg-white text-indigo-950 font-black uppercase text-[10px] tracking-widest shadow-2xl">Lancer Campagne</Button>

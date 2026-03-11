@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
+import { useSession, signOut } from 'next-auth/react'
 import { cn } from '@/lib/utils'
 import {
     Users,
@@ -132,30 +133,17 @@ export const navigationSections = [
 export function Sidebar({ className }: { className?: string }) {
     const [mounted, setMounted] = useState(false)
     const [collapsed, setCollapsed] = useState(false)
-    const [user, setUser] = useState<{ role: string, name: string } | null>(null)
+    const { data: session } = useSession()
     const pathname = usePathname()
+
+    const user = session?.user ? {
+        role: (session.user as any).role || 'OWNER',
+        name: session.user.name || 'Utilisateur',
+    } : null
 
     useEffect(() => {
         setMounted(true)
-        const savedUser = localStorage.getItem('dp_user')
-        if (savedUser) {
-            setUser(JSON.parse(savedUser))
-        } else {
-            // Auto-detect role for demo visibility
-            if (pathname.includes('/mobile/comptable')) {
-                setUser({ role: 'ACCOUNTANT', name: 'Papa Samba' })
-            } else if (pathname.includes('/mobile/admin')) {
-                setUser({ role: 'OWNER', name: 'Admin Hub' })
-            } else if (pathname.includes('/mobile/staff')) {
-                setUser({ role: 'DENTIST', name: 'Dr. Aere Lao' })
-            } else if (pathname.includes('/mobile/client')) {
-                setUser({ role: 'CLIENT', name: 'Jean Valjean' })
-            } else {
-                // Default for demo cabinet
-                setUser({ role: 'OWNER', name: 'Dr. Aere Lao' })
-            }
-        }
-    }, [pathname])
+    }, [])
 
     const filteredSections = navigationSections.map(section => {
         // Check if section itself is restricted
@@ -181,6 +169,12 @@ export function Sidebar({ className }: { className?: string }) {
     if (!mounted) {
         return <div className={cn("w-64 bg-slate-950 h-full border-r border-white/5", className)} />
     }
+
+    const getInitials = (name: string) => {
+        return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+    }
+
+    const initials = user ? getInitials(user.name) : 'DR'
 
     return (
         <div className={cn(
@@ -260,16 +254,16 @@ export function Sidebar({ className }: { className?: string }) {
                 {collapsed ? (
                     <div className="flex justify-center">
                         <div className="h-10 w-10 rounded-full bg-accent/20 border border-accent/30 flex items-center justify-center text-accent font-black text-xs">
-                            DR
+                            {initials}
                         </div>
                     </div>
                 ) : (
                     <div className="flex items-center gap-3">
                         <div className="h-10 w-10 rounded-full bg-accent/20 border border-accent/30 flex items-center justify-center text-accent font-black text-xs shadow-lg flex-shrink-0">
-                            DR
+                            {initials}
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-sm font-black text-white truncate">{user?.name || 'Dr. Aere Lao'}</p>
+                            <p className="text-sm font-black text-white truncate">{user?.name || 'Non connecté'}</p>
                             <p className="text-[10px] font-black uppercase tracking-widest text-accent/60">
                                 {user?.role === 'OWNER' ? 'Administrateur Elite' :
                                     user?.role === 'DENTIST' ? 'Praticien Elite' :
@@ -277,12 +271,16 @@ export function Sidebar({ className }: { className?: string }) {
                                             user?.role === 'SECRETARY' ? 'Secrétaire Elite' :
                                                 user?.role === 'ACCOUNTANT' ? 'Comptable Elite' :
                                                     user?.role === 'CLIENT' ? 'Patient VIP Elite' :
-                                                        'Utilisateur Elite'}
+                                                        'Non connecté'}
                             </p>
                         </div>
-                        <Link href="/login" className="h-8 w-8 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-500 hover:text-white transition-all">
+                        <button
+                            onClick={() => signOut({ callbackUrl: '/login' })}
+                            className="h-8 w-8 rounded-xl bg-white/5 hover:bg-red-500/20 flex items-center justify-center text-slate-500 hover:text-red-400 transition-all"
+                            title="Se déconnecter"
+                        >
                             <LogOut className="h-3.5 w-3.5" />
-                        </Link>
+                        </button>
                     </div>
                 )}
             </div>

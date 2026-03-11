@@ -32,7 +32,8 @@ import {
     Star,
     ArrowRight,
     Printer,
-    Download
+    Download,
+    Target
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"

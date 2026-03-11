@@ -1,7 +1,8 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Odontogram, ToothState } from "@/components/dental/Odontogram"
+import { NeuralTreatmentMap } from "@/components/dental/NeuralTreatmentMap"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import {
@@ -15,7 +16,8 @@ import {
     ShieldCheck,
     Dna,
     Clock,
-    UserCircle
+    UserCircle,
+    Cpu
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -26,6 +28,17 @@ export default function ChartingPage() {
         36: 'MISSING',
         46: 'IMPLANT'
     })
+
+    const [neuralMapData, setNeuralMapData] = useState<{ nodes: any[], connections: any[] } | null>(null)
+
+    useEffect(() => {
+        // In a real scenario, use actual patient ID from URL/props
+        const dummyPatientId = "demo-patient-id"
+        fetch(`/api/ai/neural-map/${dummyPatientId}`)
+            .then(res => res.json())
+            .then(data => setNeuralMapData(data))
+            .catch(err => console.error("Error fetching neural map:", err))
+    }, [])
 
     const handleToothStateChange = (number: number, state: ToothState) => {
         setToothStates(prev => ({ ...prev, [number]: state }))
@@ -71,48 +84,28 @@ export default function ChartingPage() {
                         <CardHeader className="p-8 border-b border-white/5 flex flex-row items-center justify-between">
                             <div>
                                 <CardTitle className="text-xl font-black tracking-tighter flex items-center gap-2 uppercase">
-                                    <Sparkles className="h-5 w-5 text-indigo-400" /> Analyse IA Diagnostic
+                                    <Sparkles className="h-5 w-5 text-indigo-400" /> Analyse IA & Stratégie Thérapeutique
                                 </CardTitle>
-                                <p className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.3em]">DeepSeek Dental Engine Active</p>
+                                <p className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.3em]">Neural Core V2.4 Powered by DeepSeek Dental</p>
                             </div>
                             <div className="h-10 w-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10 animate-pulse">
                                 <Zap className="h-5 w-5 text-indigo-400" />
                             </div>
                         </CardHeader>
-                        <CardContent className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div className="space-y-4">
-                                <h4 className="text-[11px] font-black uppercase text-slate-500 tracking-widest">Observations Prédictives</h4>
-                                <div className="space-y-3">
-                                    <div className="p-4 bg-white/5 rounded-2xl border border-white/5 hover:border-indigo-500/30 transition-all cursor-pointer">
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <div className="h-2 w-2 rounded-full bg-red-400" />
-                                            <span className="text-[10px] font-black text-white/80 uppercase">Alerte Dent 21</span>
-                                        </div>
-                                        <p className="text-xs text-slate-400 leading-relaxed font-medium">L'analyse radiologique suggère une progression vers la dentine. Traitement conservateur recommandé sous 30 jours.</p>
-                                    </div>
-                                    <div className="p-4 bg-white/5 rounded-2xl border border-white/5">
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <div className="h-2 w-2 rounded-full bg-teal-400" />
-                                            <span className="text-[10px] font-black text-white/80 uppercase">Post-Opératoire Dent 46</span>
-                                        </div>
-                                        <p className="text-xs text-slate-400 leading-relaxed font-medium">Osseointegration à 94%. Charge prothétique envisageable dans 8 semaines.</p>
+                        <CardContent className="p-8">
+                            {neuralMapData ? (
+                                <NeuralTreatmentMap
+                                    nodes={neuralMapData.nodes}
+                                    connections={neuralMapData.connections}
+                                />
+                            ) : (
+                                <div className="h-[400px] w-full bg-slate-900/50 rounded-[2.5rem] animate-pulse flex items-center justify-center">
+                                    <div className="flex flex-col items-center gap-4">
+                                        <Cpu className="h-10 w-10 text-indigo-500 animate-spin" />
+                                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Génération de la cartographie neurale...</p>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="flex flex-col justify-between p-6 bg-gradient-to-br from-indigo-600/20 to-transparent rounded-[2rem] border border-white/5">
-                                <div className="space-y-2">
-                                    <h4 className="text-[10px] font-black uppercase text-indigo-400 tracking-widest flex items-center gap-2">
-                                        <ShieldCheck className="h-3 w-3" /> Score de Santé Globale
-                                    </h4>
-                                    <div className="text-4xl font-black">78%</div>
-                                    <div className="w-full bg-white/5 h-2 rounded-full overflow-hidden">
-                                        <div className="bg-indigo-500 h-full rounded-full" style={{ width: '78%' }} />
-                                    </div>
-                                </div>
-                                <p className="text-[10px] mt-4 text-slate-500 italic font-medium">
-                                    Indices basés sur la densité minérale, l'état parodontal et l'historique de soins.
-                                </p>
-                            </div>
+                            )}
                         </CardContent>
                     </Card>
                 </div>

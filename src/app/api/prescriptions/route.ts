@@ -1,22 +1,29 @@
 export const dynamic = 'force-dynamic'
 import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
+import { createPrescriptionSchema, formatZodErrors } from "@/lib/validations"
 
 export async function POST(req: Request) {
     try {
         const body = await req.json()
-        const { patientId, items, notes } = body
 
-        if (!patientId || !items || items.length === 0) {
-            return NextResponse.json({ error: "Patient ID and at least one item are required" }, { status: 400 })
+        // Validation Zod
+        const parsed = createPrescriptionSchema.safeParse(body)
+        if (!parsed.success) {
+            return NextResponse.json(
+                { error: "Données invalides", details: formatZodErrors(parsed.error) },
+                { status: 400 }
+            )
         }
+
+        const data = parsed.data
 
         const prescription = await prisma.prescription.create({
             data: {
-                patientId,
-                notes,
+                patientId: data.patientId,
+                notes: data.notes,
                 items: {
-                    create: items.map((item: any) => ({
+                    create: data.items.map((item) => ({
                         medicationName: item.name,
                         dosage: item.dosage,
                         duration: item.duration,
@@ -51,6 +58,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Failed to create prescription" }, { status: 500 })
     }
 }
+
 export async function GET() {
     try {
         const prescriptions = await prisma.prescription.findMany({

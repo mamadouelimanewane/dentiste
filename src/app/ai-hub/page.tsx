@@ -19,13 +19,16 @@ import {
     BarChart3,
     Clock,
     UserCircle,
-    Mic
+    Mic,
+    Settings
 } from "lucide-react"
+import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 
 export default function AIHubPage() {
+    const router = useRouter()
     const [isGenerating, setIsGenerating] = useState(false)
     const [command, setCommand] = useState("")
 
@@ -120,6 +123,13 @@ export default function AIHubPage() {
                         }}
                     >
                         <ShieldCheck className="mr-2 h-5 w-5" /> Mode Audit IA
+                    </Button>
+                    <Button
+                        variant="ghost"
+                        className="h-14 w-14 rounded-2xl border-slate-200 bg-white hover:bg-slate-50 text-slate-400 hover:text-indigo-600 transition-all shadow-sm"
+                        onClick={() => router.push('/settings')}
+                    >
+                        <Settings className="h-6 w-6" />
                     </Button>
                 </div>
             </div>

@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
+import { createTaskSchema, updateTaskSchema, formatZodErrors } from "@/lib/validations"
 
 export async function GET() {
     try {
@@ -27,14 +28,26 @@ export async function GET() {
 export async function POST(req: Request) {
     try {
         const body = await req.json()
+
+        // Validation Zod
+        const parsed = createTaskSchema.safeParse(body)
+        if (!parsed.success) {
+            return NextResponse.json(
+                { error: "Données invalides", details: formatZodErrors(parsed.error) },
+                { status: 400 }
+            )
+        }
+
+        const data = parsed.data
+
         const task = await prisma.task.create({
             data: {
-                title: body.title,
-                status: body.status || 'TODO',
-                priority: body.priority || 'MEDIUM',
-                category: body.category || 'ADMIN',
-                patientId: body.patientId || null,
-                dueDate: body.dueDate ? new Date(body.dueDate) : null
+                title: data.title,
+                status: data.status || 'TODO',
+                priority: data.priority || 'MEDIUM',
+                category: data.category || 'ADMIN',
+                patientId: data.patientId || null,
+                dueDate: data.dueDate ? new Date(data.dueDate) : null
             }
         })
         return NextResponse.json(task)
@@ -47,10 +60,20 @@ export async function POST(req: Request) {
 export async function PATCH(req: Request) {
     try {
         const body = await req.json()
-        const { id, ...data } = body
+
+        // Validation Zod
+        const parsed = updateTaskSchema.safeParse(body)
+        if (!parsed.success) {
+            return NextResponse.json(
+                { error: "Données invalides", details: formatZodErrors(parsed.error) },
+                { status: 400 }
+            )
+        }
+
+        const { id, ...updateData } = parsed.data
         const task = await prisma.task.update({
             where: { id },
-            data: data
+            data: updateData
         })
         return NextResponse.json(task)
     } catch (error) {

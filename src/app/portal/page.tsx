@@ -17,10 +17,10 @@ import {
     ImageIcon,
     Stethoscope,
     Phone,
-    MapPin,
     ExternalLink,
     X,
-    CheckCircle2
+    CheckCircle2,
+    ArrowRight
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"

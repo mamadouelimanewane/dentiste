@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
+import { createAppointmentSchema, formatZodErrors } from "@/lib/validations"
 
 export async function GET() {
     try {
@@ -29,18 +30,29 @@ export async function POST(req: Request) {
     try {
         const body = await req.json()
 
+        // Validation Zod
+        const parsed = createAppointmentSchema.safeParse(body)
+        if (!parsed.success) {
+            return NextResponse.json(
+                { error: "Données invalides", details: formatZodErrors(parsed.error) },
+                { status: 400 }
+            )
+        }
+
+        const data = parsed.data
+
         // 1. Création du rendez-vous
         const appointment = (await prisma.appointment.create({
             data: {
-                patientId: body.patientId,
-                title: body.title,
-                start: new Date(body.start),
-                end: new Date(body.end),
-                type: body.type,
-                status: body.status || 'CONFIRMED',
-                notes: body.notes,
-                isSurgery: !!body.isSurgery,
-                siteId: body.siteId || 'CABINET_DAKAR'
+                patientId: data.patientId,
+                title: data.title,
+                start: new Date(data.start),
+                end: new Date(data.end),
+                type: data.type,
+                status: data.status || 'CONFIRMED',
+                notes: data.notes,
+                isSurgery: !!data.isSurgery,
+                siteId: data.siteId || 'CABINET_DAKAR'
             },
             include: {
                 patient: true
@@ -49,7 +61,7 @@ export async function POST(req: Request) {
 
         // 2. Génération automatique du rappel (Simulation Elite Connect)
         const patientName = `${appointment.patient.firstName} ${appointment.patient.lastName}`
-        const dateStr = new Date(body.start).toLocaleDateString('fr-FR', {
+        const dateStr = new Date(data.start).toLocaleDateString('fr-FR', {
             weekday: 'long',
             day: 'numeric',
             month: 'long',
@@ -57,11 +69,11 @@ export async function POST(req: Request) {
             minute: '2-digit'
         })
 
-        const smsContent = `Bonjour ${appointment.patient.firstName}, votre rendez-vous chez DentoPrestige pour "${body.title}" est confirmé le ${dateStr}. Merci de prévenir en cas d'empêchement.`
+        const smsContent = `Bonjour ${appointment.patient.firstName}, votre rendez-vous chez DentoPrestige pour "${data.title}" est confirmé le ${dateStr}. Merci de prévenir en cas d'empêchement.`
 
         await prisma.communicationLog.create({
             data: {
-                patientId: body.patientId,
+                patientId: data.patientId,
                 type: 'WHATSAPP',
                 category: 'REMINDER',
                 content: smsContent,

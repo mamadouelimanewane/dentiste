@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -30,7 +30,8 @@ import {
     Plus,
     Trash2,
     Edit,
-    Key
+    Key,
+    Loader2
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { motion } from "framer-motion"
@@ -110,10 +111,19 @@ export default function SettingsPage() {
         { id: 'TEAM', name: 'Collaborateurs & Rôles', icon: User },
         { id: 'AGENDA', name: 'Horaires & RDV', icon: Clock },
         { id: 'COMMUNICATION', name: 'SMS & WhatsApp', icon: MessageSquare },
+        { id: 'AI', name: 'Neural & Intelligence', icon: Brain },
         { id: 'SECURITY', name: 'Périmètre de Sécurité', icon: ShieldCheck },
         { id: 'BILLING', name: 'Facturation & Licence', icon: CreditCard },
         { id: 'INTEGRATIONS', name: 'Hub API & Webhooks', icon: Globe },
     ]
+
+    const [aiSettings, setAiSettings] = useState({
+        engine: 'DEEPSEEK_V2',
+        diagnosticPrecision: 98,
+        autonomousReporting: true,
+        voiceSynthesis: true,
+        imagingAnalysis: true
+    })
 
     return (
         <div className="p-8 space-y-10 max-w-7xl mx-auto pb-40">
@@ -410,6 +420,103 @@ export default function SettingsPage() {
                                     </Button>
                                 </CardContent>
                             </Card>
+                        </motion.div>
+                    )}
+
+                    {activeSection === 'AI' && (
+                        <motion.div
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            className="space-y-8"
+                        >
+                            <Card className="rounded-[3rem] border-none shadow-luxury bg-slate-950 text-white overflow-hidden relative">
+                                <div className="absolute top-0 right-0 p-10 opacity-10">
+                                    <Brain className="h-60 w-60 text-indigo-500" />
+                                </div>
+                                <CardHeader className="p-10 border-b border-white/5 relative z-10">
+                                    <div className="flex justify-between items-center">
+                                        <div>
+                                            <CardTitle className="text-2xl font-black tracking-tighter uppercase italic">Neural Core Engine</CardTitle>
+                                            <CardDescription className="text-sm font-medium text-slate-400 mt-2">Gérez l'intelligence centrale de votre écosystème clinique.</CardDescription>
+                                        </div>
+                                        <div className="px-4 py-2 bg-indigo-500/20 border border-indigo-500/30 rounded-full flex items-center gap-2">
+                                            <div className="h-2 w-2 rounded-full bg-indigo-400 animate-pulse" />
+                                            <span className="text-[10px] font-black uppercase text-indigo-400">DeepSeek v2.4 Online</span>
+                                        </div>
+                                    </div>
+                                </CardHeader>
+                                <CardContent className="p-10 space-y-10 relative z-10">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Moteur d'Analyse (LLM)</label>
+                                            <select
+                                                className="w-full h-12 bg-white/5 border border-white/10 rounded-xl text-sm font-bold px-5 text-white outline-none focus:border-indigo-500 transition-all"
+                                                value={aiSettings.engine}
+                                                onChange={(e) => setAiSettings({ ...aiSettings, engine: e.target.value })}
+                                            >
+                                                <option value="DEEPSEEK_V2" className="bg-slate-900">DeepSeek V2 (Optimisé Santé)</option>
+                                                <option value="GPT_4O" className="bg-slate-900">GPT-4o (Vision Avancée)</option>
+                                                <option value="CLAUDE_3_5" className="bg-slate-900">Claude 3.5 Sonnet</option>
+                                            </select>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Précision Diagnostique (Confidence Threshold)</label>
+                                            <div className="flex items-center gap-4">
+                                                <input
+                                                    type="range"
+                                                    className="flex-1 accent-indigo-500"
+                                                    min="80" max="99"
+                                                    value={aiSettings.diagnosticPrecision}
+                                                    onChange={(e) => setAiSettings({ ...aiSettings, diagnosticPrecision: parseInt(e.target.value) })}
+                                                />
+                                                <span className="text-xl font-black min-w-[3rem] text-indigo-400">{aiSettings.diagnosticPrecision}%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-4 pt-4 border-t border-white/5">
+                                        <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-500">Modules d'Intelligence Client</h4>
+                                        {[
+                                            { key: 'autonomousReporting', label: 'Autonomous Strategic Reporting', desc: 'Génération automatique de rapports de performance mensuels par IA.' },
+                                            { key: 'voiceSynthesis', label: 'Neural Voice Synthesis', desc: 'Audio-guiding et notifications vocales pour les patients en salle d\'attente.' },
+                                            { key: 'imagingAnalysis', label: 'Advanced Radiological Vision', desc: 'Détection en temps réel des pathologies sur panoramiques et rétro-alvéolaires.' },
+                                        ].map((module) => (
+                                            <div key={module.key} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5 hover:bg-white/10 transition-all">
+                                                <div>
+                                                    <p className="text-sm font-black text-white">{module.label}</p>
+                                                    <p className="text-[11px] text-slate-500 mt-0.5">{module.desc}</p>
+                                                </div>
+                                                <div className={cn(
+                                                    "h-6 w-12 rounded-full transition-all cursor-pointer",
+                                                    aiSettings[module.key as keyof typeof aiSettings] ? "bg-indigo-500" : "bg-white/10"
+                                                )}
+                                                    onClick={() => setAiSettings({
+                                                        ...aiSettings,
+                                                        [module.key]: !aiSettings[module.key as keyof typeof aiSettings]
+                                                    })}
+                                                >
+                                                    <div className={cn(
+                                                        "h-6 w-6 rounded-full bg-white shadow-sm transition-all",
+                                                        aiSettings[module.key as keyof typeof aiSettings] ? "translate-x-6" : "translate-x-0"
+                                                    )} />
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            <div className="bg-indigo-500/5 p-8 rounded-[3rem] border border-indigo-500/10 border-dashed">
+                                <div className="flex gap-6 items-center">
+                                    <div className="h-14 w-14 rounded-2xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 shrink-0">
+                                        <Zap className="h-7 w-7" />
+                                    </div>
+                                    <div>
+                                        <h4 className="text-sm font-black text-slate-900 uppercase">Impact Prévu sur le CA : +22%</h4>
+                                        <p className="text-xs text-slate-500 mt-1">L'IA estime une réduction de 15% des rendez-vous oubliés et une augmentation de 8% de la transformation des devis.</p>
+                                    </div>
+                                </div>
+                            </div>
                         </motion.div>
                     )}
 

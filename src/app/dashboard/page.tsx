@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react'
+import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import {
   Calendar, Users, Activity, DollarSign, ShieldCheck, BookOpen,
@@ -24,10 +25,11 @@ const MODULES_GRID = [
   { name: 'Devis', icon: FileText, href: '/quotes', desc: 'Plans financiers', color: 'bg-amber-100/50 text-amber-700 group-hover:bg-amber-600 group-hover:text-white', roles: ['OWNER', 'SECRETARY'] },
   { name: 'Stérilisation', icon: ShieldCheck, href: '/sterilization', desc: 'Traçabilité IoT', color: 'bg-rose-50 text-rose-600 group-hover:bg-rose-600 group-hover:text-white', roles: ['OWNER', 'ASSISTANT'] },
   { name: 'Inventory', icon: Package, href: '/inventory', desc: 'Stock & Ruptures', color: 'bg-orange-50 text-orange-600 group-hover:bg-orange-600 group-hover:text-white', roles: ['OWNER', 'ASSISTANT'] },
+  { name: 'AI Hub', icon: Brain, href: '/ai-hub', desc: 'Neural Command', color: 'bg-indigo-50 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white', isNew: true, roles: ['OWNER', 'DENTIST'] },
 ]
 
 export default function DashboardPage() {
-  const [user, setUser] = useState<{ role: string, name: string } | null>(null)
+  const { data: session } = useSession()
   const [mounted, setMounted] = useState(false)
   const [stats, setStats] = useState<any>({
     revenue: 0,
@@ -37,6 +39,11 @@ export default function DashboardPage() {
   })
   const [todayApts, setTodayApts] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
+
+  const user = session?.user ? {
+    role: (session.user as any).role || 'OWNER',
+    name: session.user.name || 'Dr. Lao',
+  } : null
 
   const fetchDashboardData = async () => {
     setIsLoading(true)
@@ -49,11 +56,16 @@ export default function DashboardPage() {
       const apts = await aptsRes.json()
       const metrics = await metricsRes.json()
 
-      setTodayApts(Array.isArray(apts) ? apts.slice(0, 5) : [])
+      const todayStr = new Date().toISOString().split('T')[0]
+      const validApts = Array.isArray(apts) ? apts : []
+      const trueTodayApts = validApts.filter(a => new Date(a.start).toISOString().split('T')[0] === todayStr)
+      const trueWaiting = validApts.filter(a => a.status === 'WAITED' || a.status === 'ARRIVED' || a.status === 'WAITING').length
+
+      setTodayApts(trueTodayApts)
       setStats({
         revenue: metrics.treasury || 0,
-        appointmentsCount: Array.isArray(apts) ? apts.length : 0,
-        waitingCount: 3, // Mocked for now
+        appointmentsCount: trueTodayApts.length,
+        waitingCount: trueWaiting,
         unpaidCount: metrics.netResult || 0
       })
     } catch (error) {
@@ -65,10 +77,6 @@ export default function DashboardPage() {
 
   useEffect(() => {
     setMounted(true)
-    const savedUser = localStorage.getItem('dp_user')
-    if (savedUser) {
-      setUser(JSON.parse(savedUser))
-    }
     fetchDashboardData()
   }, [])
 

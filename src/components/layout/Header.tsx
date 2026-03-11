@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { Bell, Search, Diamond, Menu, X, ChevronDown, Wifi, Battery, Clock, Zap } from 'lucide-react'
 import { navigationSections } from './Sidebar'
@@ -19,28 +20,12 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
     const [showSearch, setShowSearch] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-    const [user, setUser] = useState<{ role: string, name: string } | null>(null)
+    const { data: session } = useSession()
 
-    useEffect(() => {
-        const savedUser = localStorage.getItem('dp_user')
-        if (savedUser) {
-            setUser(JSON.parse(savedUser))
-        } else {
-            // Auto-detect role for demo pages
-            if (pathname.includes('/mobile/comptable')) {
-                setUser({ role: 'ACCOUNTANT', name: 'Papa Samba' })
-            } else if (pathname.includes('/mobile/admin')) {
-                setUser({ role: 'OWNER', name: 'Admin Hub' })
-            } else if (pathname.includes('/mobile/staff')) {
-                setUser({ role: 'DENTIST', name: 'Dr. Aere Lao' })
-            } else if (pathname.includes('/mobile/client')) {
-                setUser({ role: 'CLIENT', name: 'Jean Valjean' })
-            } else {
-                // Default for demo cabinet
-                setUser({ role: 'OWNER', name: 'Dr. Aere Lao' })
-            }
-        }
-    }, [pathname])
+    const user = session?.user ? {
+        role: (session.user as any).role || 'OWNER',
+        name: session.user.name || 'Utilisateur',
+    } : null
 
     useEffect(() => {
         const timer = setInterval(() => setCurrentTime(new Date()), 1000)
@@ -73,6 +58,12 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
             item.name.toLowerCase().includes(searchQuery.toLowerCase())
         ).slice(0, 5)
         : []
+
+    const getInitials = (name: string) => {
+        return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+    }
+
+    const initials = user ? getInitials(user.name) : 'DR'
 
     return (
         <>
@@ -183,7 +174,7 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
                     {/* User Avatar */}
                     <Link href="/settings"
                         className="h-10 w-10 rounded-2xl bg-accent/20 border border-accent/30 flex items-center justify-center text-accent font-black text-xs hover:bg-accent/30 transition-all">
-                        DR
+                        {initials}
                     </Link>
                 </div>
             </header>

@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
+import { createQuoteSchema, formatZodErrors } from "@/lib/validations"
 
 export async function GET() {
     try {
@@ -27,12 +28,24 @@ export async function GET() {
 export async function POST(req: Request) {
     try {
         const body = await req.json()
+
+        // Validation Zod
+        const parsed = createQuoteSchema.safeParse(body)
+        if (!parsed.success) {
+            return NextResponse.json(
+                { error: "Données invalides", details: formatZodErrors(parsed.error) },
+                { status: 400 }
+            )
+        }
+
+        const data = parsed.data
+
         const quote = await prisma.quote.create({
             data: {
-                patientId: body.patientId,
-                title: body.title,
-                total: parseFloat(body.total),
-                status: body.status || 'DRAFT'
+                patientId: data.patientId,
+                title: data.title,
+                total: data.total,
+                status: data.status || 'DRAFT'
             }
         })
         return NextResponse.json(quote)

@@ -22,8 +22,10 @@ import {
     CheckCircle2,
     Camera,
     X,
-    ArrowRight
+    ArrowRight,
+    Brain
 } from "lucide-react"
+import { NeuralTreatmentMap } from "@/components/dental/NeuralTreatmentMap"
 import { cn } from "@/lib/utils"
 import { useRouter } from "next/navigation"
 
@@ -31,6 +33,7 @@ export default function SmileDesignStudio() {
     const router = useRouter()
     const [step, setStep] = useState(1)
     const [isAnalyzing, setIsAnalyzing] = useState(false)
+    const [aiResult, setAiResult] = useState<any>(null)
     const [comparisonView, setComparisonView] = useState(0.5)
     const [selectedTreatment, setSelectedTreatment] = useState('VENEERS')
     const [uploadedImage, setUploadedImage] = useState<string | null>(null)
@@ -58,13 +61,29 @@ export default function SmileDesignStudio() {
         }
     }
 
-    const handleStartAnalysis = () => {
+    const handleStartAnalysis = async () => {
         if (!uploadedImage) return
         setIsAnalyzing(true)
-        setTimeout(() => {
+        setAiResult(null)
+
+        try {
+            const res = await fetch('/api/ai/analyze-image', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image: uploadedImage, analysisType: 'SMILE_DESIGN' })
+            })
+            const data = await res.json()
+            if (res.ok) {
+                setAiResult(data)
+                setStep(2)
+            } else {
+                console.error("Analysis Failed:", data.error)
+            }
+        } catch (error) {
+            console.error("Network Error during AI Analysis")
+        } finally {
             setIsAnalyzing(false)
-            setStep(2)
-        }, 3000)
+        }
     }
 
     return (
@@ -244,6 +263,34 @@ export default function SmileDesignStudio() {
                         )}
                     </Card>
 
+                    {/* Aesthetic Intelligence Map */}
+                    {aiResult && (
+                        <div className="space-y-6 animate-in slide-in-from-bottom-10 duration-700">
+                            <div className="flex items-center gap-2">
+                                <Brain className="h-5 w-5 text-gold" />
+                                <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest">Cartographie Neurale du Sourire</h3>
+                            </div>
+                            <NeuralTreatmentMap
+                                nodes={[
+                                    { id: 'a1', label: 'Asymétrie Ligne Bipupillaire', type: 'PATHOLOGY', status: 'DETECTED' },
+                                    { id: 'a2', label: 'Saturation Chromatique Élevée', type: 'PATHOLOGY', status: 'DETECTED' },
+                                    { id: 't1', label: 'Réalignement Axial (Facettes)', type: 'TREATMENT', status: 'RECOMMENDED' },
+                                    { id: 't2', label: 'Éclaircissement OM3 (Bleaching)', type: 'TREATMENT', status: 'RECOMMENDED' },
+                                    { id: 'p1', label: 'Harmonie Faciale Totale', type: 'PREVENTION', status: 'PLANNED' },
+                                    { id: 'p2', label: 'Stabilité Estethique 10 ans', type: 'PREVENTION', status: 'PLANNED' },
+                                ]}
+                                connections={[
+                                    { from: 'a1', to: 't1' },
+                                    { from: 'a2', to: 't2' },
+                                    { from: 't1', to: 'p1' },
+                                    { from: 't2', to: 'p1' },
+                                    { from: 'p1', to: 'p2' },
+                                ]}
+                                className="h-[350px]"
+                            />
+                        </div>
+                    )}
+
                     {/* AI Insights on Design */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <Card className="rounded-[2.5rem] border-none shadow-luxury bg-white p-8">
@@ -251,7 +298,7 @@ export default function SmileDesignStudio() {
                                 <Palette className="h-5 w-5 text-indigo-500" />
                                 <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Analyse de Teinte</h4>
                             </div>
-                            <p className="text-sm font-bold text-slate-900 leading-tight">Suggéré : Vita 3D Master OM3</p>
+                            <p className="text-sm font-bold text-slate-900 leading-tight">Suggéré : {aiResult?.shadeSuggestion || 'Vita 3D Master OM3'}</p>
                             <p className="text-[10px] text-slate-400 mt-2 italic">L'IA préconise cette teinte pour un rendu naturel sur la carnation détectée.</p>
                         </Card>
                         <Card className="rounded-[2.5rem] border-none shadow-luxury bg-white p-8">
@@ -259,7 +306,7 @@ export default function SmileDesignStudio() {
                                 <Smile className="h-5 w-5 text-teal-500" />
                                 <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Symétrie Gingivale</h4>
                             </div>
-                            <p className="text-sm font-bold text-slate-900 leading-tight">Optimisée (+1.2mm secteur 1)</p>
+                            <p className="text-sm font-bold text-slate-900 leading-tight">{aiResult?.symmetry || 'Optimisée (+1.2mm)'}</p>
                             <p className="text-[10px] text-slate-400 mt-2 italic">Correction de la ligne de sourire pour aligner les collets.</p>
                         </Card>
                         <Card className="rounded-[2.5rem] border-none shadow-luxury bg-white p-8">
@@ -267,7 +314,7 @@ export default function SmileDesignStudio() {
                                 <Eye className="h-5 w-5 text-amber-500" />
                                 <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Rendu Visuel 3D</h4>
                             </div>
-                            <p className="text-sm font-bold text-slate-900 leading-tight">Photoréalisme : 98.4%</p>
+                            <p className="text-sm font-bold text-slate-900 leading-tight">Photoréalisme : {aiResult?.realism || '98.4%'}</p>
                             <p className="text-[10px] text-slate-400 mt-2 italic">L'éclairage a été harmonisé pour correspondre aux sources de lumière réelles.</p>
                         </Card>
                     </div>
@@ -289,7 +336,7 @@ export default function SmileDesignStudio() {
                             <div className="space-y-4">
                                 <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest border-b border-white/10 pb-4">
                                     <span className="text-slate-400">Teinte sélectionnée</span>
-                                    <span>OM3 (Blanchiment)</span>
+                                    <span>{aiResult?.shadeSuggestion?.split(' ').pop() || 'OM3'} (Blanchiment)</span>
                                 </div>
                                 <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest border-b border-white/10 pb-4">
                                     <span className="text-slate-400">Nb de Facettes</span>
@@ -305,7 +352,7 @@ export default function SmileDesignStudio() {
                                     <p className="text-[10px] font-black uppercase tracking-widest text-gold text-center w-full">Impact prévisionnel du sourire</p>
                                 </div>
                                 <div className="text-center bg-white/5 border border-white/10 p-4 rounded-2xl">
-                                    <p className="text-3xl font-black">+42%</p>
+                                    <p className="text-3xl font-black">+{aiResult?.confidenceBoost || 42}%</p>
                                     <p className="text-[9px] font-black uppercase tracking-widest text-indigo-300">Confiance en soi estimée (AI Score)</p>
                                 </div>
                             </div>

@@ -11,7 +11,6 @@ import {
     Users,
     Search,
     Plus,
-    MapSegments,
     Award,
     Zap,
     Star,

@@ -27,13 +27,18 @@ import {
     History,
     FileCheck,
     Printer,
-    CreditCard as PaymentIcon
+    Smartphone,
+    CreditCard as PaymentIcon,
+    File as FileIcon
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { motion, AnimatePresence } from "framer-motion"
+import { PDFDownloadLink } from '@react-pdf/renderer'
+import { InvoicePDF } from '@/components/pdf/InvoicePDF'
 
 export default function BillingPage() {
     const [viewMode, setViewMode] = useState<'DASHBOARD' | 'FSE' | 'PAYMENTS'>('DASHBOARD')
+    const [paymentLoading, setPaymentLoading] = useState<string | null>(null)
 
     const fseItems = [
         { id: 'FSE-2026-X81', patient: 'Sophie Faye', amount: '142,50', status: 'TRANSMITTED', date: 'Aujourd\'hui 14:22', type: 'CCAM' },
@@ -66,6 +71,32 @@ export default function BillingPage() {
         link.click();
         document.body.removeChild(link);
     };
+
+    const handleCinetPayPayment = async (invoiceId: string, amount: string, patientName: string) => {
+        try {
+            setPaymentLoading(invoiceId)
+            const res = await fetch('/api/payment/initiate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    amount: parseInt(amount.replace(/,/g, '')),
+                    patientName,
+                    description: `Règlement facture ${invoiceId}`,
+                    paymentMethod: 'MOBILE_MONEY'
+                })
+            })
+            const data = await res.json()
+            if (data.success) {
+                alert(`Lien de paiement Wave/Orange Money généré via CinetPay :\n${data.paymentUrl}`)
+            } else {
+                alert("Erreur lors de l'initiation du paiement.")
+            }
+        } catch (error) {
+            alert("Erreur réseau.")
+        } finally {
+            setPaymentLoading(null)
+        }
+    }
 
     return (
         <div className="p-8 space-y-10 max-w-7xl mx-auto print:p-0">
@@ -179,14 +210,54 @@ export default function BillingPage() {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div className="flex items-center gap-8">
+                                                    <div className="flex items-center gap-6">
                                                         <div className="text-right">
                                                             <p className="text-sm font-black text-slate-900">{inv.amount} FCFA</p>
                                                             <p className="text-[10px] font-bold text-slate-400 uppercase">Hier</p>
                                                         </div>
-                                                        <Button variant="ghost" size="icon" className="rounded-full text-slate-300 group-hover:text-slate-950 transition-colors">
-                                                            <Download className="h-5 w-5" />
-                                                        </Button>
+                                                        <div className="flex items-center gap-1">
+                                                            {inv.status !== 'PAID' && (
+                                                                <Button
+                                                                    variant="outline"
+                                                                    size="sm"
+                                                                    className="rounded-xl border-accent text-accent hover:bg-accent/10 whitespace-nowrap h-8 text-[10px] font-black uppercase"
+                                                                    onClick={() => handleCinetPayPayment(inv.id, inv.amount, inv.patient)}
+                                                                    disabled={paymentLoading === inv.id}
+                                                                >
+                                                                    {paymentLoading === inv.id ? (
+                                                                        <span className="flex items-center gap-2"><Smartphone className="h-3 w-3 animate-pulse" /> Init...</span>
+                                                                    ) : (
+                                                                        <span className="flex items-center gap-2"><Smartphone className="h-3 w-3" /> Payer via Mobile</span>
+                                                                    )}
+                                                                </Button>
+                                                            )}
+                                                            <PDFDownloadLink
+                                                                document={
+                                                                    <InvoicePDF
+                                                                        invoiceNumber={inv.id}
+                                                                        date={new Date().toLocaleDateString('fr-FR')}
+                                                                        patientName={inv.patient}
+                                                                        patientPhone="77 000 00 00" // Dans la vraie vie, pris du backend
+                                                                        items={[
+                                                                            { id: '1', description: inv.type, quantity: 1, unitPrice: parseInt(inv.amount.replace(/,/g, '')) }
+                                                                        ]}
+                                                                        total={parseInt(inv.amount.replace(/,/g, ''))}
+                                                                    />
+                                                                }
+                                                                fileName={`Facture_${inv.id}.pdf`}
+                                                            >
+                                                                {({ loading }: { loading: boolean }) => (
+                                                                    <Button
+                                                                        variant="ghost"
+                                                                        size="icon"
+                                                                        className="rounded-full text-slate-400 hover:text-slate-900"
+                                                                        disabled={loading}
+                                                                    >
+                                                                        <Download className="h-4 w-4" />
+                                                                    </Button>
+                                                                )}
+                                                            </PDFDownloadLink>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             ))}
@@ -200,24 +271,43 @@ export default function BillingPage() {
 
                             {/* Right Intelligence Panel */}
                             <div className="col-span-12 lg:col-span-4 space-y-8">
-                                <Card className="rounded-[2.5rem] border-none shadow-luxury bg-slate-950 text-white p-8 overflow-hidden relative">
-                                    <div className="absolute top-0 right-0 p-8 opacity-10">
-                                        <Sparkles className="h-40 w-40 text-accent" />
+                                <Card className="rounded-[3rem] border-none shadow-luxury bg-slate-950 text-white p-10 overflow-hidden relative group">
+                                    <div className="absolute top-0 right-0 p-10 opacity-10 group-hover:rotate-12 transition-transform duration-700">
+                                        <Sparkles className="h-48 w-48 text-indigo-500" />
                                     </div>
-                                    <div className="relative z-10 space-y-6">
+                                    <div className="relative z-10 space-y-8">
                                         <div className="flex items-center gap-3">
-                                            <Sparkles className="h-5 w-5 text-accent" />
-                                            <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400">IA Financial Guard</h3>
-                                        </div>
-                                        <div className="space-y-4">
-                                            <div className="bg-white/5 p-4 rounded-2xl border border-white/10">
-                                                <p className="text-[10px] font-black text-accent uppercase tracking-widest mb-1">Alerte Reste à charge</p>
-                                                <p className="text-[11px] font-medium text-slate-300">3 patients ont un reste à charge &gt; 500,000 FCFA sans plan d'échelonnement.</p>
-                                                <Button variant="link" className="text-accent p-0 h-auto text-[9px] font-black uppercase mt-3">Lancer relances →</Button>
+                                            <div className="h-10 w-10 rounded-2xl bg-indigo-500/20 flex items-center justify-center text-indigo-400">
+                                                <ShieldCheck className="h-6 w-6" />
                                             </div>
-                                            <div className="bg-white/5 p-4 rounded-2xl border border-white/10">
-                                                <p className="text-[10px] font-black text-teal-400 uppercase tracking-widest mb-1">Optimisation CCAM</p>
-                                                <p className="text-[11px] font-medium text-slate-300">Suggestion d'acte complémentaire (HBQK002) détectée sur le dossier #452.</p>
+                                            <div>
+                                                <h3 className="text-[10px] font-black uppercase tracking-widest text-indigo-400">Sentinelle IA Financière</h3>
+                                                <p className="text-[9px] font-bold text-slate-500 uppercase">Protection des flux G.A.F.A</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-4">
+                                            <div className="bg-white/5 p-6 rounded-[2rem] border border-white/10 hover:bg-white/10 transition-colors">
+                                                <div className="flex justify-between items-center mb-2">
+                                                    <span className="text-[9px] font-black text-rose-500 uppercase tracking-widest">Anomalie Détectée</span>
+                                                    <AlertTriangle className="h-4 w-4 text-rose-500 animate-pulse" />
+                                                </div>
+                                                <p className="text-xs font-medium text-slate-300">
+                                                    Incohérence détectée entre l'acte (HBQK389) et l'imagerie CBCT sur le patient #D-2026-F9.
+                                                </p>
+                                                <Button variant="link" className="text-indigo-400 p-0 h-auto text-[9px] font-black uppercase mt-4">Rectifier Nomenclature →</Button>
+                                            </div>
+
+                                            <div className="bg-indigo-600/10 p-6 rounded-[2rem] border border-indigo-500/20">
+                                                <div className="flex justify-between items-center mb-2">
+                                                    <span className="text-[9px] font-black text-indigo-400 uppercase tracking-widest">Neural Forecast</span>
+                                                    <TrendingUp className="h-4 w-4 text-indigo-400" />
+                                                </div>
+                                                <p className="text-xs font-black text-white">Encaissement Prévu J+7 :</p>
+                                                <p className="text-2xl font-black text-white mt-1">4.2M <span className="text-xs font-bold text-slate-400">FCFA</span></p>
+                                                <p className="text-[9px] font-medium text-slate-400 mt-2 italic leading-relaxed">
+                                                    Basé sur 18 FSE acceptées et 4 virements mutuelle en transit.
+                                                </p>
                                             </div>
                                         </div>
                                     </div>

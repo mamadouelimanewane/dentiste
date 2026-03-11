@@ -18,7 +18,8 @@ import {
     Calendar,
     Target,
     Zap,
-    MoreHorizontal
+    MoreHorizontal,
+    Trophy
 } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { cn } from "@/lib/utils"

@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button"
 import { BookOpen, TrendingUp, TrendingDown, Receipt, FileText, ArrowRight, Wallet, PieChart, Activity, Clock, ShieldCheck, Plus, Sparkles, Loader2, Download, Printer } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { cn } from "@/lib/utils"
+import { PDFDownloadLink } from "@react-pdf/renderer"
+import { AccountingPDF } from "@/components/pdf/AccountingPDF"
 
 export default function AccountingPage() {
     const [metrics, setMetrics] = useState<any>(null)
@@ -52,10 +54,6 @@ export default function AccountingPage() {
         exportToCSV();
     };
 
-    const printToPDF = () => {
-        window.print();
-    };
-
     if (isLoading) {
         return (
             <div className="h-screen flex items-center justify-center bg-slate-50">
@@ -88,11 +86,24 @@ export default function AccountingPage() {
                 </div>
                 <div className="flex gap-3">
                     <Button variant="outline" onClick={exportToCSV} className="rounded-xl border-slate-200 font-bold bg-white">
-                        <Download className="mr-2 h-4 w-4" /> CSV
+                        <Download className="mr-2 h-4 w-4" /> CSV/Excel
                     </Button>
-                    <Button variant="outline" onClick={printToPDF} className="rounded-xl border-slate-200 font-bold bg-white">
-                        <Printer className="mr-2 h-4 w-4" /> PDF
-                    </Button>
+                    {metrics?.journals ? (
+                        <PDFDownloadLink
+                            document={<AccountingPDF journals={metrics.journals} />}
+                            fileName={`Grand_Livre_${new Date().toISOString().split('T')[0]}.pdf`}
+                        >
+                            {({ loading }: { loading: boolean }) => (
+                                <Button variant="outline" className="rounded-xl border-slate-200 font-bold bg-white" disabled={loading}>
+                                    <Printer className="mr-2 h-4 w-4" /> PDF
+                                </Button>
+                            )}
+                        </PDFDownloadLink>
+                    ) : (
+                        <Button variant="outline" className="rounded-xl border-slate-200 font-bold bg-white" disabled>
+                            <Printer className="mr-2 h-4 w-4" /> PDF
+                        </Button>
+                    )}
                     <Button className="bg-slate-900 text-white hover:bg-slate-800 font-black px-6 rounded-xl uppercase tracking-widest text-xs h-11">
                         <Plus className="mr-2 h-4 w-4" /> Nouvelle Écriture
                     </Button>

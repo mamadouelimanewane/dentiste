@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from 'react'
+import { NeuralTreatmentMap } from "@/components/dental/NeuralTreatmentMap"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import {
@@ -23,7 +24,9 @@ import {
     CheckCircle2,
     Cpu,
     Radiation,
-    ChevronLeft
+    ChevronLeft,
+    Volume2,
+    VolumeX
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { motion, AnimatePresence } from "framer-motion"
@@ -33,40 +36,92 @@ export default function AIRadioLab() {
     const [isAnalyzing, setIsAnalyzing] = useState(false)
     const [analysisResult, setAnalysisResult] = useState<any>(null)
     const [selectedRadio, setSelectedRadio] = useState<any>(null)
+    const [isPlayingVoice, setIsPlayingVoice] = useState(false)
+    const [voiceLang, setVoiceLang] = useState<'FR' | 'WO'>('FR')
+
+    const toggleVoiceReport = () => {
+        if (isPlayingVoice) {
+            window.speechSynthesis.cancel()
+            setIsPlayingVoice(false)
+            return
+        }
+
+        if (!analysisResult) return
+
+        let textToSpeak = ""
+        if (voiceLang === 'FR') {
+            textToSpeak = `Rapport d'analyse du Laboratoire d'Intelligence Artificielle.
+                L'indice de santé globale est de ${analysisResult.generalIndex} pour cent.
+                Les détections prioritaires incluent : ` +
+                analysisResult.detections.map((d: any) => `en zone ${d.zone}, ${d.diagnosis}`).join('. ')
+        } else {
+            // Simulated Wolof (Phonetic/Basic for demo)
+            textToSpeak = `Rapport AI ci radio bi.
+                Xibaaru wér-gu-yaram bi : ${analysisResult.generalIndex} pour cent la.
+                Fi ñu gis ay jafe-jafe: ` +
+                analysisResult.detections.map((d: any) => `ci wetu ${d.zone}, ${d.diagnosis}`).join('. ')
+        }
+
+        const utterance = new SpeechSynthesisUtterance(textToSpeak)
+        utterance.lang = 'fr-FR'
+        utterance.rate = 0.85
+
+        utterance.onend = () => setIsPlayingVoice(false)
+        utterance.onerror = () => setIsPlayingVoice(false)
+
+        setIsPlayingVoice(true)
+        window.speechSynthesis.speak(utterance)
+    }
 
     const radios = [
         { id: 1, title: 'Panoramique Patient Jean V.', date: '24 Jan 2026', type: 'BANO', url: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=800' },
         { id: 2, title: 'CBCT 3D - Secteur 4', date: '20 Jan 2026', type: 'CBCT', url: 'https://images.unsplash.com/photo-1530497610245-94d3c16cda28?auto=format&fit=crop&q=80&w=800' },
     ]
 
-    const handleRunAI = () => {
+    const handleRunAI = async () => {
         setIsAnalyzing(true)
         setAnalysisResult(null)
-        setTimeout(() => {
-            setIsAnalyzing(false)
-            setAnalysisResult({
-                detections: [
-                    { zone: '16-17', diagnosis: 'Caries probables (92% confidence)', severity: 'HIGH', color: 'text-red-500' },
-                    { zone: 'Secteur 4', diagnosis: 'Résorption osseuse horizontale légère', severity: 'MODERATE', color: 'text-amber-500' },
-                    { zone: '38', diagnosis: 'Dent de sagesse incluse - proximité nerf alvéolaire', severity: 'CRITICAL', color: 'text-rose-500' }
-                ],
-                generalIndex: 94
-            })
-            toast.success("Analyse terminée avec 3 détections pathologiques.");
 
-            try {
-                if ('speechSynthesis' in window) {
-                    window.speechSynthesis.cancel();
-                    const msg = new SpeechSynthesisUtterance("Diagnostic neurologique terminé. Trois détections nécessitent votre attention.");
-                    const voices = window.speechSynthesis.getVoices();
-                    const frVoice = voices.find(v => v.lang.startsWith('fr'));
-                    if (frVoice) msg.voice = frVoice;
-                    msg.lang = 'fr-FR';
-                    msg.volume = 1.0;
-                    window.speechSynthesis.speak(msg);
-                }
-            } catch (e) { }
-        }, 3000)
+        // Simulated Edge AI Pre-scan (Local processing)
+        toast.info("Edge AI : Détection locale des densités...")
+        await new Promise(resolve => setTimeout(resolve, 800))
+        toast.info("Edge AI : Segmentation des zones critiques terminée.")
+
+        try {
+            const res = await fetch('/api/ai/analyze-image', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image: selectedRadio?.url, analysisType: 'RADIO' })
+            })
+            const data = await res.json()
+
+            if (res.ok && data.success) {
+                setAnalysisResult({
+                    detections: data.detections,
+                    generalIndex: data.generalIndex
+                })
+                toast.success(`Analyse terminée avec ${data.detections.length} détection(s).`);
+
+                try {
+                    if ('speechSynthesis' in window) {
+                        window.speechSynthesis.cancel();
+                        const msg = new SpeechSynthesisUtterance(`Diagnostic IA terminé. ${data.detections.length} détections nécessitent votre attention.`);
+                        const voices = window.speechSynthesis.getVoices();
+                        const frVoice = voices.find(v => v.lang.startsWith('fr'));
+                        if (frVoice) msg.voice = frVoice;
+                        msg.lang = 'fr-FR';
+                        msg.volume = 1.0;
+                        window.speechSynthesis.speak(msg);
+                    }
+                } catch (e) { }
+            } else {
+                toast.error("Erreur d'analyse IA ou crédits épuisés.");
+            }
+        } catch (error) {
+            toast.error("Erreur réseau de communication tensorielle.");
+        } finally {
+            setIsAnalyzing(false)
+        }
     }
 
     return (
@@ -137,24 +192,30 @@ export default function AIRadioLab() {
                                     )}
                                 </AnimatePresence>
 
-                                {/* AI Detections Overlays */}
+                                {/* AI Detections Overlays (Dynamic Boxes) */}
                                 {analysisResult && (
                                     <div className="absolute inset-0 z-30 pointer-events-none">
-                                        <motion.div
-                                            initial={{ scale: 0, opacity: 0 }}
-                                            animate={{ scale: 1, opacity: 1 }}
-                                            className="absolute top-[35%] left-[25%] h-24 w-24 border-2 border-rose-500 rounded-xl"
-                                        >
-                                            <div className="absolute top-0 left-0 -translate-y-full bg-rose-500 text-white text-[8px] font-black px-2 py-0.5 rounded-t-lg">PATHOLOGY: 16-17</div>
-                                        </motion.div>
-                                        <motion.div
-                                            initial={{ scale: 0, opacity: 0 }}
-                                            animate={{ scale: 1, opacity: 1 }}
-                                            transition={{ delay: 0.5 }}
-                                            className="absolute bottom-[20%] right-[30%] h-16 w-16 border-2 border-amber-500 rounded-xl"
-                                        >
-                                            <div className="absolute top-0 left-0 -translate-y-full bg-amber-500 text-white text-[8px] font-black px-2 py-0.5 rounded-t-lg">RE-ANALYZE: 38</div>
-                                        </motion.div>
+                                        {analysisResult.detections.map((d: any, i: number) => (
+                                            <motion.div
+                                                key={i}
+                                                initial={{ scale: 0, opacity: 0 }}
+                                                animate={{ scale: 1, opacity: 1 }}
+                                                transition={{ delay: i * 0.3 }}
+                                                className={`absolute h-20 w-20 border-2 rounded-xl flex items-center justify-center`}
+                                                style={{
+                                                    top: `${Math.floor(Math.random() * 50) + 20}%`,
+                                                    left: `${Math.floor(Math.random() * 50) + 20}%`,
+                                                    borderColor: d.severity === 'HIGH' || d.severity === 'CRITICAL' ? '#ef4444' : '#f59e0b'
+                                                }}
+                                            >
+                                                <div
+                                                    className="absolute top-0 left-0 -translate-y-full text-white text-[8px] font-black px-2 py-0.5 rounded-t-lg"
+                                                    style={{ backgroundColor: d.severity === 'HIGH' || d.severity === 'CRITICAL' ? '#ef4444' : '#f59e0b' }}
+                                                >
+                                                    ZONE: {d.zone}
+                                                </div>
+                                            </motion.div>
+                                        ))}
                                     </div>
                                 )}
                             </div>
@@ -235,8 +296,31 @@ export default function AIRadioLab() {
                 <div className="col-span-12 lg:col-span-4 space-y-8">
                     <Card className="rounded-[3rem] border-none shadow-luxury bg-white p-8">
                         <div className="flex items-center justify-between mb-8">
-                            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Rapport d'Intelligence</h3>
-                            <Brain className="h-5 w-5 text-rose-500" />
+                            <div className="flex flex-col">
+                                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Rapport d'Intelligence</h3>
+                                <div className="flex gap-2 mt-2">
+                                    <button
+                                        onClick={() => setVoiceLang('FR')}
+                                        className={cn("text-[8px] font-black px-2 py-0.5 rounded-md transition-all", voiceLang === 'FR' ? "bg-indigo-600 text-white" : "bg-slate-100 text-slate-400")}
+                                    >FR</button>
+                                    <button
+                                        onClick={() => setVoiceLang('WO')}
+                                        className={cn("text-[8px] font-black px-2 py-0.5 rounded-md transition-all", voiceLang === 'WO' ? "bg-rose-500 text-white" : "bg-slate-100 text-slate-400")}
+                                    >WO (Wolof)</button>
+                                </div>
+                            </div>
+                            <Button
+                                variant="outline"
+                                size="icon"
+                                className={cn(
+                                    "rounded-xl h-10 w-10 transition-all",
+                                    isPlayingVoice ? "bg-rose-50 border-rose-200 text-rose-500 scale-110 shadow-lg" : "text-slate-400 hover:text-indigo-600"
+                                )}
+                                onClick={toggleVoiceReport}
+                                disabled={!analysisResult}
+                            >
+                                {isPlayingVoice ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+                            </Button>
                         </div>
 
                         <div className="space-y-6">
@@ -253,6 +337,23 @@ export default function AIRadioLab() {
                                         <p className="text-[10px] font-black text-rose-400 uppercase tracking-widest mb-1">Score Global Santé</p>
                                         <p className="text-4xl font-black text-rose-600 tracking-tighter">{analysisResult.generalIndex}%</p>
                                     </div>
+
+                                    <NeuralTreatmentMap
+                                        nodes={analysisResult.detections.map((d: any, i: number) => ({
+                                            id: `det-${i}`,
+                                            label: d.diagnosis,
+                                            type: d.severity === 'CRITICAL' ? 'PATHOLOGY' : 'TREATMENT',
+                                            status: 'DETECTED'
+                                        })).concat([
+                                            { id: 'goal-1', label: 'Récupération Fonctionnelle', type: 'PREVENTION', status: 'PLANNED' }
+                                        ])}
+                                        connections={analysisResult.detections.slice(0, -1).map((d: any, i: number) => ({
+                                            from: `det-${i}`,
+                                            to: `det-${i + 1}`
+                                        }))}
+                                        className="h-[300px]"
+                                    />
+
                                     <div className="divide-y divide-slate-50">
                                         {analysisResult.detections.map((d: any, i: number) => (
                                             <div key={i} className="py-4 flex gap-4">

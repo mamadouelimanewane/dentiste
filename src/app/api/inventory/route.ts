@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
+import { createStockItemSchema, formatZodErrors } from "@/lib/validations"
 
 export async function GET() {
     try {
@@ -32,22 +33,28 @@ export async function GET() {
 export async function POST(req: Request) {
     try {
         const body = await req.json()
-        const { name, category, quantity, minQuantity, unit, lotNumber, expiryDate, isSterile } = body
 
-        if (!name || !category || quantity === undefined || !unit) {
-            return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
+        // Validation Zod
+        const parsed = createStockItemSchema.safeParse(body)
+        if (!parsed.success) {
+            return NextResponse.json(
+                { error: "Données invalides", details: formatZodErrors(parsed.error) },
+                { status: 400 }
+            )
         }
+
+        const data = parsed.data
 
         const newItem = await prisma.stockItem.create({
             data: {
-                name,
-                category,
-                quantity: parseInt(quantity),
-                minQuantity: parseInt(minQuantity || 5),
-                unit,
-                lotNumber,
-                expiryDate: expiryDate ? new Date(expiryDate) : null,
-                isSterile: !!isSterile,
+                name: data.name,
+                category: data.category,
+                quantity: data.quantity,
+                minQuantity: data.minQuantity ?? 5,
+                unit: data.unit,
+                lotNumber: data.lotNumber,
+                expiryDate: data.expiryDate ? new Date(data.expiryDate) : null,
+                isSterile: data.isSterile ?? false,
                 lastRestock: new Date()
             }
         })

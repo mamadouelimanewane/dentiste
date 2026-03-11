@@ -1,7 +1,8 @@
 "use client"
 
-import { useState } from 'react'
-import { Video, VideoOff, Mic, MicOff, Phone, PhoneOff, Monitor, MessageSquare, Users, Clock, Calendar, Star, ChevronRight, Wifi, Camera } from 'lucide-react'
+import { useState, useRef } from 'react'
+import { Video, VideoOff, Mic, MicOff, Phone, PhoneOff, Monitor, MessageSquare, Users, Clock, Calendar, Star, ChevronRight, Wifi, Camera, Brain } from 'lucide-react'
+import { JitsiMeeting } from '@jitsi/react-sdk'
 
 const UPCOMING_SESSIONS = [
     { id: 1, patient: 'Amadou Diallo', time: '14:00', duration: 30, type: 'Consultation', status: 'scheduled', avatar: 'AD' },
@@ -17,10 +18,18 @@ const PAST_SESSIONS = [
 
 export default function TeleconsultationPage() {
     const [activeSession, setActiveSession] = useState(false)
-    const [videoOn, setVideoOn] = useState(true)
-    const [micOn, setMicOn] = useState(true)
-    const [screenShare, setScreenShare] = useState(false)
+    const [roomName, setRoomName] = useState('dentoprestige-teleconsult-demo-123')
     const [activeTab, setActiveTab] = useState<'upcoming' | 'history'>('upcoming')
+
+    const apiRef = useRef<any>(null)
+
+    const handleJitsiIFrameRef1 = (iframeRef: any) => {
+        iframeRef.style.border = 'none'
+        iframeRef.style.padding = '0'
+        iframeRef.style.height = '100%'
+        iframeRef.style.width = '100%'
+        iframeRef.style.borderRadius = '2rem'
+    }
 
     return (
         <div className="p-6 space-y-6 max-w-7xl mx-auto">
@@ -61,72 +70,36 @@ export default function TeleconsultationPage() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Video Area */}
                 <div className="lg:col-span-2 space-y-4">
                     {activeSession ? (
-                        <div className="bg-slate-950 rounded-[2rem] overflow-hidden aspect-video relative">
-                            {/* Main Video */}
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                {videoOn ? (
-                                    <div className="w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center">
-                                        <div className="text-center">
-                                            <div className="h-24 w-24 rounded-full bg-blue-600/20 border-2 border-blue-500/30 flex items-center justify-center mx-auto mb-4">
-                                                <span className="text-3xl font-black text-blue-400">IS</span>
-                                            </div>
-                                            <p className="text-white font-black">Ibrahima Sow</p>
-                                            <div className="flex items-center gap-2 justify-center mt-2">
-                                                <Wifi className="h-3 w-3 text-teal-400" />
-                                                <span className="text-xs text-teal-400 font-bold">Connexion stable</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="flex flex-col items-center gap-3">
-                                        <VideoOff className="h-12 w-12 text-slate-600" />
-                                        <p className="text-slate-500 font-bold text-sm">Vidéo désactivée</p>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Self Preview */}
-                            <div className="absolute bottom-4 right-4 w-32 h-24 bg-slate-800 rounded-xl border-2 border-white/10 flex items-center justify-center overflow-hidden">
-                                <div className="text-center">
-                                    <Camera className="h-6 w-6 text-slate-500 mx-auto" />
-                                    <p className="text-[9px] text-slate-500 mt-1">Vous</p>
-                                </div>
-                            </div>
-
-                            {/* Session Timer */}
-                            <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-sm rounded-xl px-3 py-1.5 flex items-center gap-2">
-                                <div className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
-                                <span className="text-white text-xs font-black">12:34</span>
-                            </div>
-
-                            {/* Controls */}
-                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3">
-                                <button onClick={() => setMicOn(!micOn)}
-                                    className={`h-12 w-12 rounded-full flex items-center justify-center transition-all ${micOn ? 'bg-white/20 hover:bg-white/30 text-white' : 'bg-red-500 text-white'}`}>
-                                    {micOn ? <Mic className="h-5 w-5" /> : <MicOff className="h-5 w-5" />}
-                                </button>
-                                <button onClick={() => setVideoOn(!videoOn)}
-                                    className={`h-12 w-12 rounded-full flex items-center justify-center transition-all ${videoOn ? 'bg-white/20 hover:bg-white/30 text-white' : 'bg-red-500 text-white'}`}>
-                                    {videoOn ? <Video className="h-5 w-5" /> : <VideoOff className="h-5 w-5" />}
-                                </button>
-                                <button onClick={() => setScreenShare(!screenShare)}
-                                    className={`h-12 w-12 rounded-full flex items-center justify-center transition-all ${screenShare ? 'bg-blue-500 text-white' : 'bg-white/20 hover:bg-white/30 text-white'}`}>
-                                    <Monitor className="h-5 w-5" />
-                                </button>
-                                <button className="h-12 w-12 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-all">
-                                    <MessageSquare className="h-5 w-5" />
-                                </button>
-                                <button onClick={() => setActiveSession(false)}
-                                    className="h-12 w-12 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center transition-all">
-                                    <PhoneOff className="h-5 w-5" />
-                                </button>
-                            </div>
+                        <div className="bg-slate-950 rounded-[2rem] overflow-hidden relative" style={{ height: '600px' }}>
+                            <JitsiMeeting
+                                domain="meet.jit.si"
+                                roomName={roomName}
+                                configOverwrite={{
+                                    startWithAudioMuted: false,
+                                    startWithVideoMuted: false,
+                                    disableModeratorIndicator: true,
+                                    enableEmailInStats: false,
+                                }}
+                                interfaceConfigOverwrite={{
+                                    DISABLE_JOIN_LEAVE_NOTIFICATIONS: true,
+                                    SHOW_CHROME_EXTENSION_BANNER: false,
+                                }}
+                                userInfo={{
+                                    displayName: 'Dr. DentoPrestige'
+                                }}
+                                onApiReady={(externalApi) => {
+                                    apiRef.current = externalApi
+                                    externalApi.addListener('videoConferenceLeft', () => {
+                                        setActiveSession(false)
+                                    })
+                                }}
+                                getIFrameRef={handleJitsiIFrameRef1}
+                            />
                         </div>
                     ) : (
-                        <div className="bg-slate-950 rounded-[2rem] aspect-video flex flex-col items-center justify-center gap-4">
+                        <div className="bg-slate-950 rounded-[2rem] h-[600px] flex flex-col items-center justify-center gap-4">
                             <div className="h-20 w-20 rounded-full bg-blue-600/20 border border-blue-500/30 flex items-center justify-center">
                                 <Video className="h-10 w-10 text-blue-400" />
                             </div>
@@ -138,6 +111,44 @@ export default function TeleconsultationPage() {
                                 className="px-6 py-3 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all">
                                 Démarrer maintenant
                             </button>
+                        </div>
+                    )}
+
+                    {/* AI Transcription & Neural Keywords */}
+                    {activeSession && (
+                        <div className="bg-slate-900 rounded-[2rem] border border-white/5 p-6 space-y-4 animate-in slide-in-from-bottom-5">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <div className="h-2 w-2 rounded-full bg-teal-500 animate-pulse" />
+                                    <h3 className="text-xs font-black text-white/50 uppercase tracking-widest">Neural Transcription Live</h3>
+                                </div>
+                                <div className="px-3 py-1 bg-white/5 rounded-full border border-white/10 flex items-center gap-2">
+                                    <Brain className="h-3 w-3 text-indigo-400" />
+                                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Analyse en temps réel</span>
+                                </div>
+                            </div>
+
+                            <div className="space-y-3">
+                                <div className="bg-white/5 rounded-xl p-4 border border-white/5 relative">
+                                    <p className="text-[11px] text-slate-400 font-medium italic">
+                                        "... alors pour cette molaire, on va prévoir une <span className="text-white bg-indigo-500/30 px-1 rounded">couronne céramo-métallique</span> après le traitement canalaire. Est-ce que vous ressentez une <span className="text-white bg-rose-500/30 px-1 rounded">douleur à la pression</span> ?"
+                                    </p>
+                                    <div className="absolute -left-1 top-1/2 -translate-y-1/2 h-8 w-1 bg-indigo-500 rounded-full shadow-[0_0_15px_rgba(99,102,241,1)]" />
+                                </div>
+                            </div>
+
+                            <div className="flex flex-wrap gap-2">
+                                {[
+                                    { label: 'Lésion Secteur 4', type: 'Pathology' },
+                                    { label: 'Réhabilitation 46', type: 'Treatment' },
+                                    { label: 'Douleur aiguë', type: 'Symptom' },
+                                ].map(keyword => (
+                                    <div key={keyword.label} className="px-3 py-1.5 bg-indigo-500/10 border border-indigo-500/20 rounded-lg flex items-center gap-2">
+                                        <div className="h-1.5 w-1.5 rounded-full bg-indigo-400" />
+                                        <span className="text-[10px] font-black text-indigo-300 uppercase tracking-tighter">{keyword.label}</span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     )}
 

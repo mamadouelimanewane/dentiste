@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
+import { updateStockItemSchema, formatZodErrors } from "@/lib/validations"
 
 export async function PATCH(
     req: Request,
@@ -8,32 +9,36 @@ export async function PATCH(
 ) {
     try {
         const id = params.id
-        const body = await req.json()
-        const { quantity, name, category, minQuantity, unit, lotNumber, expiryDate, isSterile } = body
-
         if (!id) {
             return NextResponse.json({ error: "Item ID is required" }, { status: 400 })
         }
 
+        const body = await req.json()
+
+        const parsed = updateStockItemSchema.safeParse(body)
+        if (!parsed.success) {
+            return NextResponse.json(
+                { error: "Données invalides", details: formatZodErrors(parsed.error) },
+                { status: 400 }
+            )
+        }
+
+        const data = parsed.data
+        const updateData: any = { ...data }
+
+        if (data.expiryDate) updateData.expiryDate = new Date(data.expiryDate)
+
         const updatedItem = await prisma.stockItem.update({
             where: { id },
-            data: {
-                name,
-                category,
-                quantity: quantity !== undefined ? parseInt(quantity) : undefined,
-                minQuantity: minQuantity !== undefined ? parseInt(minQuantity) : undefined,
-                unit,
-                lotNumber,
-                expiryDate: expiryDate ? new Date(expiryDate) : undefined,
-                isSterile: isSterile !== undefined ? !!isSterile : undefined,
-                // Only update lastRestock if quantity increased? Or always on update?
-                // Let's just update updatedAt which is handled by Prisma anyway.
-            }
+            data: updateData
         })
 
         return NextResponse.json(updatedItem)
-    } catch (error) {
+    } catch (error: any) {
         console.error("Failed to update stock item:", error)
+        if (error.code === 'P2025') {
+            return NextResponse.json({ error: "Article non trouvé" }, { status: 404 })
+        }
         return NextResponse.json({ error: "Failed to update stock item" }, { status: 500 })
     }
 }
@@ -44,7 +49,6 @@ export async function DELETE(
 ) {
     try {
         const id = params.id
-
         if (!id) {
             return NextResponse.json({ error: "Item ID is required" }, { status: 400 })
         }
@@ -53,8 +57,8 @@ export async function DELETE(
             where: { id }
         })
 
-        return NextResponse.json({ success: true })
-    } catch (error) {
+        return NextResponse.json({ success: true, message: "Article supprimé" })
+    } catch (error: any) {
         console.error("Failed to delete stock item:", error)
         return NextResponse.json({ error: "Failed to delete stock item" }, { status: 500 })
     }

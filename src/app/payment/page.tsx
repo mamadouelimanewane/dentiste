@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { CreditCard, Smartphone, CheckCircle, Clock, AlertCircle, TrendingUp, DollarSign, ArrowRight, QrCode, Banknote, RefreshCw, Download, Filter } from 'lucide-react'
+import { toast } from 'sonner'
 
 const PAYMENT_METHODS = [
     { id: 'wave', name: 'Wave', logo: '🌊', color: 'from-blue-500 to-blue-600', fee: '0.5%', delay: 'Instantané', popular: true },
@@ -37,12 +38,40 @@ export default function PaymentPage() {
     const handlePayment = async () => {
         if (!amount || !phone) return
         setProcessing(true)
-        await new Promise(r => setTimeout(r, 2000))
-        setProcessing(false)
-        setSuccess(true)
-        setTimeout(() => setSuccess(false), 3000)
-        setAmount('')
-        setPhone('')
+        setSuccess(false)
+
+        try {
+            const res = await fetch('/api/payments', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    amount: parseInt(amount),
+                    phone,
+                    method: selectedMethod,
+                })
+            })
+            const data = await res.json()
+
+            if (data.success) {
+                setSuccess(true)
+                setAmount('')
+                setPhone('')
+                toast.success(`Succès: ${data.message}. Transaction: ${data.transactionId}`)
+
+                // Audio confirmation for VIP feel
+                if ('speechSynthesis' in window) {
+                    const msg = new SpeechSynthesisUtterance("Paiement reçu. Merci de votre confiance.");
+                    msg.lang = 'fr-FR';
+                    window.speechSynthesis.speak(msg);
+                }
+            } else {
+                toast.error("Le traitement du paiement a échoué.")
+            }
+        } catch (error) {
+            toast.error("Erreur de connexion à la passerelle de paiement.")
+        } finally {
+            setProcessing(false)
+        }
     }
 
     const totalUnpaid = UNPAID_INVOICES.reduce((sum, inv) => sum + inv.amount, 0)
