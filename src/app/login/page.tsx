@@ -46,7 +46,7 @@ export default function LoginPage() {
     if (!mounted) return null
 
     return (
-        <div className="min-h-screen bg-[#050A0A] flex flex-col lg:flex-row relative overflow-y-auto lg:overflow-hidden font-sans select-none">
+        <div className="min-h-screen bg-[#050A0A] flex flex-col lg:flex-row relative overflow-y-auto lg:overflow-hidden font-sans">
             
             {/* Background Layer: Animated Glows */}
             <div className="fixed inset-0 z-0 pointer-events-none">
@@ -128,7 +128,7 @@ export default function LoginPage() {
             </div>
 
             {/* Right Section: Login & Visual */}
-            <div className="relative z-10 w-full lg:w-[45%] flex items-center justify-center p-6 lg:p-12 min-h-screen">
+            <div className="relative z-20 w-full lg:w-[45%] flex items-center justify-center p-6 lg:p-12 min-h-screen">
                 <motion.div 
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
