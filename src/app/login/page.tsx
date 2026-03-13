@@ -46,24 +46,24 @@ export default function LoginPage() {
     if (!mounted) return null
 
     return (
-        <div className="min-h-screen bg-[#050A0A] flex flex-col md:flex-row relative overflow-hidden font-sans">
+        <div className="min-h-screen bg-[#050A0A] flex flex-col lg:flex-row relative overflow-y-auto lg:overflow-hidden font-sans select-none">
             
             {/* Background Layer: Animated Glows */}
-            <div className="absolute inset-0 z-0">
+            <div className="fixed inset-0 z-0 pointer-events-none">
                 <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-emerald-500/10 blur-[120px] rounded-full animate-pulse" />
                 <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/10 blur-[120px] rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
                 <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` }} />
             </div>
 
             {/* Left Section: Immersive Brand & Stats */}
-            <div className="relative z-10 w-full md:w-[55%] p-8 lg:p-20 flex flex-col justify-between">
-                <div>
+            <div className="relative z-10 w-full lg:w-[55%] p-8 lg:p-20 flex flex-col justify-between overflow-y-visible">
+                <div className="space-y-12">
                     <motion.div 
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className="flex items-center gap-4 mb-16"
+                        className="flex items-center gap-4 mb-12 lg:mb-16"
                     >
-                        <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 p-[1px] shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+                        <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 p-[1px] shadow-[0_0_25px_rgba(16,185,129,0.3)]">
                             <div className="h-full w-full rounded-2xl bg-[#0A1212] flex items-center justify-center">
                                 <Diamond className="h-7 w-7 text-emerald-400" />
                             </div>
@@ -80,7 +80,7 @@ export default function LoginPage() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.2 }}
                         >
-                            <h1 className="text-6xl lg:text-8xl font-black text-white tracking-tighter leading-[0.9]">
+                            <h1 className="text-5xl lg:text-8xl font-black text-white tracking-tighter leading-[0.9]">
                                 La plateforme<br />
                                 <span className="text-emerald-500 italic">dentaire</span><br />
                                 de prestige
@@ -95,7 +95,7 @@ export default function LoginPage() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.4 }}
-                            className="grid grid-cols-2 gap-6 pt-8"
+                            className="grid grid-cols-2 gap-4 lg:gap-6 pt-4"
                         >
                             {[
                                 { label: 'Patients gérés', value: '1,247', icon: Users },
@@ -105,12 +105,12 @@ export default function LoginPage() {
                             ].map((stat, i) => (
                                 <div key={stat.label} className="group relative">
                                     <div className="absolute inset-0 bg-white/5 blur-xl group-hover:bg-emerald-500/5 transition-colors rounded-3xl" />
-                                    <div className="relative p-6 bg-white/[0.03] border border-white/10 rounded-[2rem] hover:border-emerald-500/30 transition-all duration-500">
-                                        <div className="flex items-center justify-between mb-4">
+                                    <div className="relative p-5 lg:p-6 bg-white/[0.03] border border-white/10 rounded-[2rem] hover:border-emerald-500/30 transition-all duration-500">
+                                        <div className="flex items-center justify-between mb-3 lg:mb-4">
                                             <stat.icon className="h-5 w-5 text-emerald-500" />
                                             <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                                         </div>
-                                        <p className="text-3xl font-black text-white tracking-tighter">{stat.value}</p>
+                                        <p className="text-2xl lg:text-3xl font-black text-white tracking-tighter">{stat.value}</p>
                                         <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-1">{stat.label}</p>
                                     </div>
                                 </div>
@@ -128,7 +128,7 @@ export default function LoginPage() {
             </div>
 
             {/* Right Section: Login & Visual */}
-            <div className="relative z-10 w-full md:w-[45%] flex items-center justify-center p-6 lg:p-12">
+            <div className="relative z-10 w-full lg:w-[45%] flex items-center justify-center p-6 lg:p-12 min-h-screen">
                 <motion.div 
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -138,7 +138,7 @@ export default function LoginPage() {
                     {/* Visual Card Background */}
                     <div className="absolute -inset-4 bg-gradient-to-br from-emerald-500/20 to-blue-500/20 blur-3xl rounded-[3rem] opacity-50" />
                     
-                    <div className="relative bg-[#0A1212]/80 backdrop-blur-3xl border border-white/10 rounded-[3rem] p-10 shadow-2xl overflow-hidden">
+                    <div className="relative bg-[#0A1212]/90 backdrop-blur-3xl border border-white/10 rounded-[3rem] p-8 lg:p-10 shadow-2xl overflow-hidden">
                         
                         {/* Decorative top bar */}
                         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-600" />
@@ -160,7 +160,7 @@ export default function LoginPage() {
                                         value={email}
                                         onChange={e => setEmail(e.target.value)}
                                         className="w-full h-16 bg-[#0E1818] border border-white/10 rounded-[1.5rem] text-white text-base font-medium pl-14 pr-4 focus:outline-none focus:border-emerald-500/50 focus:ring-4 focus:ring-emerald-500/5 transition-all placeholder:text-slate-700"
-                                        placeholder="admin@dentoprestige.sn"
+                                        placeholder="votre@email.com"
                                         required
                                     />
                                 </div>
@@ -193,12 +193,21 @@ export default function LoginPage() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="group relative w-full h-16 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black uppercase tracking-widest text-[13px] rounded-[1.5rem] transition-all duration-300 disabled:opacity-50 overflow-hidden shadow-[0_10px_30px_rgba(16,185,129,0.3)]"
+                                className="group relative w-full h-16 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black uppercase tracking-widest text-[13px] rounded-[1.5rem] transition-all duration-300 disabled:opacity-50 overflow-hidden shadow-[0_10px_30px_rgba(16,185,129,0.3)] cursor-pointer"
                             >
                                 <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
                                 <div className="relative flex items-center justify-center gap-3">
                                     {loading ? (
-                                        <RefreshLoader />
+                                        <div className="flex gap-1.5 items-center">
+                                            {[0, 1, 2].map((i) => (
+                                                <motion.div
+                                                    key={i}
+                                                    animate={{ scale: [1, 1.4, 1], opacity: [0.3, 1, 0.3] }}
+                                                    transition={{ repeat: Infinity, duration: 0.6, delay: i * 0.15 }}
+                                                    className="h-2 w-2 rounded-full bg-slate-950"
+                                                />
+                                            ))}
+                                        </div>
                                     ) : (
                                         <>Accéder au Cabinet <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" /></>
                                     )}
@@ -212,8 +221,9 @@ export default function LoginPage() {
                                 {DEMO_ACCOUNTS.map(acc => (
                                     <button
                                         key={acc.role}
+                                        type="button"
                                         onClick={() => fillDemo(acc)}
-                                        className="flex flex-col items-center gap-3 p-4 bg-white/[0.02] border border-white/5 hover:border-emerald-500/30 hover:bg-emerald-500/5 rounded-[1.5rem] transition-all group"
+                                        className="flex flex-col items-center gap-3 p-4 bg-white/[0.02] border border-white/5 hover:border-emerald-500/30 hover:bg-emerald-500/5 rounded-[1.5rem] transition-all group cursor-pointer"
                                     >
                                         <div className={cn(
                                             "h-10 w-10 rounded-xl bg-gradient-to-br flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg",
