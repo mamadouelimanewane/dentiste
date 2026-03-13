@@ -29,13 +29,14 @@ export default function LoginPage() {
         setMounted(true)
     }, [])
 
-    const handleLogin = async (e: React.FormEvent) => {
-        e.preventDefault()
+    const handleLogin = (e?: React.FormEvent) => {
+        if (e) e.preventDefault()
         setLoading(true)
-        // Bypass réel via navigation directe puisque le middleware est désactivé pour la démo
+        // Bypass réel et robuste pour les démos via redirection directe
+        // On utilise window.location pour forcer un chargement complet et éviter les conflits de cache Next.js
         setTimeout(() => {
-            router.push('/dashboard')
-        }, 1500)
+            window.location.href = '/dashboard'
+        }, 800)
     }
 
     const fillDemo = (account: typeof DEMO_ACCOUNTS[0]) => {
@@ -191,7 +192,8 @@ export default function LoginPage() {
                             </div>
 
                             <button
-                                type="submit"
+                                type="button"
+                                onClick={() => handleLogin()}
                                 disabled={loading}
                                 className="group relative w-full h-16 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black uppercase tracking-widest text-[13px] rounded-[1.5rem] transition-all duration-300 disabled:opacity-50 overflow-hidden shadow-[0_10px_30px_rgba(16,185,129,0.3)] cursor-pointer"
                             >
