@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" className="h-full">
-      <body className={`${inter.className} h-full bg-slate-50 text-slate-900 overflow-hidden`}>
+      <body className={`${inter.className} h-full bg-slate-50 text-slate-900`}>
         <NextAuthProvider>
           <LayoutWrapper>
             {children}
