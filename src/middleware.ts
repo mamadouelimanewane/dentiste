@@ -24,7 +24,7 @@ export default withAuth(
     },
     {
         callbacks: {
-            authorized: ({ token }) => !!token, // Autorise uniquement si le token existe
+            authorized: () => true, // Bypass d'authentification temporaire pour les démos
         },
     }
 );
