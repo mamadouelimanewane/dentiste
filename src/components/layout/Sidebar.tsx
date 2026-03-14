@@ -226,9 +226,10 @@ export function Sidebar({ className }: { className?: string }) {
                             <div className="grid grid-cols-2 gap-2">
                                 {[
                                     { id: 'OWNER', label: 'Administrateur' },
+                                    { id: 'DENTIST', label: 'PRATICIEN' },
                                     { id: 'ASSISTANT', label: 'ASSISTANT' },
-                                    { id: 'CLIENT', label: 'PATIENT' },
-                                    { id: 'ACCOUNTANT', label: 'COMPTABLE' }
+                                    { id: 'ACCOUNTANT', label: 'COMPTABLE' },
+                                    { id: 'CLIENT', label: 'PATIENT' }
                                 ].map(role => (
                                     <button
                                         key={role.id}
