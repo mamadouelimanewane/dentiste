@@ -149,7 +149,7 @@ export function Sidebar({ className }: { className?: string }) {
     const user = session?.user ? {
         role: (session.user as any).role || 'OWNER',
         name: session.user.name || 'Utilisateur',
-    } : null
+    } : { role: 'OWNER', name: 'Directeur Elite' } // Fallback pour la démo
 
     useEffect(() => {
         setMounted(true)
@@ -224,7 +224,7 @@ export function Sidebar({ className }: { className?: string }) {
                 {filteredSections.map((section) => (
                     <div key={section.title} className="space-y-3">
                         {!collapsed && (
-                            <h3 className="px-6 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500/40 mb-2">{section.title}</h3>
+                            <h3 className="px-6 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500/60 mb-2">{section.title}</h3>
                         )}
                         <div className="space-y-1">
                             {section.items.map((item) => {
@@ -239,7 +239,7 @@ export function Sidebar({ className }: { className?: string }) {
                                             collapsed ? "justify-center mx-0 px-0" : "gap-4",
                                             isActive
                                                 ? "bg-emerald-600 text-white shadow-xl shadow-emerald-600/20"
-                                                : "text-slate-500 hover:bg-white/5 hover:text-white"
+                                                : "text-slate-300 hover:bg-white/5 hover:text-white"
                                         )}
                                     >
                                         <item.icon
