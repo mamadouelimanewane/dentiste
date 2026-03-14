@@ -230,18 +230,23 @@ export function Sidebar({ className }: { className?: string }) {
                         <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-3">
                             <p className="text-[9px] font-black text-emerald-500 uppercase tracking-[0.2em]">Mode Démo : Tester les Rôles</p>
                             <div className="grid grid-cols-2 gap-2">
-                                {['OWNER', 'ASSISTANT', 'CLIENT', 'ACCOUNTANT'].map(role => (
+                                {[
+                                    { id: 'OWNER', label: 'Administrateur' },
+                                    { id: 'ASSISTANT', label: 'ASSISTANT' },
+                                    { id: 'CLIENT', label: 'PATIENT' },
+                                    { id: 'ACCOUNTANT', label: 'COMPTABLE' }
+                                ].map(role => (
                                     <button
-                                        key={role}
-                                        onClick={() => setDemoRole(role)}
+                                        key={role.id}
+                                        onClick={() => setDemoRole(role.id)}
                                         className={cn(
                                             "text-[8px] font-black py-2 rounded-lg transition-all border",
-                                            user?.role === role 
+                                            user?.role === role.id 
                                                 ? "bg-emerald-600 border-emerald-500 text-white shadow-lg" 
                                                 : "bg-white/5 border-white/10 text-slate-400 hover:bg-white/10"
                                         )}
                                     >
-                                        {role}
+                                        {role.label}
                                     </button>
                                 ))}
                             </div>
