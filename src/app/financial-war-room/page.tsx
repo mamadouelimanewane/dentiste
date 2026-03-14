@@ -223,27 +223,56 @@ export default function FinancialWarRoom() {
                 </div>
             </div>
 
-            {/* KPI Strip */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {metrics.map((m, i) => (
-                    <Card key={i} className="rounded-[2.5rem] border-none shadow-luxury bg-white hover:translate-y-[-4px] transition-all">
-                        <CardContent className="p-6 md:p-8">
-                            <div className="flex justify-between items-start mb-4">
-                                <div className="p-3 bg-slate-50 rounded-2xl text-slate-400">
-                                    <m.icon className="h-5 w-5" />
+            {/* KPI Strip & Health Score */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                <div className="md:col-span-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {metrics.map((m, i) => (
+                        <Card key={i} className="rounded-[2.5rem] border-none shadow-luxury bg-white hover:translate-y-[-4px] transition-all">
+                            <CardContent className="p-6">
+                                <div className="flex justify-between items-start mb-4">
+                                    <div className="p-2.5 bg-slate-50 rounded-xl text-slate-400">
+                                        <m.icon className="h-4 w-4" />
+                                    </div>
+                                    <div className={cn("px-2 py-1 rounded-full text-[9px] font-bold flex items-center gap-1",
+                                        m.trend === 'up' ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
+                                    )}>
+                                        {m.trend === 'up' ? <ArrowUpRight className="h-2.5 w-2.5" /> : <ArrowDownRight className="h-2.5 w-2.5" />}
+                                        {m.change}
+                                    </div>
                                 </div>
-                                <div className={cn("px-2 py-1 rounded-full text-[10px] font-bold flex items-center gap-1",
-                                    m.trend === 'up' ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
-                                )}>
-                                    {m.trend === 'up' ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
-                                    {m.change}
-                                </div>
+                                <p className="text-[8px] font-black uppercase tracking-widest text-slate-400 mb-1">{m.label}</p>
+                                <h3 className="text-lg font-black text-slate-900 tracking-tighter">{m.value}</h3>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+                
+                {/* Financial Health Score - NEW ELITE FEATURE */}
+                <Card className="md:col-span-4 rounded-[2.5rem] border-none shadow-luxury bg-slate-950 text-white p-6 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform duration-700 font-black text-6xl">AA+</div>
+                    <div className="relative z-10 flex items-center gap-6">
+                        <div className="relative h-20 w-20 shrink-0">
+                            <svg className="h-20 w-20 -rotate-90">
+                                <circle cx="40" cy="40" r="35" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="8" />
+                                <circle cx="40" cy="40" r="35" fill="none" stroke="#10b981" strokeWidth="8" strokeDasharray="220" strokeDashoffset="44" strokeLinecap="round" />
+                            </svg>
+                            <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                <span className="text-xl font-black">8.5</span>
+                                <span className="text-[8px] font-bold text-slate-500 uppercase tracking-tighter">Elite Score</span>
                             </div>
-                            <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">{m.label}</p>
-                            <h3 className="text-xl font-black text-slate-900 tracking-tighter">{m.value}</h3>
-                        </CardContent>
-                    </Card>
-                ))}
+                        </div>
+                        <div>
+                            <h3 className="text-sm font-black uppercase tracking-widest text-emerald-400 mb-1 italic">Santé Financière Elite</h3>
+                            <p className="text-[10px] text-slate-400 leading-relaxed">
+                                Votre cabinet surpasse 94% des cabinets locaux sur la marge nette. Liquidité optimale.
+                            </p>
+                            <div className="flex gap-2 mt-3">
+                                <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[8px] font-black uppercase">Solide</span>
+                                <span className="px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 text-[8px] font-black uppercase">Croiss.</span>
+                            </div>
+                        </div>
+                    </div>
+                </Card>
             </div>
 
             <AnimatePresence mode="wait">
@@ -252,13 +281,17 @@ export default function FinancialWarRoom() {
                 {activeTab === 'OVERVIEW' && (
                     <motion.div key="overview" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-12 gap-8">
                         <div className="col-span-12 lg:col-span-8 space-y-8">
-                            <Card className="rounded-[3rem] border-none shadow-2xl bg-slate-900 text-white overflow-hidden relative">
+                            <Card className="rounded-[3rem] border-none shadow-2xl bg-slate-900 text-white overflow-hidden relative group">
                                 <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
                                 <div className="relative z-10 p-10 space-y-8">
                                     <div className="flex justify-between items-center flex-wrap gap-4">
                                         <div>
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <Zap className="h-3 w-3 text-emerald-400 animate-pulse" />
+                                                <span className="text-[8px] font-black uppercase tracking-widest text-emerald-400">Neural Forecasting Engine</span>
+                                            </div>
                                             <h3 className="text-2xl font-black tracking-tighter uppercase italic">Projection <span className="text-emerald-gradient">Croissance 2026</span></h3>
-                                            <p className="text-slate-400 text-sm font-medium">Analyse prédictive basée sur l'historique Q4 2025.</p>
+                                            <p className="text-slate-400 text-sm font-medium italic">Prédiction Elite : +15.2% attendu pour Q2.</p>
                                         </div>
                                         <div className="flex gap-2">
                                             {['1M', '3M', 'YTD', 'ALL'].map(t => (
@@ -269,22 +302,40 @@ export default function FinancialWarRoom() {
                                             ))}
                                         </div>
                                     </div>
-                                    <div className="h-64 flex items-end justify-between gap-3 pt-10 px-4">
+                                    <div className="h-64 flex items-end justify-between gap-3 pt-10 px-4 relative">
+                                        {/* Reference Line */}
+                                        <div className="absolute left-0 right-0 top-1/2 h-[1px] border-t border-white/5 border-dashed" />
+                                        
                                         {[40, 65, 45, 80, 55, 90, 70, 100, 85].map((h, i) => (
-                                            <div key={i} className="w-full flex flex-col items-center gap-2 group cursor-pointer">
+                                            <div key={i} className="w-full flex flex-col items-center gap-2 group cursor-pointer relative z-10">
+                                                <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-white text-slate-950 px-2 py-1 rounded-[8px] text-[10px] font-black shadow-xl">
+                                                    {Math.round(h * 1.5)}M
+                                                </div>
                                                 <motion.div
                                                     initial={{ height: 0 }}
                                                     animate={{ height: `${h}%` }}
                                                     transition={{ duration: 1, delay: i * 0.1 }}
                                                     className={cn(
                                                         "w-full rounded-t-2xl relative group-hover:scale-110 transition-transform duration-300",
-                                                        i === 7 ? "bg-gradient-to-t from-emerald-600 to-emerald-400 shadow-[0_0_30px_rgba(16,185,129,0.5)]" : "bg-white/10 group-hover:bg-white/20"
+                                                        i >= 7 ? "bg-gradient-to-t from-indigo-600 to-indigo-400 border border-indigo-400/50 shadow-[0_0_20px_rgba(79,70,229,0.3)]" : "bg-white/10 group-hover:bg-white/20"
                                                     )}
                                                     style={{ height: `${h}%` }}
                                                 />
                                                 <span className="text-[9px] font-bold text-slate-500 uppercase">
                                                     {['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep'][i]}
                                                 </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div className="grid grid-cols-3 gap-6 pt-4 border-t border-white/5">
+                                        {[
+                                            { label: 'Variance Prévue', val: '+4.2%' },
+                                            { label: 'Risque Trésor.', val: 'Bas', color: 'text-emerald-400' },
+                                            { label: 'Prochain Inves.', val: 'Mai 26' },
+                                        ].map((x, i) => (
+                                            <div key={i}>
+                                                <p className="text-[8px] font-black uppercase text-slate-500 tracking-widest">{x.label}</p>
+                                                <p className={cn("text-sm font-black italic", x.color || "text-white")}>{x.val}</p>
                                             </div>
                                         ))}
                                     </div>

@@ -167,9 +167,12 @@ export default function AdminPortal() {
                         </div>
                         <h3 className="text-xs font-black uppercase tracking-widest mb-4">Elite Academy</h3>
                         <p className="text-2xl font-black mb-4 tracking-tight leading-tight">Formez vos équipes aux outils IA DentoPrestige.</p>
-                        <Button className="w-full bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[9px] font-black uppercase tracking-widest h-12 rounded-xl">
+                        <button 
+                            onClick={() => window.location.href = '/academy'}
+                            className="w-full bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[9px] font-black uppercase tracking-widest h-12 rounded-xl transition-all"
+                        >
                             Accéder aux modules
-                        </Button>
+                        </button>
                     </Card>
                 </div>
             </div>

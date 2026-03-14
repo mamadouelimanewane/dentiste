@@ -25,13 +25,15 @@ import {
     Smartphone,
     Mail,
     PenTool,
-    Dna
+    Dna,
+    Loader2
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 
 export default function MarketingHub() {
     const [activeTab, setActiveTab] = useState('OVERVIEW')
+    const [isSimulating, setIsSimulating] = useState(false)
 
     const channels = [
         { id: 'GOOGLE', name: 'Google My Business', score: '4.9', icon: Globe, color: 'text-blue-500' },
@@ -211,11 +213,47 @@ export default function MarketingHub() {
                                 <div className="bg-white/5 border border-white/10 px-6 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-gold text-center">
                                     Potentiel CA : +1,250,000 FCFA
                                 </div>
-                                <Button className="w-full h-14 rounded-2xl bg-white text-indigo-950 font-black uppercase text-[10px] tracking-widest shadow-2xl">Lancer Campagne</Button>
+                                <Button 
+                                    onClick={() => {
+                                        setIsSimulating(true)
+                                        setTimeout(() => setIsSimulating(false), 3000)
+                                    }}
+                                    className="w-full h-14 rounded-2xl bg-white text-indigo-950 font-black uppercase text-[10px] tracking-widest shadow-2xl"
+                                >
+                                    {isSimulating ? <Loader2 className="animate-spin h-4 w-4" /> : "Lancer Campagne"}
+                                </Button>
                             </div>
                         </Card>
                     </div>
                 </div>
+
+                <AnimatePresence>
+                    {isSimulating && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="fixed inset-0 bg-slate-950/90 backdrop-blur-xl z-[200] flex items-center justify-center p-8"
+                        >
+                            <div className="max-w-xl w-full text-center space-y-8">
+                                <div className="relative h-40 w-40 mx-auto">
+                                    <div className="absolute inset-0 border-4 border-indigo-500/20 rounded-full animate-ping" />
+                                    <div className="absolute inset-0 border-4 border-indigo-500 rounded-full animate-spin border-t-transparent" />
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <Sparkles className="h-12 w-12 text-indigo-500 animate-pulse" />
+                                    </div>
+                                </div>
+                                <div className="space-y-4">
+                                    <h3 className="text-3xl font-black text-white uppercase italic tracking-tighter">Neural Engine <span className="text-indigo-500">Processing</span></h3>
+                                    <div className="flex flex-col gap-2">
+                                        <p className="text-slate-400 text-sm font-medium animate-pulse">Analyse des segmentations patients...</p>
+                                        <p className="text-indigo-400 text-[10px] font-black uppercase tracking-[0.3em]">Cénération de 45 messages personnalisés via WhatsApp Business API</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
 
                 {/* Right Sidebar - Analytics & Trends */}
                 <div className="col-span-12 lg:col-span-4 space-y-8">

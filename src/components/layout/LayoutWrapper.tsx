@@ -8,6 +8,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Loader2 } from "lucide-react"
+import { EliteCompanion } from "@/components/ai/EliteCompanion"
 
 import { useRole } from "@/hooks/useRole"
 
@@ -78,13 +79,13 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
 
         // Client (Patient) restrictions
         if (userRole === 'CLIENT') {
-            const allowedForClient = ['/portal', '/payment', '/loyalty', '/teleconsultation', '/notifications']
+            const allowedForClient = ['/portal', '/payment', '/loyalty', '/teleconsultation', '/notifications', '/support']
             if (!allowedForClient.includes(pathname) && !pathname.startsWith('/portal/')) return true
         }
 
         // Accountant restrictions
         if (userRole === 'ACCOUNTANT') {
-            const allowedForAccountant = ['/dashboard', '/accounting', '/billing', '/financial-war-room', '/messages']
+            const allowedForAccountant = ['/dashboard', '/accounting', '/billing', '/financial-war-room', '/messages', '/academy', '/notifications']
             if (!allowedForAccountant.includes(pathname)) return true
         }
 
@@ -96,7 +97,7 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
 
         // Dentist (Praticien) restrictions
         if (userRole === 'DENTIST') {
-            const deniedForDentist = ['/admin-portal', '/management', '/accounting', '/financial-war-room']
+            const deniedForDentist = ['/admin-portal', '/management', '/accounting']
             if (deniedForDentist.includes(pathname)) return true
         }
 
@@ -144,6 +145,7 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
                 <main className="flex-1 h-full overflow-y-auto no-scrollbar">
                     {children}
                 </main>
+                <EliteCompanion />
             </div>
         </div>
     )

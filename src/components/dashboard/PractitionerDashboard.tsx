@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { 
     Users, Calendar, Activity, Sparkles, Brain, Radiation, 
-    Stethoscope, FileText, ArrowRight, Zap, Clock 
+    Stethoscope, FileText, ArrowRight, Zap, Clock, GraduationCap, ShieldCheck 
 } from "lucide-react"
 import { motion } from "framer-motion"
 import Link from "next/link"
@@ -128,14 +128,15 @@ export function PractitionerDashboard({ user }: { user: any }) {
             </div>
 
             {/* Specialist Tools */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {[
                     { name: 'Smile Design Studio', icon: Sparkles, desc: 'Simulation 3D & Esthétique', href: '/smile-design' },
                     { name: 'AI Radio Lab', icon: Radiation, desc: 'Dépistage Intelligent', href: '/ai-radio-lab' },
+                    { name: 'Elite Academy', icon: GraduationCap, desc: 'Formation Continue', href: '/academy' },
+                    { name: 'Traçabilité Hub', icon: ShieldCheck, desc: 'Hygiène & Sécurité', href: '/sterilization' },
                     { name: 'Dictée Vocale Elite', icon: FileText, desc: 'Saisie sans contact', href: '/dictation' },
                 ].map((tool, i) => (
                     <Link key={i} href={tool.href}>
-                        <Card className="rounded-[2.5rem] border-none shadow-luxury bg-white p-8 hover:-translate-y-1 transition-all group overflow-hidden relative">
+                        <Card className="rounded-[2.5rem] border-none shadow-luxury bg-white p-8 hover:-translate-y-1 transition-all group overflow-hidden relative h-full">
                             <div className="absolute -right-4 -bottom-4 opacity-5 text-emerald-600 group-hover:scale-110 transition-transform">
                                 <tool.icon className="h-24 w-24" />
                             </div>
@@ -147,7 +148,6 @@ export function PractitionerDashboard({ user }: { user: any }) {
                         </Card>
                     </Link>
                 ))}
-            </div>
         </div>
     )
 }
