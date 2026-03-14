@@ -14,13 +14,14 @@ import {
     ShieldCheck,
     Star,
     Clock,
-    ImageIcon,
+    Image as ImageIcon,
     Stethoscope,
     Phone,
     ExternalLink,
     X,
     CheckCircle2,
-    ArrowRight
+    ArrowRight,
+    MapPin
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
@@ -51,12 +52,12 @@ export default function PatientPortal() {
             {/* Top Navigation / Branding */}
             <div className="w-full bg-white border-b px-8 py-4 flex justify-between items-center sticky top-0 z-30 shadow-sm">
                 <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 bg-slate-900 rounded-xl flex items-center justify-center text-white font-black italic">
+                    <div className="h-10 w-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white font-black italic shadow-lg shadow-emerald-500/20">
                         AL
                     </div>
                     <div>
-                        <h1 className="text-lg font-black text-slate-900 tracking-tighter">Clinique <span className="text-gold">Aere Lao</span></h1>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Portail Patient VIP</p>
+                        <h1 className="text-lg font-black text-slate-900 tracking-tighter italic uppercase">Dento<span className="text-emerald-600">Prestige</span> Elite</h1>
+                        <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Portail Patient VIP</p>
                     </div>
                 </div>
 
@@ -316,7 +317,7 @@ export default function PatientPortal() {
                         <div>
                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Assistance Téléphonique</p>
                             <p className="text-sm font-black text-slate-900">+221 33 800 00 00</p>
-                            <p className="text-[10px] font-bold text-teal-600 uppercase mt-1">Ligne Urgence 24h/24</p>
+                            <p className="text-[10px] font-bold text-emerald-600 uppercase mt-1">Ligne Urgence 24h/24</p>
                         </div>
                     </div>
                     <div className="flex gap-4">

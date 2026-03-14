@@ -47,7 +47,8 @@ import {
     ChevronRight,
     LogOut,
     User,
-    Smartphone
+    Smartphone,
+    Layout
 } from 'lucide-react'
 
 export const navigationSections = [
@@ -63,6 +64,15 @@ export const navigationSections = [
             { name: 'Labo Hub', href: '/lab', icon: Activity, roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
             { name: 'Command Center', href: '/tasks', icon: Briefcase, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
             { name: 'Salle d\'Attente', href: '/waiting-room', icon: Clock, badge: '3', roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
+        ]
+    },
+    {
+        title: 'Portails Elite',
+        roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY', 'ACCOUNTANT'],
+        items: [
+            { name: 'Admin Portal', href: '/admin-portal', icon: ShieldCheck, roles: ['OWNER'] },
+            { name: 'Portail Accueil', href: '/reception-portal', icon: Users, roles: ['OWNER', 'SECRETARY'] },
+            { name: 'Assistant Admin', href: '/assistant-portal', icon: FileText, roles: ['OWNER', 'ASSISTANT', 'SECRETARY'] },
         ]
     },
     {
@@ -167,7 +177,7 @@ export function Sidebar({ className }: { className?: string }) {
     }).filter(Boolean) as typeof navigationSections
 
     if (!mounted) {
-        return <div className={cn("w-64 bg-white h-full border-r border-slate-100", className)} />
+        return <div className={cn("w-64 bg-slate-950 h-full border-r border-white/5", className)} />
     }
 
     const getInitials = (name: string) => {
@@ -175,45 +185,46 @@ export function Sidebar({ className }: { className?: string }) {
     }
 
     const initials = user ? getInitials(user.name) : 'DR'
+
     return (
         <div className={cn(
-            "flex h-full flex-col border-r bg-white text-slate-600 transition-all duration-300 shadow-sm",
-            collapsed ? "w-20" : "w-64",
+            "flex h-full flex-col border-r border-white/5 bg-slate-950 text-slate-400 transition-all duration-300 shadow-[20px_0_40px_rgba(0,0,0,0.1)] z-40 relative",
+            collapsed ? "w-20" : "w-72",
             className
         )}>
             {/* Logo */}
-            <div className="flex h-20 items-center justify-between px-6 border-b border-slate-100 bg-white flex-shrink-0">
+            <div className="flex h-24 items-center justify-between px-8 border-b border-white/5 bg-slate-950 flex-shrink-0">
                 {!collapsed && (
-                    <div className="flex items-center gap-3">
-                        <div className="h-9 w-9 bg-emerald-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-600/20">
+                    <div className="flex items-center gap-4">
+                        <div className="h-10 w-10 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-600/20">
                             <Diamond className="h-5 w-5 text-white animate-pulse" />
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-lg font-black tracking-tighter text-slate-900 uppercase italic">
-                                Dento<span className="text-emerald-600">Prestige</span>
+                            <span className="text-xl font-black tracking-tighter text-white uppercase italic">
+                                Dento<span className="text-emerald-500">Prestige</span>
                             </span>
-                            <span className="text-[7px] font-black tracking-[.3em] text-emerald-600/80 uppercase -mt-1">Elite Management</span>
+                            <span className="text-[7px] font-black tracking-[.3em] text-emerald-500/80 uppercase -mt-1">Elite Management</span>
                         </div>
                     </div>
                 )}
                 {collapsed && (
-                    <div className="h-10 w-10 bg-emerald-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/20 mx-auto">
+                    <div className="h-10 w-10 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-500/20 mx-auto">
                         <Diamond className="h-5 w-5 text-white animate-pulse" />
                     </div>
                 )}
                 <button
                     onClick={() => setCollapsed(!collapsed)}
-                    className="hidden lg:flex h-8 w-8 rounded-lg bg-slate-50 border border-slate-100 hover:bg-slate-100 items-center justify-center text-slate-400 hover:text-slate-900 transition-all flex-shrink-0"
+                    className="hidden lg:flex h-9 w-9 rounded-xl bg-white/5 border border-white/10 hover:bg-emerald-600 items-center justify-center text-slate-400 hover:text-white transition-all flex-shrink-0 shadow-lg"
                 >
                     {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
                 </button>
             </div>
 
-            <nav className="flex-1 space-y-8 px-4 py-8 overflow-y-auto no-scrollbar">
+            <nav className="flex-1 space-y-8 px-4 py-8 overflow-y-auto no-scrollbar scroll-smooth">
                 {filteredSections.map((section) => (
-                    <div key={section.title} className="space-y-2">
+                    <div key={section.title} className="space-y-3">
                         {!collapsed && (
-                            <h3 className="px-4 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2">{section.title}</h3>
+                            <h3 className="px-6 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500/40 mb-2">{section.title}</h3>
                         )}
                         <div className="space-y-1">
                             {section.items.map((item) => {
@@ -224,27 +235,27 @@ export function Sidebar({ className }: { className?: string }) {
                                         href={item.href}
                                         title={collapsed ? item.name : undefined}
                                         className={cn(
-                                            "group flex items-center px-4 py-3 text-[13px] font-bold rounded-2xl transition-all duration-300 relative",
-                                            collapsed ? "justify-center" : "gap-3",
+                                            "group flex items-center px-6 py-4 text-[12px] font-bold rounded-[1.5rem] transition-all duration-300 relative mx-2",
+                                            collapsed ? "justify-center mx-0 px-0" : "gap-4",
                                             isActive
-                                                ? "bg-emerald-50 text-emerald-700 shadow-sm"
-                                                : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+                                                ? "bg-emerald-600 text-white shadow-xl shadow-emerald-600/20"
+                                                : "text-slate-500 hover:bg-white/5 hover:text-white"
                                         )}
                                     >
                                         <item.icon
                                             className={cn(
                                                 "h-5 w-5 flex-shrink-0 transition-all duration-300",
-                                                isActive ? "text-emerald-600 scale-110" : "text-slate-400 group-hover:text-slate-600 group-hover:scale-110"
+                                                isActive ? "text-white scale-110" : "text-slate-400 group-hover:text-white group-hover:scale-110"
                                             )}
                                         />
                                         {!collapsed && (
                                             <>
-                                                <span className="flex-1 truncate tracking-tight">{item.name}</span>
+                                                <span className="flex-1 truncate tracking-tight uppercase italic">{item.name}</span>
                                                 {(item as any).isNew && (
-                                                    <span className="text-[8px] font-black text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-full uppercase tracking-widest leading-none">New</span>
+                                                    <span className="text-[7px] font-black text-emerald-600 bg-emerald-500/10 px-2 py-0.5 rounded-full uppercase tracking-widest leading-none border border-emerald-500/20">New</span>
                                                 )}
                                                 {(item as any).badge && (
-                                                    <span className="h-5 w-5 bg-emerald-600 rounded-full text-[9px] font-black text-white flex items-center justify-center shadow-lg shadow-emerald-500/20">{(item as any).badge}</span>
+                                                    <span className="h-5 w-5 bg-emerald-500 text-[9px] font-black text-white flex items-center justify-center rounded-full shadow-lg shadow-emerald-500/20">{(item as any).badge}</span>
                                                 )}
                                             </>
                                         )}
@@ -252,9 +263,9 @@ export function Sidebar({ className }: { className?: string }) {
                                             <span className="absolute top-1 right-1 h-4 w-4 bg-emerald-600 rounded-full text-[8px] font-black text-white flex items-center justify-center">{(item as any).badge}</span>
                                         )}
                                         
-                                        {/* Active Indicator Dot */}
+                                        {/* Active Indicator Glow */}
                                         {isActive && !collapsed && (
-                                            <div className="absolute left-0 w-1 h-6 bg-emerald-600 rounded-r-full shadow-[0_0_12px_rgba(5,150,105,0.4)]" />
+                                            <div className="absolute left-[-8px] w-2 h-8 bg-emerald-500 rounded-r-full shadow-[0_0_20px_rgba(16,185,129,0.8)]" />
                                         )}
                                     </Link>
                                 )
@@ -265,22 +276,22 @@ export function Sidebar({ className }: { className?: string }) {
             </nav>
 
             {/* User Profile */}
-            <div className="p-4 bg-slate-50/50 flex-shrink-0 border-t border-slate-100">
+            <div className="p-6 bg-slate-900/40 flex-shrink-0 border-t border-white/5">
                 {collapsed ? (
                     <div className="flex justify-center">
-                        <div className="h-10 w-10 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-emerald-700 font-black text-xs shadow-sm hover:scale-110 transition-transform cursor-pointer">
+                        <div className="h-10 w-10 rounded-2xl bg-emerald-600 flex items-center justify-center text-white font-black text-[10px] shadow-lg shadow-emerald-500/20 hover:scale-110 transition-transform cursor-pointer">
                             {initials}
                         </div>
                     </div>
                 ) : (
-                    <div className="flex items-center gap-3 p-2 rounded-[1.5rem] bg-white border border-slate-100 shadow-sm">
-                        <div className="h-10 w-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-black text-xs shadow-lg shadow-emerald-500/20 flex-shrink-0">
+                    <div className="flex items-center gap-4 p-3 rounded-[1.75rem] bg-white/5 border border-white/10 shadow-2xl">
+                        <div className="h-11 w-11 rounded-2xl bg-emerald-600 flex items-center justify-center text-white font-black text-xs shadow-lg shadow-emerald-500/20 flex-shrink-0">
                             {initials}
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-xs font-black text-slate-900 truncate tracking-tight">{user?.name || 'Dr. Aere Lao'}</p>
-                            <p className="text-[9px] font-bold uppercase tracking-widest text-emerald-600/80">
-                                {user?.role === 'OWNER' ? 'Admin Elite' :
+                            <p className="text-xs font-black text-white truncate tracking-tight italic uppercase">{user?.name || 'Dr. Aere Lao'}</p>
+                            <p className="text-[9px] font-bold uppercase tracking-widest text-emerald-500">
+                                {user?.role === 'OWNER' ? 'Directeur Elite' :
                                     user?.role === 'DENTIST' ? 'Praticien Elite' :
                                         user?.role === 'ASSISTANT' ? 'Assistant Elite' :
                                             user?.role === 'SECRETARY' ? 'Secrétaire Elite' :
@@ -291,7 +302,7 @@ export function Sidebar({ className }: { className?: string }) {
                         </div>
                         <button
                             onClick={() => signOut({ callbackUrl: '/login' })}
-                            className="h-8 w-8 rounded-lg hover:bg-red-50 flex items-center justify-center text-slate-400 hover:text-red-500 transition-all"
+                            className="h-10 w-10 rounded-xl hover:bg-red-500/10 flex items-center justify-center text-slate-500 hover:text-red-500 transition-all shadow-sm"
                             title="Se déconnecter"
                         >
                             <LogOut className="h-4 w-4" />

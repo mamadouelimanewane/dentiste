@@ -58,8 +58,8 @@ export default function AccountingPage() {
         return (
             <div className="h-screen flex items-center justify-center bg-slate-50">
                 <div className="flex flex-col items-center gap-4">
-                    <Loader2 className="h-12 w-12 animate-spin text-accent" />
-                    <p className="font-black text-[10px] uppercase tracking-[0.5em] text-slate-400">Accès au Grand Livre OHADA...</p>
+                    <Loader2 className="h-12 w-12 animate-spin text-emerald-600" />
+                    <p className="font-black text-[10px] uppercase tracking-[0.5em] text-emerald-600/60">Accès au Grand Livre OHADA...</p>
                 </div>
             </div>
         )
@@ -79,10 +79,10 @@ export default function AccountingPage() {
             <div className="flex items-center justify-between no-print">
                 <div>
                     <div className="flex items-center gap-2 mb-1">
-                        <div className="h-1 w-8 bg-accent rounded-full"></div>
-                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">Finance & Pilotage</span>
+                        <div className="h-1 w-8 bg-emerald-600 rounded-full"></div>
+                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600">Finance & Pilotage</span>
                     </div>
-                    <h1 className="text-4xl font-black text-slate-900 tracking-tighter">Gestion <span className="text-gold">SYSCOA / OHADA</span></h1>
+                    <h1 className="text-4xl font-black text-slate-900 tracking-tighter">Gestion <span className="text-emerald-gradient">SYSCOA / OHADA</span></h1>
                 </div>
                 <div className="flex gap-3">
                     <Button variant="outline" onClick={exportToCSV} className="rounded-xl border-slate-200 font-bold bg-white">
