@@ -21,7 +21,8 @@ import {
     X,
     CheckCircle2,
     ArrowRight,
-    MapPin
+    MapPin,
+    HeartPulse
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
@@ -80,13 +81,19 @@ export default function PatientPortal() {
                         { id: 'DASHBOARD', name: 'Vue d\'ensemble', icon: Stethoscope },
                         { id: 'APPOINTMENTS', name: 'Rendez-vous', icon: Calendar },
                         { id: 'DOCUMENTS', name: 'Mes Documents', icon: FileText },
+                        { id: 'POST_OP', name: 'Suivi Post-Op IA', icon: HeartPulse },
+                        { id: 'WAITING_ROOM', name: 'Salle d\'Attente VIP', icon: Clock },
                         { id: 'BILLING', name: 'Facturation', icon: CreditCard },
                         { id: 'MESSAGES', name: 'Messages', icon: MessageSquare },
                         { id: 'SETTINGS', name: 'Profil & Sécurité', icon: User },
                     ].map(tab => (
                         <button
                             key={tab.id}
-                            onClick={() => setActiveTab(tab.id)}
+                            onClick={() => {
+                                if (tab.id === 'POST_OP') window.location.href = '/portal/post-op';
+                                else if (tab.id === 'WAITING_ROOM') window.location.href = '/waiting-room';
+                                else setActiveTab(tab.id);
+                            }}
                             className={cn(
                                 "w-full flex items-center gap-4 px-6 h-14 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all",
                                 activeTab === tab.id

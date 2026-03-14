@@ -49,7 +49,10 @@ import {
     LogOut,
     User,
     Smartphone,
-    Layout
+    Layout,
+    Landmark,
+    HeartPulse,
+    Globe
 } from 'lucide-react'
 
 export const navigationSections = [
@@ -84,6 +87,7 @@ export const navigationSections = [
             { name: 'AI Radio Lab', href: '/ai-radio-lab', icon: Radiation, roles: ['OWNER', 'DENTIST'] },
             { name: 'AI Voice Dictation', href: '/dictation', icon: Mic, roles: ['OWNER', 'DENTIST'] },
             { name: 'Financial War Room', href: '/financial-war-room', icon: Target, roles: ['OWNER', 'ACCOUNTANT', 'DENTIST'] },
+            { name: 'Executive Satellite', href: '/executive', icon: Globe, roles: ['OWNER'] },
             { name: 'Téléconsultation', href: '/teleconsultation', icon: Video, isNew: true, roles: ['OWNER', 'DENTIST', 'CLIENT'] },
         ]
     },
@@ -96,6 +100,7 @@ export const navigationSections = [
             { name: 'Facturation & Actes', href: '/billing', icon: DollarSign, roles: ['OWNER', 'SECRETARY', 'ACCOUNTANT', 'ASSISTANT'] },
             { name: 'Paiement en Ligne', href: '/payment', icon: CreditCard, isNew: true, roles: ['OWNER', 'CLIENT', 'SECRETARY'] },
             { name: 'Comptabilité OHADA', href: '/accounting', icon: BookOpen, roles: ['OWNER', 'ACCOUNTANT'] },
+            { name: 'Fiscalité OHADA', href: '/accounting/tax', icon: Landmark, roles: ['OWNER', 'ACCOUNTANT'] },
         ]
     },
     {
@@ -106,6 +111,7 @@ export const navigationSections = [
             { name: 'Gestion Elite (RH)', href: '/management', icon: Briefcase, roles: ['OWNER'] },
             { name: 'Stocks & Intrants', href: '/inventory', icon: Package, roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
             { name: 'Traçabilité Hub', href: '/sterilization', icon: ShieldCheck, roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
+            { name: 'Suivi Post-Op IA', href: '/portal/post-op', icon: HeartPulse, roles: ['OWNER', 'DENTIST', 'CLIENT'] },
             { name: 'Portail Patient VIP', href: '/portal', icon: UserCircle, roles: ['OWNER', 'CLIENT'] },
             { name: 'Programme Fidélité', href: '/loyalty', icon: Star, isNew: true, roles: ['OWNER', 'CLIENT'] },
         ]

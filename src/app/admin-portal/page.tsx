@@ -17,7 +17,9 @@ import {
     Zap,
     Brain,
     AlertCircle,
-    Bell
+    Bell,
+    Globe,
+    Landmark
 } from "lucide-react"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
@@ -160,19 +162,48 @@ export default function AdminPortal() {
                         </div>
                     </Card>
 
-                    {/* Luxury Call to Action */}
+                    {/* Elite Academy */}
                     <Card className="rounded-[2.5rem] border-none shadow-luxury bg-gradient-to-br from-indigo-600 to-purple-800 text-white p-8 relative overflow-hidden">
                         <div className="absolute -bottom-4 -right-4 opacity-10">
                             <Star className="h-32 w-32" />
                         </div>
-                        <h3 className="text-xs font-black uppercase tracking-widest mb-4">Elite Academy</h3>
-                        <p className="text-2xl font-black mb-4 tracking-tight leading-tight">Formez vos équipes aux outils IA DentoPrestige.</p>
+                        <h3 className="text-xs font-black uppercase tracking-widest mb-4">Staff Training</h3>
+                        <p className="text-2xl font-black mb-4 tracking-tight leading-tight uppercase italic text-emerald-400">Elite Academy</p>
                         <button 
                             onClick={() => window.location.href = '/academy'}
                             className="w-full bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[9px] font-black uppercase tracking-widest h-12 rounded-xl transition-all"
                         >
                             Accéder aux modules
                         </button>
+                    </Card>
+
+                    {/* Executive Fleet View */}
+                    <Card className="rounded-[2.5rem] border-none shadow-luxury bg-slate-900 text-white p-8 relative overflow-hidden group">
+                        <div className="absolute -top-4 -right-4 opacity-10 group-hover:scale-110 transition-transform">
+                            <Globe className="h-32 w-32 text-emerald-500" />
+                        </div>
+                        <h3 className="text-[10px] font-black uppercase tracking-widest mb-4 opacity-60 italic">Multi-Site Steering</h3>
+                        <p className="text-2xl font-black mb-6 tracking-tight leading-tight uppercase italic">Executive <span className="text-emerald-500">Satellite</span> View</p>
+                        <Button
+                            onClick={() => window.location.href = '/executive'}
+                            className="w-full bg-emerald-600 hover:bg-emerald-500 text-white text-[9px] font-black uppercase tracking-widest h-12 rounded-xl"
+                        >
+                            Pilotage Flotte
+                        </Button>
+                    </Card>
+
+                    {/* Tax Engine */}
+                    <Card className="rounded-[2.5rem] border-none shadow-luxury bg-white p-8 relative overflow-hidden border border-slate-100">
+                        <Landmark className="absolute -bottom-4 -right-4 h-32 w-32 text-slate-50 opacity-50" />
+                        <h3 className="text-[10px] font-black uppercase tracking-widest mb-4 text-slate-400 italic">Conformité OHADA</h3>
+                        <p className="text-xl font-black mb-6 tracking-tight leading-tight uppercase italic text-slate-900">Advanced <span className="text-indigo-600">Tax Engine</span></p>
+                        <Button
+                            variant="outline"
+                            onClick={() => window.location.href = '/accounting/tax'}
+                            className="w-full border-slate-200 text-slate-900 text-[9px] font-black uppercase tracking-widest h-12 rounded-xl"
+                        >
+                            Auditer la liasse
+                        </Button>
                     </Card>
                 </div>
             </div>

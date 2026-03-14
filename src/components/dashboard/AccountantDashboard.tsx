@@ -42,9 +42,9 @@ export function AccountantDashboard({ user }: { user: any }) {
                                     Grand Livre OHADA
                                 </Button>
                             </Link>
-                            <Link href="/billing">
-                                <Button variant="outline" className="border-white/20 text-white font-black uppercase text-[10px] tracking-widest h-14 rounded-2xl px-10 hover:bg-white/5">
-                                    Suivi Facturation
+                            <Link href="/accounting/tax">
+                                <Button variant="outline" className="border-emerald-500/50 text-emerald-400 font-black uppercase text-[10px] tracking-widest h-14 rounded-2xl px-10 hover:bg-emerald-500/10">
+                                    Fiscalité OHADA
                                 </Button>
                             </Link>
                         </div>

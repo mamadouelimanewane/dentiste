@@ -44,9 +44,9 @@ export function StaffDashboard({ user }: { user: any }) {
                                     Salle d'Attente
                                 </Button>
                             </Link>
-                            <Link href="/messages">
-                                <Button variant="outline" className="border-slate-200 text-slate-900 font-black uppercase text-[10px] tracking-widest h-14 rounded-2xl px-10 hover:bg-slate-50">
-                                    Messagerie (3)
+                            <Link href="/sterilization">
+                                <Button variant="outline" className="border-indigo-500/50 text-indigo-600 font-black uppercase text-[10px] tracking-widest h-14 rounded-2xl px-10 hover:bg-indigo-50">
+                                    Traçabilité Hub
                                 </Button>
                             </Link>
                         </div>

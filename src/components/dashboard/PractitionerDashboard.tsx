@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { 
     Users, Calendar, Activity, Sparkles, Brain, Radiation, 
-    Stethoscope, FileText, ArrowRight, Zap, Clock, GraduationCap, ShieldCheck 
+    Stethoscope, FileText, ArrowRight, Zap, Clock, GraduationCap, ShieldCheck, HeartPulse 
 } from "lucide-react"
 import { motion } from "framer-motion"
 import Link from "next/link"
@@ -128,26 +128,30 @@ export function PractitionerDashboard({ user }: { user: any }) {
             </div>
 
             {/* Specialist Tools */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
                 {[
                     { name: 'Smile Design Studio', icon: Sparkles, desc: 'Simulation 3D & Esthétique', href: '/smile-design' },
                     { name: 'AI Radio Lab', icon: Radiation, desc: 'Dépistage Intelligent', href: '/ai-radio-lab' },
                     { name: 'Elite Academy', icon: GraduationCap, desc: 'Formation Continue', href: '/academy' },
                     { name: 'Traçabilité Hub', icon: ShieldCheck, desc: 'Hygiène & Sécurité', href: '/sterilization' },
+                    { name: 'Smart Waiting Room', icon: Clock, desc: 'Gestion du Flux VIP', href: '/waiting-room' },
+                    { name: 'Suivi Post-Op IA', icon: HeartPulse, desc: 'Télésurveillance Robotique', href: '/portal/post-op' },
                     { name: 'Dictée Vocale Elite', icon: FileText, desc: 'Saisie sans contact', href: '/dictation' },
                 ].map((tool, i) => (
                     <Link key={i} href={tool.href}>
-                        <Card className="rounded-[2.5rem] border-none shadow-luxury bg-white p-8 hover:-translate-y-1 transition-all group overflow-hidden relative h-full">
+                        <Card className="rounded-[2.5rem] border-none shadow-luxury bg-white p-6 hover:-translate-y-1 transition-all group overflow-hidden relative h-full">
                             <div className="absolute -right-4 -bottom-4 opacity-5 text-emerald-600 group-hover:scale-110 transition-transform">
-                                <tool.icon className="h-24 w-24" />
+                                <tool.icon className="h-20 w-20" />
                             </div>
-                            <div className="h-12 w-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 mb-6 group-hover:bg-emerald-600 group-hover:text-white transition-all">
-                                <tool.icon className="h-6 w-6" />
+                            <div className="h-10 w-10 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 mb-4 group-hover:bg-emerald-600 group-hover:text-white transition-all">
+                                <tool.icon className="h-5 w-5" />
                             </div>
-                            <h4 className="text-sm font-black text-slate-900 uppercase tracking-tight">{tool.name}</h4>
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">{tool.desc}</p>
+                            <h4 className="text-[12px] font-black text-slate-900 uppercase tracking-tight leading-tight">{tool.name}</h4>
+                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">{tool.desc}</p>
                         </Card>
                     </Link>
                 ))}
+            </div>
         </div>
     )
 }
