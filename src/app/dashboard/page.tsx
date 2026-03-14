@@ -32,16 +32,12 @@ import { AccountantDashboard } from '@/components/dashboard/AccountantDashboard'
 import { StaffDashboard } from '@/components/dashboard/StaffDashboard'
 import AdminPortal from '../admin-portal/page'
 import PatientPortal from '../portal/page'
+import { useRole } from '@/hooks/useRole'
 
 export default function DashboardPage() {
-  const { data: session } = useSession()
+  const { role: userRole, user, status } = useRole()
   const [mounted, setMounted] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-
-  const user = session?.user ? {
-    role: (session.user as any).role || 'OWNER',
-    name: session.user.name || 'Utilisateur Elite',
-  } : { role: 'OWNER', name: 'Directeur Elite' } // Fallback for demo
 
   useEffect(() => {
     setMounted(true)
