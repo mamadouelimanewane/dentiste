@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import {
@@ -19,7 +20,8 @@ import {
     AlertCircle,
     Bell,
     Globe,
-    Landmark
+    Landmark,
+    Binary
 } from "lucide-react"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
@@ -204,6 +206,20 @@ export default function AdminPortal() {
                         >
                             Auditer la liasse
                         </Button>
+                    </Card>
+
+                    {/* Blockchain Ledger */}
+                    <Card className="rounded-[2.5rem] border-none shadow-luxury bg-slate-950 text-emerald-400 p-8 relative overflow-hidden group">
+                        <Binary className="absolute -top-4 -right-4 h-32 w-32 opacity-10 group-hover:scale-110 transition-transform" />
+                        <h3 className="text-[10px] font-black uppercase tracking-widest mb-4 opacity-60 italic">Security Trust</h3>
+                        <p className="text-xl font-black mb-6 tracking-tight leading-tight uppercase italic">Blockchain <span className="text-white">Ledger</span></p>
+                        <Link href="/admin-portal/blockchain">
+                            <Button
+                                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white text-[9px] font-black uppercase tracking-widest h-12 rounded-xl border-none"
+                            >
+                                Vérifier Registres
+                            </Button>
+                        </Link>
                     </Card>
                 </div>
             </div>

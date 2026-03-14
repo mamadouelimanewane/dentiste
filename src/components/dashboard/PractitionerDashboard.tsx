@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { 
     Users, Calendar, Activity, Sparkles, Brain, Radiation, 
-    Stethoscope, FileText, ArrowRight, Zap, Clock, GraduationCap, ShieldCheck, HeartPulse 
+    Stethoscope, FileText, ArrowRight, Zap, Clock, GraduationCap, ShieldCheck, HeartPulse, BrainCircuit, Wand2 
 } from "lucide-react"
 import { motion } from "framer-motion"
 import Link from "next/link"
@@ -131,6 +131,8 @@ export function PractitionerDashboard({ user }: { user: any }) {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
                 {[
                     { name: 'Smile Design Studio', icon: Sparkles, desc: 'Simulation 3D & Esthétique', href: '/smile-design' },
+                    { name: 'Holo-Smile Studio', icon: Wand2, desc: 'Miroir Holo-IA', href: '/clinical/smile-studio' },
+                    { name: 'Neural Vision Lab', icon: BrainCircuit, desc: 'Diagnostique Profond', href: '/clinical/vision-lab' },
                     { name: 'AI Radio Lab', icon: Radiation, desc: 'Dépistage Intelligent', href: '/ai-radio-lab' },
                     { name: 'Elite Academy', icon: GraduationCap, desc: 'Formation Continue', href: '/academy' },
                     { name: 'Traçabilité Hub', icon: ShieldCheck, desc: 'Hygiène & Sécurité', href: '/sterilization' },

@@ -52,7 +52,13 @@ import {
     Layout,
     Landmark,
     HeartPulse,
-    Globe
+    Globe,
+    Eye,
+    Wand2,
+    BrainCircuit,
+    Car,
+    Binary,
+    Navigation
 } from 'lucide-react'
 
 export const navigationSections = [
@@ -64,6 +70,7 @@ export const navigationSections = [
             { name: 'Patients Elite', href: '/patients', icon: Users, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
             { name: 'Workflow Clinique', href: '/workflow', icon: Activity, roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
             { name: 'Smile Design Studio', href: '/smile-design', icon: Sparkles, roles: ['OWNER', 'DENTIST'] },
+            { name: 'Holo-Smile Studio', href: '/clinical/smile-studio', icon: Wand2, isNew: true, roles: ['OWNER', 'DENTIST'] },
             { name: 'Agenda Dynamique', href: '/agenda', icon: Calendar, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
             { name: 'Labo Hub', href: '/lab', icon: Activity, roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
             { name: 'Command Center', href: '/tasks', icon: Briefcase, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
@@ -85,9 +92,11 @@ export const navigationSections = [
         items: [
             { name: 'AI Command Center', href: '/ai-hub', icon: Brain, roles: ['OWNER', 'DENTIST'] },
             { name: 'AI Radio Lab', href: '/ai-radio-lab', icon: Radiation, roles: ['OWNER', 'DENTIST'] },
+            { name: 'Neural Vision Lab', href: '/clinical/vision-lab', icon: BrainCircuit, isNew: true, roles: ['OWNER', 'DENTIST'] },
             { name: 'AI Voice Dictation', href: '/dictation', icon: Mic, roles: ['OWNER', 'DENTIST'] },
             { name: 'Financial War Room', href: '/financial-war-room', icon: Target, roles: ['OWNER', 'ACCOUNTANT', 'DENTIST'] },
             { name: 'Executive Satellite', href: '/executive', icon: Globe, roles: ['OWNER'] },
+            { name: 'Concierge VIP', href: '/executive/concierge', icon: Car, isNew: true, roles: ['OWNER'] },
             { name: 'Téléconsultation', href: '/teleconsultation', icon: Video, isNew: true, roles: ['OWNER', 'DENTIST', 'CLIENT'] },
         ]
     },
@@ -101,6 +110,7 @@ export const navigationSections = [
             { name: 'Paiement en Ligne', href: '/payment', icon: CreditCard, isNew: true, roles: ['OWNER', 'CLIENT', 'SECRETARY'] },
             { name: 'Comptabilité OHADA', href: '/accounting', icon: BookOpen, roles: ['OWNER', 'ACCOUNTANT'] },
             { name: 'Fiscalité OHADA', href: '/accounting/tax', icon: Landmark, roles: ['OWNER', 'ACCOUNTANT'] },
+            { name: 'Blockchain Ledger', href: '/admin-portal/blockchain', icon: Binary, isNew: true, roles: ['OWNER'] },
         ]
     },
     {

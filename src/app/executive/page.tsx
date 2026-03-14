@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import Link from "next/link"
 import { 
     LayoutDashboard, Users, TrendingUp, Activity, DollarSign,
     MapPin, Globe, Filter, Download, Calendar, ArrowUpRight,
     ArrowDownRight, Target, Brain, ShieldCheck, Zap, Sparkles,
-    ChevronRight, Info, Building2, BarChart3, PieChart
+    ChevronRight, Info, Building2, BarChart3, PieChart, Car
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -57,9 +58,11 @@ export default function ExecutiveSatelliteView() {
                     <Button onClick={runBenchmarking} disabled={isAnalyzing} className="h-16 px-10 rounded-2xl bg-white text-slate-900 font-black uppercase text-[10px] tracking-widest hover:bg-emerald-50 transition-all shadow-xl">
                         {isAnalyzing ? "Analyse Flotte..." : "Benchmarking Global"}
                     </Button>
-                    <Button variant="outline" className="h-16 px-8 rounded-2xl border-white/20 text-white font-black uppercase text-[10px] tracking-widest hover:bg-white/5">
-                        Exporter l'Audit
-                    </Button>
+                    <Link href="/executive/concierge">
+                        <Button variant="outline" className="h-16 px-8 rounded-2xl border-white/20 text-white font-black uppercase text-[10px] tracking-widest hover:bg-white/5">
+                            <Car className="mr-2 h-4 w-4" /> Concierge Bio-Logistique
+                        </Button>
+                    </Link>
                 </div>
             </div>
 

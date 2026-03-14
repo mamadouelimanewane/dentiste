@@ -22,7 +22,9 @@ import {
     CheckCircle2,
     ArrowRight,
     MapPin,
-    HeartPulse
+    HeartPulse,
+    Wand2,
+    Binary
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
@@ -82,6 +84,8 @@ export default function PatientPortal() {
                         { id: 'APPOINTMENTS', name: 'Rendez-vous', icon: Calendar },
                         { id: 'DOCUMENTS', name: 'Mes Documents', icon: FileText },
                         { id: 'POST_OP', name: 'Suivi Post-Op IA', icon: HeartPulse },
+                        { id: 'SMILE_STUDIO', name: 'Miroir Holo-IA', icon: Wand2 },
+                        { id: 'BLOCKCHAIIN', name: 'Passeport Digital', icon: Binary },
                         { id: 'WAITING_ROOM', name: 'Salle d\'Attente VIP', icon: Clock },
                         { id: 'BILLING', name: 'Facturation', icon: CreditCard },
                         { id: 'MESSAGES', name: 'Messages', icon: MessageSquare },
@@ -92,6 +96,8 @@ export default function PatientPortal() {
                             onClick={() => {
                                 if (tab.id === 'POST_OP') window.location.href = '/portal/post-op';
                                 else if (tab.id === 'WAITING_ROOM') window.location.href = '/waiting-room';
+                                else if (tab.id === 'SMILE_STUDIO') window.location.href = '/clinical/smile-studio';
+                                else if (tab.id === 'BLOCKCHAIIN') window.location.href = '/admin-portal/blockchain';
                                 else setActiveTab(tab.id);
                             }}
                             className={cn(
