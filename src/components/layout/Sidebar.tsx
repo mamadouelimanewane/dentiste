@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { useSession, signOut } from 'next-auth/react'
 import { cn } from '@/lib/utils'
+import { useRole } from '@/hooks/useRole'
 import {
     Users,
     Calendar,
@@ -143,16 +144,9 @@ export const navigationSections = [
 export function Sidebar({ className }: { className?: string }) {
     const [mounted, setMounted] = useState(false)
     const [collapsed, setCollapsed] = useState(false)
-    const { data: session } = useSession()
     const pathname = usePathname()
-
-    // For demo purposes, we allow switching roles if no real session exists
-    const [demoRole, setDemoRole] = useState<string>('OWNER')
-
-    const user = session?.user ? {
-        role: (session.user as any).role || 'OWNER',
-        name: session.user.name || 'Utilisateur',
-    } : { role: demoRole, name: demoRole === 'OWNER' ? 'Directeur Elite' : demoRole === 'ASSISTANT' ? 'Assistant Elite' : 'Patient VIP' }
+    const { role: userRole, user, switchDemoRole, isDemo } = useRole()
+    const session = null // useRole handles session check internally, but we can keep it for UI if needed
 
     useEffect(() => {
         setMounted(true)
@@ -187,7 +181,7 @@ export function Sidebar({ className }: { className?: string }) {
         return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
     }
 
-    const initials = user ? getInitials(user.name) : 'DR'
+    const initials = user ? getInitials(user.name || '') : 'DR'
 
     return (
         <div className={cn(
@@ -238,7 +232,7 @@ export function Sidebar({ className }: { className?: string }) {
                                 ].map(role => (
                                     <button
                                         key={role.id}
-                                        onClick={() => setDemoRole(role.id)}
+                                        onClick={() => switchDemoRole(role.id)}
                                         className={cn(
                                             "text-[8px] font-black py-2 rounded-lg transition-all border",
                                             user?.role === role.id 

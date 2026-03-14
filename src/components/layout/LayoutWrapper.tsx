@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Loader2 } from "lucide-react"
 
+import { useRole } from "@/hooks/useRole"
+
 // Pages accessibles sans authentification
 const PUBLIC_PAGES = ["/", "/login"]
 
@@ -16,6 +18,7 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
     const pathname = usePathname()
     const router = useRouter()
     const { data: session, status } = useSession()
+    const { role: userRole } = useRole()
     const [mounted, setMounted] = useState(false)
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
@@ -66,7 +69,7 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
     */
 
     // Simplified RBAC logic based on Sidebar navigationSections
-    const userRole = (session?.user as any)?.role || 'GUEST'
+    // userRole is now coming from useRole() hook above
 
     const isAccessDenied = () => {
         // Paths that only OWNER can access
