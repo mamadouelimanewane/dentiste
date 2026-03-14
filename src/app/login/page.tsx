@@ -12,16 +12,16 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from "@/lib/utils"
 
 const DEMO_ACCOUNTS = [
-    { role: 'OWNER', name: 'Dr. Aere Lao', email: 'admin@dentoprestige.sn', password: 'admin123', color: 'from-emerald-500 to-teal-600', icon: Shield, label: 'Administrateur' },
-    { role: 'DENTIST', name: 'Dr. Fatou Diallo', email: 'dentiste@dentoprestige.sn', password: 'dentiste123', color: 'from-blue-500 to-indigo-600', icon: Stethoscope, label: 'Praticien' },
-    { role: 'ASSISTANT', name: 'Aminata Sow', email: 'assistant@dentoprestige.sn', password: 'assistant123', color: 'from-amber-400 to-orange-500', icon: Users, label: 'Assistant(e)' },
-    { role: 'SECRETARY', name: 'Moussa Ndiaye', email: 'secretaire@dentoprestige.sn', password: 'secretaire123', color: 'from-purple-500 to-rose-600', icon: ClipboardList, label: 'Secrétaire' },
+    { role: 'OWNER', name: 'Dr. Admin Lao', email: 'admin@dentoprestige.sn', password: 'password', color: 'from-emerald-500 to-teal-600', icon: Shield, label: 'Administrateur' },
+    { role: 'DENTIST', name: 'Dr. Diallo', email: 'dentiste@dentoprestige.sn', password: 'password', color: 'from-blue-500 to-indigo-600', icon: Stethoscope, label: 'Praticien' },
+    { role: 'ASSISTANT', name: 'Mariam Faye', email: 'assistant@dentoprestige.sn', password: 'password', color: 'from-amber-400 to-orange-500', icon: Users, label: 'Assistant(e)' },
+    { role: 'CLIENT', name: 'Abdoulaye Sall', email: 'patient@dentoprestige.sn', password: 'password', color: 'from-purple-500 to-rose-600', icon: Heart, label: 'Patient VIP' },
 ]
 
 export default function LoginPage() {
     const router = useRouter()
-    const [email, setEmail] = useState('admin@dentoprestige.sn')
-    const [password, setPassword] = useState('••••••••')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
     const [loading, setLoading] = useState(false)
     const [mounted, setMounted] = useState(false)
@@ -35,19 +35,27 @@ export default function LoginPage() {
         setLoading(true)
         
         try {
-            // Tentative de connexion réelle via NextAuth
-            // Comme authorize() est bypassé dans src/lib/auth.ts, cela réussira toujours
             const result = await signIn('credentials', {
                 email,
                 password,
                 redirect: false
             })
 
-            // Redirection forcée pour garantir le rafraîchissement de la session dans toute l'app
-            window.location.href = '/dashboard'
+            if (result?.error) {
+                console.error("Auth error:", result.error)
+                return
+            }
+
+            // Redirection intelligente selon le rôle déduit de l'email pour la démo
+            if (email === 'patient@dentoprestige.sn') {
+                window.location.href = '/portal'
+            } else if (email === 'admin@dentoprestige.sn') {
+                window.location.href = '/admin-portal'
+            } else {
+                window.location.href = '/dashboard'
+            }
         } catch (err) {
-            console.error("Auth error:", err)
-            // Fallback en cas d'erreur de la lib NextAuth pour ne pas bloquer la démo
+            console.error("Critical Auth error:", err)
             window.location.href = '/dashboard'
         }
     }

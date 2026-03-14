@@ -91,6 +91,12 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
             if (deniedForStaff.includes(pathname)) return true
         }
 
+        // Dentist (Praticien) restrictions
+        if (userRole === 'DENTIST') {
+            const deniedForDentist = ['/admin-portal', '/management', '/accounting', '/financial-war-room']
+            if (deniedForDentist.includes(pathname)) return true
+        }
+
         return false
     }
 
