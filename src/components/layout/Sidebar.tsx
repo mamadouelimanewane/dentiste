@@ -167,7 +167,7 @@ export function Sidebar({ className }: { className?: string }) {
     }).filter(Boolean) as typeof navigationSections
 
     if (!mounted) {
-        return <div className={cn("w-64 bg-slate-950 h-full border-r border-white/5", className)} />
+        return <div className={cn("w-64 bg-white h-full border-r border-slate-100", className)} />
     }
 
     const getInitials = (name: string) => {
@@ -175,37 +175,47 @@ export function Sidebar({ className }: { className?: string }) {
     }
 
     const initials = user ? getInitials(user.name) : 'DR'
-
     return (
         <div className={cn(
-            "flex h-full flex-col border-r bg-slate-950 text-slate-300 transition-all duration-300",
+            "flex h-full flex-col border-r bg-white text-slate-600 transition-all duration-300 shadow-sm",
             collapsed ? "w-20" : "w-64",
             className
         )}>
             {/* Logo */}
-            <div className="flex h-20 items-center justify-between px-4 border-b border-white/5 bg-slate-950/50 backdrop-blur-xl flex-shrink-0">
+            <div className="flex h-20 items-center justify-between px-6 border-b border-slate-100 bg-white flex-shrink-0">
                 {!collapsed && (
-                    <div className="flex items-center gap-2">
-                        <Diamond className="h-6 w-6 text-accent animate-pulse flex-shrink-0" />
-                        <span className="text-lg font-black tracking-tighter text-white uppercase">Dento<span className="text-accent">Prestige</span></span>
+                    <div className="flex items-center gap-3">
+                        <div className="h-9 w-9 bg-emerald-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-600/20">
+                            <Diamond className="h-5 w-5 text-white animate-pulse" />
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="text-lg font-black tracking-tighter text-slate-900 uppercase italic">
+                                Dento<span className="text-emerald-600">Prestige</span>
+                            </span>
+                            <span className="text-[7px] font-black tracking-[.3em] text-emerald-600/80 uppercase -mt-1">Elite Management</span>
+                        </div>
                     </div>
                 )}
-                {collapsed && <Diamond className="h-6 w-6 text-accent animate-pulse mx-auto" />}
+                {collapsed && (
+                    <div className="h-10 w-10 bg-emerald-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/20 mx-auto">
+                        <Diamond className="h-5 w-5 text-white animate-pulse" />
+                    </div>
+                )}
                 <button
                     onClick={() => setCollapsed(!collapsed)}
-                    className="hidden lg:flex h-8 w-8 rounded-xl bg-white/5 hover:bg-white/10 items-center justify-center text-slate-400 hover:text-white transition-all flex-shrink-0"
+                    className="hidden lg:flex h-8 w-8 rounded-lg bg-slate-50 border border-slate-100 hover:bg-slate-100 items-center justify-center text-slate-400 hover:text-slate-900 transition-all flex-shrink-0"
                 >
                     {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
                 </button>
             </div>
 
-            <nav className="flex-1 space-y-6 px-3 py-6 overflow-y-auto no-scrollbar">
+            <nav className="flex-1 space-y-8 px-4 py-8 overflow-y-auto no-scrollbar">
                 {filteredSections.map((section) => (
-                    <div key={section.title} className="space-y-1">
+                    <div key={section.title} className="space-y-2">
                         {!collapsed && (
-                            <h3 className="px-3 text-[9px] font-black uppercase tracking-[0.2em] text-slate-600 mb-3">{section.title}</h3>
+                            <h3 className="px-4 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2">{section.title}</h3>
                         )}
-                        <div className="space-y-0.5">
+                        <div className="space-y-1">
                             {section.items.map((item) => {
                                 const isActive = pathname === item.href
                                 return (
@@ -214,32 +224,37 @@ export function Sidebar({ className }: { className?: string }) {
                                         href={item.href}
                                         title={collapsed ? item.name : undefined}
                                         className={cn(
-                                            "group flex items-center px-3 py-2.5 text-[12px] font-bold rounded-xl transition-all duration-200 relative",
+                                            "group flex items-center px-4 py-3 text-[13px] font-bold rounded-2xl transition-all duration-300 relative",
                                             collapsed ? "justify-center" : "gap-3",
                                             isActive
-                                                ? "bg-accent/10 text-accent border border-accent/20"
-                                                : "text-slate-400 hover:bg-white/5 hover:text-white"
+                                                ? "bg-emerald-50 text-emerald-700 shadow-sm"
+                                                : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
                                         )}
                                     >
                                         <item.icon
                                             className={cn(
-                                                "h-4 w-4 flex-shrink-0 transition-all duration-200",
-                                                isActive ? "text-accent scale-110" : "text-slate-500 group-hover:text-slate-300"
+                                                "h-5 w-5 flex-shrink-0 transition-all duration-300",
+                                                isActive ? "text-emerald-600 scale-110" : "text-slate-400 group-hover:text-slate-600 group-hover:scale-110"
                                             )}
                                         />
                                         {!collapsed && (
                                             <>
-                                                <span className="flex-1 truncate">{item.name}</span>
+                                                <span className="flex-1 truncate tracking-tight">{item.name}</span>
                                                 {(item as any).isNew && (
-                                                    <span className="text-[8px] font-black text-teal-400 bg-teal-400/10 px-1.5 py-0.5 rounded-full">NEW</span>
+                                                    <span className="text-[8px] font-black text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-full uppercase tracking-widest leading-none">New</span>
                                                 )}
                                                 {(item as any).badge && (
-                                                    <span className="h-4 w-4 bg-red-500 rounded-full text-[9px] font-black text-white flex items-center justify-center">{(item as any).badge}</span>
+                                                    <span className="h-5 w-5 bg-emerald-600 rounded-full text-[9px] font-black text-white flex items-center justify-center shadow-lg shadow-emerald-500/20">{(item as any).badge}</span>
                                                 )}
                                             </>
                                         )}
                                         {collapsed && (item as any).badge && (
-                                            <span className="absolute top-1 right-1 h-3 w-3 bg-red-500 rounded-full text-[7px] font-black text-white flex items-center justify-center">{(item as any).badge}</span>
+                                            <span className="absolute top-1 right-1 h-4 w-4 bg-emerald-600 rounded-full text-[8px] font-black text-white flex items-center justify-center">{(item as any).badge}</span>
+                                        )}
+                                        
+                                        {/* Active Indicator Dot */}
+                                        {isActive && !collapsed && (
+                                            <div className="absolute left-0 w-1 h-6 bg-emerald-600 rounded-r-full shadow-[0_0_12px_rgba(5,150,105,0.4)]" />
                                         )}
                                     </Link>
                                 )
@@ -250,36 +265,36 @@ export function Sidebar({ className }: { className?: string }) {
             </nav>
 
             {/* User Profile */}
-            <div className="border-t border-white/5 p-3 bg-slate-950/50 flex-shrink-0">
+            <div className="p-4 bg-slate-50/50 flex-shrink-0 border-t border-slate-100">
                 {collapsed ? (
                     <div className="flex justify-center">
-                        <div className="h-10 w-10 rounded-full bg-accent/20 border border-accent/30 flex items-center justify-center text-accent font-black text-xs">
+                        <div className="h-10 w-10 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-emerald-700 font-black text-xs shadow-sm hover:scale-110 transition-transform cursor-pointer">
                             {initials}
                         </div>
                     </div>
                 ) : (
-                    <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-full bg-accent/20 border border-accent/30 flex items-center justify-center text-accent font-black text-xs shadow-lg flex-shrink-0">
+                    <div className="flex items-center gap-3 p-2 rounded-[1.5rem] bg-white border border-slate-100 shadow-sm">
+                        <div className="h-10 w-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-black text-xs shadow-lg shadow-emerald-500/20 flex-shrink-0">
                             {initials}
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-sm font-black text-white truncate">{user?.name || 'Non connecté'}</p>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-accent/60">
-                                {user?.role === 'OWNER' ? 'Administrateur Elite' :
+                            <p className="text-xs font-black text-slate-900 truncate tracking-tight">{user?.name || 'Dr. Aere Lao'}</p>
+                            <p className="text-[9px] font-bold uppercase tracking-widest text-emerald-600/80">
+                                {user?.role === 'OWNER' ? 'Admin Elite' :
                                     user?.role === 'DENTIST' ? 'Praticien Elite' :
-                                        user?.role === 'ASSISTANT' ? 'Assistant(e) Elite' :
+                                        user?.role === 'ASSISTANT' ? 'Assistant Elite' :
                                             user?.role === 'SECRETARY' ? 'Secrétaire Elite' :
                                                 user?.role === 'ACCOUNTANT' ? 'Comptable Elite' :
-                                                    user?.role === 'CLIENT' ? 'Patient VIP Elite' :
-                                                        'Non connecté'}
+                                                    user?.role === 'CLIENT' ? 'Patient VIP' :
+                                                        'Invité Elite'}
                             </p>
                         </div>
                         <button
                             onClick={() => signOut({ callbackUrl: '/login' })}
-                            className="h-8 w-8 rounded-xl bg-white/5 hover:bg-red-500/20 flex items-center justify-center text-slate-500 hover:text-red-400 transition-all"
+                            className="h-8 w-8 rounded-lg hover:bg-red-50 flex items-center justify-center text-slate-400 hover:text-red-500 transition-all"
                             title="Se déconnecter"
                         >
-                            <LogOut className="h-3.5 w-3.5" />
+                            <LogOut className="h-4 w-4" />
                         </button>
                     </div>
                 )}

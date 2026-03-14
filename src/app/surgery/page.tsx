@@ -56,26 +56,26 @@ export default function SurgeryPage() {
             <div className="flex items-center justify-between">
                 <div>
                     <div className="flex items-center gap-2 mb-1">
-                        <div className="h-1 w-8 bg-red-500 rounded-full"></div>
-                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-red-500">Bloc Opératoire & Chirurgie de Pointe</span>
+                        <div className="h-1 w-8 bg-emerald-600 rounded-full"></div>
+                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600">Bloc Opératoire & Chirurgie de Pointe</span>
                     </div>
-                    <h1 className="text-4xl font-black text-slate-900 tracking-tighter">Surgery <span className="text-gold">Command Center</span></h1>
-                    <p className="text-slate-500 font-medium">Gestion du bloc, traçabilité des implants et monitoring environnemental.</p>
+                    <h1 className="text-4xl font-black text-slate-900 tracking-tighter">Surgery <span className="text-emerald-gradient">Command Center</span></h1>
+                    <p className="text-slate-500 font-medium tracking-tight">Gestion du bloc, traçabilité des implants et monitoring environnemental.</p>
                 </div>
                 <div className="flex gap-4">
                     {blocks.map(b => (
-                        <Card key={b.id} className="bg-white border-slate-100 p-4 rounded-2xl flex items-center gap-4 shadow-sm">
-                            <div className={cn("h-2 w-2 rounded-full", b.status === 'OCCUPIED' ? 'bg-red-500 animate-pulse' : 'bg-teal-500')} />
+                        <Card key={b.id} className="bg-white border-slate-100 p-4 rounded-2xl flex items-center gap-4 shadow-luxury">
+                            <div className={cn("h-2 w-2 rounded-full", b.status === 'OCCUPIED' ? 'bg-red-500' : 'bg-emerald-500')} />
                             <div className="flex flex-col">
                                 <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{b.name}</span>
                                 <div className="flex items-center gap-2 text-[10px] font-bold text-slate-900">
                                     <Thermometer className="h-3 w-3 text-red-400" /> {b.temp}
-                                    <Wind className="h-3 w-3 text-blue-400" /> {b.humidity}
+                                    <Wind className="h-3 w-3 text-emerald-400" /> {b.humidity}
                                 </div>
                             </div>
                         </Card>
                     ))}
-                    <Button className="bg-slate-900 text-white font-black uppercase tracking-widest text-[10px] h-14 rounded-2xl px-8 shadow-xl">
+                    <Button className="bg-emerald-600 text-white font-black uppercase tracking-widest text-[10px] h-14 rounded-2xl px-8 shadow-xl hover:bg-emerald-500 transition-all">
                         <Plus className="h-4 w-4 mr-2" /> Réserver Bloc
                     </Button>
                 </div>
@@ -123,22 +123,22 @@ export default function SurgeryPage() {
                                                 <div className="flex justify-between items-start">
                                                     <div className={cn(
                                                         "h-12 w-12 rounded-2xl flex items-center justify-center",
-                                                        activeSurgery === s.id ? "bg-white/10 text-accent" : "bg-slate-100 text-slate-400"
+                                                        activeSurgery === s.id ? "bg-white/10 text-emerald-400" : "bg-slate-100 text-slate-400"
                                                     )}>
                                                         <Activity className="h-6 w-6" />
                                                     </div>
                                                     <span className={cn(
                                                         "text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full border",
-                                                        s.status === 'IN_PROGRESS' ? "bg-red-500/10 text-red-500 border-red-500/20" : "bg-green-500/10 text-green-500 border-green-500/20"
+                                                        s.status === 'IN_PROGRESS' ? "bg-red-500/10 text-red-500 border-red-500/20" : "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
                                                     )}>
                                                         {s.status === 'IN_PROGRESS' ? 'En Cours' : 'Prêt'}
                                                     </span>
                                                 </div>
                                                 <div>
-                                                    <h3 className="text-xl font-black tracking-tight mb-1">{s.procedure}</h3>
+                                                    <h3 className="text-xl font-black tracking-tight mb-1 uppercase italic tracking-tighter">{s.procedure}</h3>
                                                     <div className="flex items-center gap-2">
                                                         <User className="h-3 w-3 text-slate-500" />
-                                                        <p className={cn("text-xs font-bold", activeSurgery === s.id ? "text-slate-400" : "text-slate-500")}>{s.patient} • {s.room}</p>
+                                                        <p className={cn("text-xs font-bold uppercase tracking-tight", activeSurgery === s.id ? "text-slate-400" : "text-slate-500")}>{s.patient} • {s.room}</p>
                                                     </div>
                                                 </div>
                                                 <div className="flex justify-between items-end border-t border-white/5 pt-6 mt-6">
@@ -151,7 +151,7 @@ export default function SurgeryPage() {
                                                     </div>
                                                     <div className="text-right">
                                                         <p className="text-[9px] font-black uppercase tracking-widest text-slate-500 mb-1">Temps Restant (Est.)</p>
-                                                        <p className="text-xl font-black text-accent">{s.time.split(' / ')[1]}</p>
+                                                        <p className="text-xl font-black text-emerald-500">{s.time.split(' / ')[1]}</p>
                                                     </div>
                                                 </div>
                                             </CardContent>
@@ -162,12 +162,12 @@ export default function SurgeryPage() {
                                 {/* Active Step Timeline */}
                                 <Card className="rounded-[3rem] border-none shadow-luxury bg-white p-10">
                                     <div className="flex justify-between items-center mb-10">
-                                        <h3 className="text-base font-black tracking-tighter flex items-center gap-2">
-                                            <Timer className="h-5 w-5 text-accent" /> Timeline Clinique en Temps Réel
+                                        <h3 className="text-base font-black tracking-tighter flex items-center gap-2 uppercase">
+                                            <Timer className="h-5 w-5 text-emerald-500" /> Timeline Clinique en Temps Réel
                                         </h3>
                                         <div className="flex items-center gap-2">
-                                            <div className="h-2 w-2 rounded-full bg-teal-500 animate-pulse" />
-                                            <span className="text-[10px] font-black uppercase tracking-widest text-teal-600">Sync IA Active</span>
+                                            <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                                            <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600">Sync IA Active</span>
                                         </div>
                                     </div>
                                     <div className="flex gap-4">
@@ -175,8 +175,8 @@ export default function SurgeryPage() {
                                             <div key={i} className="flex-1 space-y-4">
                                                 <div className={cn(
                                                     "h-2 rounded-full transition-all duration-500",
-                                                    i < surgeries[activeSurgery === 1 ? 0 : 1].currentStep ? "bg-teal-500" :
-                                                        i === surgeries[activeSurgery === 1 ? 0 : 1].currentStep ? "bg-accent animate-pulse" : "bg-slate-100"
+                                                    i < surgeries[activeSurgery === 1 ? 0 : 1].currentStep ? "bg-emerald-500" :
+                                                        i === surgeries[activeSurgery === 1 ? 0 : 1].currentStep ? "bg-emerald-400 animate-pulse" : "bg-slate-100"
                                                 )} />
                                                 <div className="text-center">
                                                     <p className={cn(
@@ -184,7 +184,7 @@ export default function SurgeryPage() {
                                                         i === surgeries[activeSurgery === 1 ? 0 : 1].currentStep ? "text-slate-900" : "text-slate-400"
                                                     )}>{step}</p>
                                                     {i === surgeries[activeSurgery === 1 ? 0 : 1].currentStep && (
-                                                        <span className="text-[8px] font-bold text-accent uppercase">Actif</span>
+                                                        <span className="text-[8px] font-bold text-emerald-600 uppercase">Actif</span>
                                                     )}
                                                 </div>
                                             </div>
@@ -203,7 +203,7 @@ export default function SurgeryPage() {
                             >
                                 <Card className="rounded-[2.5rem] border-none shadow-luxury bg-white p-8">
                                     <h4 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-8 flex items-center gap-2">
-                                        <ClipboardCheck className="h-5 w-5 text-accent" /> Check-list Pré-Opératoire Elite
+                                        <ClipboardCheck className="h-5 w-5 text-emerald-500" /> Check-list Pré-Opératoire Elite
                                     </h4>
                                     <div className="space-y-4">
                                         {[
@@ -216,15 +216,15 @@ export default function SurgeryPage() {
                                         ].map((item, i) => (
                                             <div key={i} className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 hover:bg-white border hover:border-slate-100 transition-all cursor-pointer">
                                                 <span className="text-xs font-bold text-slate-700">{item.label}</span>
-                                                {item.status === 'OK' ? <CheckCircle2 className="h-5 w-5 text-teal-500" /> : <div className="h-5 w-5 rounded-full border-2 border-slate-200" />}
+                                                {item.status === 'OK' ? <CheckCircle2 className="h-5 w-5 text-emerald-500" /> : <div className="h-5 w-5 rounded-full border-2 border-slate-200" />}
                                             </div>
                                         ))}
                                     </div>
                                 </Card>
 
                                 <Card className="rounded-[2.5rem] border-none shadow-luxury bg-slate-950 text-white p-8">
-                                    <h4 className="text-xs font-black uppercase tracking-widest text-accent mb-8 flex items-center gap-2">
-                                        <ScanLine className="h-5 w-5 text-accent" /> Scan Consommables & Implants
+                                    <h4 className="text-xs font-black uppercase tracking-widest text-emerald-500 mb-8 flex items-center gap-2">
+                                        <ScanLine className="h-5 w-5 text-emerald-500" /> Scan Consommables & Implants
                                     </h4>
                                     <div className="space-y-6">
                                         {consumables.map((c, i) => (
@@ -236,13 +236,13 @@ export default function SurgeryPage() {
                                                 </div>
                                                 <div className={cn(
                                                     "h-10 w-10 rounded-xl flex items-center justify-center",
-                                                    c.status === 'SCANNED' ? "bg-teal-500/10 text-teal-400" : "bg-white/5 text-slate-600"
+                                                    c.status === 'SCANNED' ? "bg-emerald-500/10 text-emerald-400" : "bg-white/5 text-slate-600"
                                                 )}>
                                                     {c.status === 'SCANNED' ? <CheckCircle2 className="h-5 w-5" /> : <ScanLine className="h-5 w-5" />}
                                                 </div>
                                             </div>
                                         ))}
-                                        <Button className="w-full bg-accent text-white font-black uppercase text-[10px] tracking-widest h-14 rounded-xl shadow-xl shadow-accent/20">Scanner Nouveau Code</Button>
+                                        <Button className="w-full bg-emerald-600 text-white font-black uppercase text-[10px] tracking-widest h-14 rounded-xl shadow-xl hover:bg-emerald-500 transition-all">Scanner Nouveau Code</Button>
                                     </div>
                                 </Card>
                             </motion.div>
@@ -317,11 +317,11 @@ export default function SurgeryPage() {
                                 <div className="p-5 rounded-2xl bg-slate-50 flex justify-between items-center group cursor-pointer hover:bg-slate-100 transition-all">
                                     <div className="flex items-center gap-4">
                                         <div className="h-10 w-10 rounded-xl bg-white shadow-sm flex items-center justify-center">
-                                            <DoorOpen className="h-5 w-5 text-teal-500" />
+                                            <DoorOpen className="h-5 w-5 text-emerald-500" />
                                         </div>
                                         <div>
                                             <p className="text-xs font-black text-slate-900 uppercase">Bloc Quartz</p>
-                                            <p className="text-[9px] font-bold text-teal-500">DISPONIBLE</p>
+                                            <p className="text-[9px] font-bold text-emerald-500">DISPONIBLE</p>
                                         </div>
                                     </div>
                                     <ChevronRight className="h-4 w-4 text-slate-300" />
@@ -336,9 +336,9 @@ export default function SurgeryPage() {
                                     <ShieldCheck className="h-20 w-20" />
                                 </div>
                                 <div className="relative z-10">
-                                    <p className="text-2xl font-black tracking-tighter text-gold">100%</p>
+                                    <p className="text-2xl font-black tracking-tighter text-emerald-500">100%</p>
                                     <p className="text-[9px] font-black uppercase tracking-widest text-slate-500">Conformité Stérilisation J-0</p>
-                                    <Button variant="link" className="p-0 h-auto text-[9px] font-black uppercase text-accent mt-4">Voir logs autoclaves →</Button>
+                                    <Button variant="link" className="p-0 h-auto text-[9px] font-black uppercase text-emerald-600 mt-4">Voir logs autoclaves →</Button>
                                 </div>
                             </div>
                         </div>

@@ -199,10 +199,10 @@ export default function AgendaPage() {
             <div className="flex items-center justify-between shrink-0">
                 <div>
                     <div className="flex items-center gap-2 mb-1">
-                        <div className="h-1 w-8 bg-gold rounded-full"></div>
-                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gold">Synchronisation Multi-Sites</span>
+                        <div className="h-1 w-8 bg-emerald-600 rounded-full"></div>
+                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600">Synchronisation Multi-Sites</span>
                     </div>
-                    <h1 className="text-4xl font-black text-slate-900 tracking-tighter">Elite <span className="text-gold">Planner Pro</span></h1>
+                    <h1 className="text-4xl font-black text-slate-900 tracking-tighter">Elite <span className="text-emerald-gradient">Planner Pro</span></h1>
                     <p className="text-slate-500 font-medium tracking-tight">Gestion intelligente des ressources et rappels multi-canaux.</p>
                 </div>
 
@@ -254,7 +254,7 @@ export default function AgendaPage() {
                             id="btn-waiting-list"
                             className={cn(
                                 "rounded-xl px-3 text-[9px] font-black uppercase tracking-widest h-8",
-                                view === 'WAITING_LIST' ? "bg-gold text-white" : "text-slate-400 hover:text-gold"
+                                view === 'WAITING_LIST' ? "bg-emerald-600 text-white" : "text-slate-400 hover:text-emerald-600"
                             )}
                             onClick={() => setView('WAITING_LIST')}
                         >
@@ -365,7 +365,7 @@ export default function AgendaPage() {
                         <Button
                             type="submit"
                             disabled={isSaving}
-                            className="w-full bg-slate-900 text-gold font-black uppercase tracking-widest h-14 rounded-2xl shadow-xl mt-4"
+                            className="w-full bg-slate-900 text-emerald-500 font-black uppercase tracking-widest h-14 rounded-2xl shadow-xl mt-4"
                         >
                             {isSaving ? "Enregistrement..." : "Confirmer la Réservation"}
                         </Button>
@@ -379,7 +379,7 @@ export default function AgendaPage() {
                     <div className="w-80 flex flex-col gap-6 shrink-0 animate-in slide-in-from-left duration-500">
                         <div className="bg-white p-6 rounded-[2.5rem] shadow-luxury border border-slate-100 flex-1 flex flex-col overflow-hidden">
                             <div className="flex items-center gap-2 mb-6 shrink-0">
-                                <Zap className="h-4 w-4 text-gold animate-pulse" />
+                                <Zap className="h-4 w-4 text-emerald-600 animate-pulse" />
                                 <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Accès Rapide</h3>
                             </div>
 
@@ -401,13 +401,13 @@ export default function AgendaPage() {
                                     >
                                         <div className="flex justify-between items-start">
                                             <p className="text-xs font-black text-slate-800">{p.firstName} {p.lastName}</p>
-                                            <div className="h-5 w-5 rounded-full bg-gold/10 flex items-center justify-center text-[10px] text-gold">+</div>
+                                            <div className="h-5 w-5 rounded-full bg-emerald-600/10 flex items-center justify-center text-[10px] text-emerald-600 font-black">+</div>
                                         </div>
                                     </button>
                                 ))}
                                 <Button
                                     variant="ghost"
-                                    className="w-full text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-gold"
+                                    className="w-full text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-emerald-600"
                                     onClick={() => setView('WAITING_LIST')}
                                 >
                                     Voir toute la liste
@@ -427,7 +427,7 @@ export default function AgendaPage() {
                                 <Button
                                     variant="ghost"
                                     size="icon"
-                                    className="h-10 w-10 text-white/20 hover:text-gold hover:bg-white/5 rounded-xl transition-all"
+                                    className="h-10 w-10 text-white/20 hover:text-emerald-500 hover:bg-white/5 rounded-xl transition-all"
                                     onClick={() => { fetchAppointments(); fetchPatients(); }}
                                 >
                                     <RefreshCw className={cn("h-4 w-4", isLoading && "animate-spin")} />
@@ -457,7 +457,7 @@ export default function AgendaPage() {
                                     const isToday = format(day, 'ddMMyyyy') === format(new Date(), 'ddMMyyyy')
                                     return (
                                         <div key={day.toISOString()} className={cn("flex-1 p-6 text-center border-r border-slate-200 last:border-0", isToday ? "bg-gold/5" : "hover:bg-slate-50/30 transition-colors")}>
-                                            <div className={cn("text-[10px] font-black uppercase tracking-[0.3em] mb-1.5", isToday ? "text-gold" : "text-slate-400")}>
+                                            <div className={cn("text-[10px] font-black uppercase tracking-[0.3em] mb-1.5", isToday ? "text-emerald-600" : "text-slate-400")}>
                                                 {format(day, 'EEE', { locale: fr }).replace('.', '')}
                                             </div>
                                             <div className={cn("text-3xl font-black tracking-tighter", isToday ? "text-slate-900" : "text-slate-700")}>
@@ -505,7 +505,7 @@ export default function AgendaPage() {
                                                 animate={{ opacity: 1, scale: 1 }}
                                                 className={cn(
                                                     "absolute rounded-[2.5rem] p-6 z-20 cursor-pointer shadow-xl border-2 overflow-hidden group transition-all hover:scale-[1.02] hover:shadow-2xl hover:z-30",
-                                                    isSurgery ? "bg-slate-950 text-white border-gold/50" : "bg-white text-slate-900 border-slate-100"
+                                                    isSurgery ? "bg-slate-950 text-white border-emerald-500/50" : "bg-white text-slate-900 border-slate-100"
                                                 )}
                                                 style={{
                                                     left: `calc(${pos.left} + 12px)`,
@@ -543,11 +543,11 @@ export default function AgendaPage() {
                             <div className="p-12 space-y-8">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <h2 className="text-4xl font-black text-slate-900 tracking-tighter">Liste d'Attente <span className="text-gold">Prioritaire</span></h2>
+                                        <h2 className="text-4xl font-black text-slate-900 tracking-tighter">Liste d'Attente <span className="text-emerald-gradient">Prioritaire</span></h2>
                                         <p className="text-slate-500 font-medium">Patients en attente de planification de soins.</p>
                                     </div>
-                                    <div className="h-20 w-20 rounded-[2.5rem] bg-gold/10 flex items-center justify-center">
-                                        <Zap className="h-10 w-10 text-gold" />
+                                    <div className="h-20 w-20 rounded-[2.5rem] bg-emerald-600/10 flex items-center justify-center">
+                                        <Zap className="h-10 w-10 text-emerald-600" />
                                     </div>
                                 </div>
 
@@ -563,14 +563,14 @@ export default function AgendaPage() {
                                             setIsBookingOpen(true)
                                         }}>
                                             <div className="flex justify-between items-start mb-6">
-                                                <div className="h-12 w-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-gold group-hover:text-white transition-colors">
+                                                <div className="h-12 w-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
                                                     <Stethoscope className="h-6 w-6" />
                                                 </div>
                                                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-300">#EA-{p.id.slice(0, 4)}</span>
                                             </div>
                                             <h3 className="text-xl font-black text-slate-900 tracking-tight">{p.firstName} {p.lastName}</h3>
                                             <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mt-2 mb-6">{p.phone || 'Pas de numéro'}</p>
-                                            <Button className="w-full bg-slate-900 text-gold font-black uppercase tracking-widest text-[10px] h-12 rounded-2xl">
+                                            <Button className="w-full bg-slate-900 text-emerald-500 font-black uppercase tracking-widest text-[10px] h-12 rounded-2xl">
                                                 Planifier ce patient
                                             </Button>
                                         </Card>

@@ -122,7 +122,7 @@ export default function CommunicationPage() {
         return (
             <div className="h-screen flex items-center justify-center bg-slate-50">
                 <div className="flex flex-col items-center gap-4">
-                    <Loader2 className="h-12 w-12 animate-spin text-teal-500" />
+                    <Loader2 className="h-12 w-12 animate-spin text-emerald-600" />
                     <p className="font-black text-[10px] uppercase tracking-[0.5em] text-slate-400">Chargement Communication Hub...</p>
                 </div>
             </div>
@@ -135,11 +135,11 @@ export default function CommunicationPage() {
             <div className="flex items-center justify-between">
                 <div>
                     <div className="flex items-center gap-2 mb-1">
-                        <div className="h-1 w-8 bg-teal-500 rounded-full"></div>
-                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-teal-500">Communication Multicanal</span>
+                        <div className="h-1 w-8 bg-emerald-600 rounded-full"></div>
+                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 italic">Communication Multicanal</span>
                     </div>
-                    <h1 className="text-4xl font-black text-slate-900 tracking-tighter">
-                        WhatsApp <span className="text-teal-600">&</span> SMS Hub
+                    <h1 className="text-4xl font-black text-slate-900 tracking-tighter uppercase italic">
+                        WhatsApp <span className="text-emerald-gradient">&</span> SMS Hub
                     </h1>
                     <p className="text-slate-500 font-medium mt-1">Gestion automatisée des rendez-vous, rappels et documents patients</p>
                 </div>
@@ -147,7 +147,7 @@ export default function CommunicationPage() {
                     <Button variant="outline" className="rounded-xl border-slate-200 font-bold">
                         <Settings className="mr-2 h-4 w-4" /> Paramètres
                     </Button>
-                    <Button className="bg-teal-600 hover:bg-teal-700 text-white font-black px-6 rounded-xl uppercase tracking-widest text-xs h-11">
+                    <Button className="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-6 rounded-xl uppercase tracking-widest text-xs h-11 shadow-lg shadow-emerald-500/20">
                         <Plus className="mr-2 h-4 w-4" /> Nouvelle Campagne
                     </Button>
                 </div>
@@ -156,7 +156,7 @@ export default function CommunicationPage() {
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 {[
-                    { label: 'Messages Envoyés (30j)', value: data?.stats?.totalSent || '1,247', icon: Send, color: 'text-teal-600', bg: 'bg-teal-50' },
+                    { label: 'Messages Envoyés (30j)', value: data?.stats?.totalSent || '1,247', icon: Send, color: 'text-emerald-600', bg: 'bg-emerald-50' },
                     { label: 'Taux de Délivrabilité', value: data?.stats?.deliveryRate || '98.5%', icon: CheckCircle, color: 'text-green-600', bg: 'bg-green-50' },
                     { label: 'Confirmations RDV', value: '94%', icon: Calendar, color: 'text-blue-600', bg: 'bg-blue-50' },
                     { label: 'Coût Moyen/Message', value: '25 FCFA', icon: TrendingUp, color: 'text-purple-600', bg: 'bg-purple-50' },
@@ -244,7 +244,7 @@ export default function CommunicationPage() {
                                                 variant="ghost"
                                                 size="sm"
                                                 onClick={() => setShowTemplates(!showTemplates)}
-                                                className="text-[10px] font-black uppercase text-teal-600"
+                                                className="text-[10px] font-black uppercase text-emerald-600"
                                             >
                                                 <FileText className="mr-2 h-3 w-3" /> Modèles
                                             </Button>
@@ -259,7 +259,7 @@ export default function CommunicationPage() {
                                                             <button
                                                                 key={i}
                                                                 onClick={() => useTemplate(template.content)}
-                                                                className="w-full text-left p-3 bg-white rounded-xl hover:bg-teal-50 transition-colors mb-2 border border-slate-100"
+                                                                className="w-full text-left p-3 bg-white rounded-xl hover:bg-emerald-50 transition-colors mb-2 border border-slate-100"
                                                             >
                                                                 <p className="text-xs font-bold text-slate-900">{template.title}</p>
                                                                 <p className="text-[10px] text-slate-500 line-clamp-1 mt-1">{template.content}</p>
@@ -309,7 +309,7 @@ export default function CommunicationPage() {
                                     <Button
                                         onClick={handleSendMessage}
                                         disabled={!messageContent || selectedPatients.length === 0 || isSending}
-                                        className="w-full bg-teal-600 hover:bg-teal-700 text-white font-black uppercase tracking-widest text-xs h-14 rounded-2xl shadow-xl"
+                                        className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black uppercase tracking-widest text-xs h-14 rounded-2xl shadow-xl shadow-emerald-500/20"
                                     >
                                         {isSending ? (
                                             <>
@@ -327,7 +327,7 @@ export default function CommunicationPage() {
 
                         {/* Quick Actions */}
                         <div className="col-span-12 lg:col-span-4 space-y-6">
-                            <Card className="rounded-[2.5rem] border-none shadow-luxury bg-gradient-to-br from-teal-600 to-teal-700 text-white p-8">
+                            <Card className="rounded-[2.5rem] border-none shadow-luxury bg-gradient-to-br from-emerald-600 to-emerald-700 text-white p-8">
                                 <div className="space-y-6">
                                     <div className="flex items-center gap-2">
                                         <Zap className="h-5 w-5 text-yellow-300" />
@@ -412,7 +412,7 @@ export default function CommunicationPage() {
                                                 <div className={cn(
                                                     "px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest",
                                                     log.status === 'DELIVERED' ? "bg-green-100 text-green-700" :
-                                                        log.status === 'OPENED' ? "bg-teal-100 text-teal-700" :
+                                                        log.status === 'OPENED' ? "bg-emerald-100 text-emerald-700" :
                                                             log.status === 'SENT' ? "bg-blue-100 text-blue-700" : "bg-red-100 text-red-700"
                                                 )}>
                                                     {log.status}
@@ -443,7 +443,7 @@ export default function CommunicationPage() {
                                 active: true,
                                 stats: "142 envois ce mois",
                                 icon: Calendar,
-                                color: "teal"
+                                color: "emerald"
                             },
                             {
                                 title: "Instructions Post-Opératoires",
@@ -480,7 +480,7 @@ export default function CommunicationPage() {
                                     </div>
                                     <div className={cn(
                                         "h-6 w-12 rounded-full transition-all cursor-pointer",
-                                        automation.active ? "bg-teal-500" : "bg-slate-200"
+                                        automation.active ? "bg-emerald-500" : "bg-slate-200"
                                     )}>
                                         <div className={cn(
                                             "h-6 w-6 rounded-full bg-white shadow-sm transition-all",
@@ -492,7 +492,7 @@ export default function CommunicationPage() {
                                 <p className="text-sm text-slate-600 font-medium mb-4">{automation.description}</p>
                                 <div className="flex items-center justify-between pt-4 border-t border-slate-100">
                                     <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">{automation.stats}</p>
-                                    <Button variant="ghost" size="sm" className="text-[10px] font-black uppercase text-teal-600">
+                                    <Button variant="ghost" size="sm" className="text-[10px] font-black uppercase text-emerald-600">
                                         Configurer
                                     </Button>
                                 </div>
@@ -518,7 +518,7 @@ export default function CommunicationPage() {
                                     <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">{metric.label}</p>
                                     <div className="flex items-end justify-between">
                                         <p className={cn("text-3xl font-black tracking-tight", metric.color)}>{metric.value}</p>
-                                        <p className="text-xs font-bold text-teal-600">{metric.trend}</p>
+                                        <p className="text-xs font-bold text-emerald-600">{metric.trend}</p>
                                     </div>
                                 </Card>
                             ))}

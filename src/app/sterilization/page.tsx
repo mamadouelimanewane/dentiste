@@ -77,15 +77,15 @@ export default function IoTSterilizationHub() {
             {/* Header IoT Style */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div className="flex items-center gap-4 md:gap-6">
-                    <div className="h-12 w-12 md:h-16 md:w-16 bg-slate-900 rounded-[2rem] flex items-center justify-center text-white shadow-xl shadow-slate-200 shrink-0">
-                        <ShieldCheck className="h-6 w-6 md:h-8 md:w-8 text-teal-400" />
+                    <div className="h-12 w-12 md:h-16 md:w-16 bg-slate-900 rounded-[2rem] flex items-center justify-center text-white shadow-xl shadow-emerald-500/10 shrink-0">
+                        <ShieldCheck className="h-6 w-6 md:h-8 md:w-8 text-emerald-400" />
                     </div>
                     <div>
                         <div className="flex items-center gap-2 mb-1">
-                            <div className="h-1 w-4 md:h-1 md:w-8 bg-teal-500 rounded-full"></div>
-                            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.3em] text-teal-500 italic">IoT Shield Active</span>
+                            <div className="h-1 w-4 md:h-1 md:w-8 bg-emerald-500 rounded-full"></div>
+                            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500 italic">IoT Shield Active</span>
                         </div>
-                        <h1 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter uppercase italic">Traçabilité <span className="text-teal-600">Hub Bunker</span></h1>
+                        <h1 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter uppercase italic">Traçabilité <span className="text-emerald-gradient">Hub Bunker</span></h1>
                         <p className="text-xs md:text-sm text-slate-500 font-medium tracking-tight">Monitoring IoT et audit de stérilisation en temps réel.</p>
                     </div>
                 </div>
@@ -109,14 +109,14 @@ export default function IoTSterilizationHub() {
                         <div className="flex justify-between items-start">
                             <div className="space-y-4">
                                 <div className="flex items-center gap-3">
-                                    <div className="h-3 w-3 rounded-full bg-green-500 animate-ping" />
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-teal-400">Autoclave Getinge A-01 : En cours</span>
+                                    <div className="h-3 w-3 rounded-full bg-emerald-500 animate-ping" />
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-emerald-400">Autoclave Getinge A-01 : En cours</span>
                                 </div>
-                                <h2 className="text-5xl font-black tracking-tighter uppercase italic leading-none">PRION CORE 134°C</h2>
+                                <h2 className="text-5xl font-black tracking-tighter uppercase italic leading-none">PRION CORE <span className="text-emerald-gradient">134°C</span></h2>
                                 <p className="text-slate-400 font-medium tracking-tight">Cycle sécurisé chargé avec 8 plateaux chirurgicaux.</p>
                             </div>
                             <div className="text-right">
-                                <p className="text-6xl font-black text-teal-400 tracking-tighter">18:45</p>
+                                <p className="text-6xl font-black text-emerald-400 tracking-tighter">18:45</p>
                                 <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Temps Restant</p>
                             </div>
                         </div>
@@ -126,7 +126,7 @@ export default function IoTSterilizationHub() {
                             {[
                                 { label: 'Température', val: `${temp}°C`, sub: 'Limite 135°', icon: Thermometer, color: 'text-rose-400' },
                                 { label: 'Pression', val: `${pressure} Bar`, sub: 'Limite 2.5', icon: Gauge, color: 'text-indigo-400' },
-                                { label: 'Hygrométrie', val: '0.04%', sub: 'Séchage actif', icon: Wind, color: 'text-teal-400' },
+                                { label: 'Hygrométrie', val: '0.04%', sub: 'Séchage actif', icon: Wind, color: 'text-emerald-400' },
                             ].map((stat, i) => (
                                 <div key={i} className="bg-white/5 border border-white/10 rounded-[2.5rem] p-8 space-y-4 hover:bg-white/10 transition-all">
                                     <div className="flex justify-between items-center">
@@ -146,11 +146,11 @@ export default function IoTSterilizationHub() {
                         <div className="space-y-4 pt-4">
                             <div className="flex justify-between items-end">
                                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Avancement du Cycle</span>
-                                <span className="text-teal-400 font-black text-sm">{progress}%</span>
+                                <span className="text-emerald-400 font-black text-sm">{progress}%</span>
                             </div>
                             <div className="h-4 w-full bg-white/5 rounded-full overflow-hidden p-1 border border-white/10">
                                 <motion.div
-                                    className="h-full bg-gradient-to-r from-teal-600 to-indigo-600 rounded-full"
+                                    className="h-full bg-gradient-to-r from-emerald-600 to-indigo-600 rounded-full"
                                     initial={{ width: 0 }}
                                     animate={{ width: `${progress}%` }}
                                     transition={{ duration: 1.5 }}
@@ -235,7 +235,7 @@ export default function IoTSterilizationHub() {
                     <Card className="rounded-[4rem] border-none shadow-luxury bg-white p-12 overflow-hidden">
                         <div className="flex items-center justify-between mb-12">
                             <div>
-                                <h3 className="text-2xl font-black tracking-tighter uppercase italic">Direct Scan <span className="text-teal-600">& Trace</span></h3>
+                                <h3 className="text-2xl font-black tracking-tighter uppercase italic">Direct Scan <span className="text-emerald-gradient">& Trace</span></h3>
                                 <p className="text-sm font-medium text-slate-400 mt-1">Liez vos plateaux techniques au cycle de stérilisation en cours.</p>
                             </div>
                             <Button
@@ -263,8 +263,8 @@ export default function IoTSterilizationHub() {
                                         ))}
                                     </div>
                                 </div>
-                                <div className="p-6 bg-teal-50/50 border border-teal-100 rounded-[2.5rem] flex items-center gap-6">
-                                    <CheckCircle2 className="h-10 w-10 text-teal-600" />
+                                <div className="p-6 bg-emerald-50/50 border border-emerald-100 rounded-[2.5rem] flex items-center gap-6">
+                                    <CheckCircle2 className="h-10 w-10 text-emerald-600" />
                                     <div>
                                         <p className="text-xs font-black text-slate-900">12 Lots d'instruments validés</p>
                                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Prêts pour le stockage stérile.</p>
@@ -275,13 +275,13 @@ export default function IoTSterilizationHub() {
                                 <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80" />
                                 <div className="absolute inset-0 flex items-center justify-center">
                                     <div className="w-48 h-48 border-2 border-teal-500/50 rounded-3xl relative">
-                                        <div className="absolute -top-2 -left-2 h-6 w-6 border-t-4 border-l-4 border-teal-500" />
-                                        <div className="absolute -top-2 -right-2 h-6 w-6 border-t-4 border-r-4 border-teal-500" />
-                                        <div className="absolute -bottom-2 -left-2 h-6 w-6 border-b-4 border-l-4 border-teal-500" />
-                                        <div className="absolute -bottom-2 -right-2 h-6 w-6 border-b-4 border-r-4 border-teal-500" />
+                                    <div className="absolute -top-2 -left-2 h-6 w-6 border-t-4 border-l-4 border-emerald-500" />
+                                        <div className="absolute -top-2 -right-2 h-6 w-6 border-t-4 border-r-4 border-emerald-500" />
+                                        <div className="absolute -bottom-2 -left-2 h-6 w-6 border-b-4 border-l-4 border-emerald-500" />
+                                        <div className="absolute -bottom-2 -right-2 h-6 w-6 border-b-4 border-r-4 border-emerald-500" />
                                         {isScanning && (
                                             <motion.div
-                                                className="absolute inset-x-0 h-1 bg-teal-500 shadow-[0_0_15px_rgba(20,184,166,1)]"
+                                                className="absolute inset-x-0 h-1 bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,1)]"
                                                 animate={{ top: ['0%', '100%', '0%'] }}
                                                 transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                                             />
@@ -304,7 +304,7 @@ export default function IoTSterilizationHub() {
                         <div className="p-0">
                             {isLoading ? (
                                 <div className="p-10 text-center">
-                                    <Loader2 className="h-8 w-8 animate-spin text-teal-500 mx-auto mb-2" />
+                                    <Loader2 className="h-8 w-8 animate-spin text-emerald-500 mx-auto mb-2" />
                                     <p className="text-[9px] font-black uppercase text-slate-400">Lecture eeprom...</p>
                                 </div>
                             ) : recentCycles.length === 0 ? (
@@ -316,7 +316,7 @@ export default function IoTSterilizationHub() {
                                     <div className="flex items-center gap-4">
                                         <div className={cn(
                                             "h-10 w-10 rounded-2xl flex items-center justify-center",
-                                            cycle.status === 'SUCCESS' ? "bg-teal-50 text-teal-600" : "bg-rose-50 text-rose-600"
+                                            cycle.status === 'SUCCESS' ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
                                         )}>
                                             <ShieldCheck className="h-5 w-5" />
                                         </div>
@@ -337,14 +337,14 @@ export default function IoTSterilizationHub() {
                     </Card>
 
                     <Card className="rounded-[4rem] border-none shadow-luxury bg-slate-950 p-10 flex flex-col items-center text-center space-y-4">
-                        <div className="h-20 w-20 bg-teal-500 rounded-[2.5rem] flex items-center justify-center shadow-xl shadow-teal-500/20">
+                        <div className="h-20 w-20 bg-emerald-500 rounded-[2.5rem] flex items-center justify-center shadow-xl shadow-emerald-500/20">
                             <ShieldCheck className="h-10 w-10 text-white" />
                         </div>
                         <div className="space-y-2">
                             <h4 className="text-xl font-black text-white tracking-tighter uppercase italic">Norme ISO 17665</h4>
                             <p className="text-xs font-medium text-slate-400 leading-relaxed px-4">Votre cabinet est 100% conforme aux exigences de stérilisation à la vapeur d'eau.</p>
                         </div>
-                        <div className="bg-white/5 border border-white/10 px-6 py-2 rounded-full text-[10px] font-black text-teal-400 uppercase tracking-widest">
+                        <div className="bg-white/5 border border-white/10 px-6 py-2 rounded-full text-[10px] font-black text-emerald-400 uppercase tracking-widest">
                             Certifié Janvier 2026
                         </div>
                     </Card>

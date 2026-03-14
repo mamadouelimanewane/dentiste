@@ -194,7 +194,7 @@ export default function PatientDashboard({ params }: { params: { id: string } })
             {/* Patient Header */}
             <div className="bg-white border-b px-8 py-6 flex justify-between items-start">
                 <div className="flex gap-4">
-                    <div className="h-16 w-16 rounded-full bg-teal-100 flex items-center justify-center text-teal-700 text-2xl font-bold">
+                    <div className="h-16 w-16 rounded-2xl bg-emerald-600 flex items-center justify-center text-white text-2xl font-black shadow-lg shadow-emerald-500/20">
                         JD
                     </div>
                     <div>
@@ -208,14 +208,14 @@ export default function PatientDashboard({ params }: { params: { id: string } })
                 <div className="flex gap-3">
                     <Button
                         variant="outline"
-                        className="border-accent/30 text-accent font-black hover:bg-accent/5 gap-2"
+                        className="border-emerald-500/30 text-emerald-600 font-black hover:bg-emerald-50 gap-2"
                         onClick={generateCaseSummary}
                     >
-                        <Star className="h-4 w-4 fill-accent" /> Résumé Elite IA
+                        <Sparkles className="h-4 w-4 text-emerald-500" /> Résumé Elite IA
                     </Button>
-                    <Button variant="outline" onClick={() => window.location.href = '/communication'}><MessageSquare className="h-4 w-4 mr-2" /> Contacter</Button>
-                    <Button variant="outline">Éditer</Button>
-                    <Button className="bg-slate-900 text-white hover:bg-slate-800 font-black px-6">Nouveau Soin</Button>
+                    <Button variant="outline" className="rounded-xl border-slate-200" onClick={() => window.location.href = '/communication'}><MessageSquare className="h-4 w-4 mr-2" /> Contacter</Button>
+                    <Button variant="outline" className="rounded-xl border-slate-200">Éditer</Button>
+                    <Button className="bg-emerald-600 text-white hover:bg-emerald-500 font-black px-6 rounded-xl shadow-lg shadow-emerald-500/20">Nouveau Soin</Button>
                 </div>
             </div>
 
@@ -225,16 +225,16 @@ export default function PatientDashboard({ params }: { params: { id: string } })
                     <div className="col-span-12 xl:col-span-8 space-y-6">
                         <Card>
                             <CardHeader>
-                                <CardTitle className="flex justify-between items-center text-slate-800 font-black uppercase tracking-tight">
+                                <CardTitle className="flex justify-between items-center text-slate-900 font-black uppercase tracking-tight text-sm">
                                     Odontogramme Interactif
-                                    <Button variant="ghost" size="sm" className="text-teal-600 font-bold">Plein Écran</Button>
+                                    <Button variant="ghost" size="sm" className="text-emerald-600 font-black text-[10px] uppercase tracking-widest">Plein Écran</Button>
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <div className="bg-slate-50 border border-dashed rounded-3xl p-6 flex justify-center overflow-x-auto shadow-inner min-h-[400px] items-center">
                                     {isOdontogramLoading ? (
                                         <div className="flex flex-col items-center gap-2">
-                                            <RefreshCw className="h-8 w-8 animate-spin text-slate-300" />
+                                            <RefreshCw className="h-8 w-8 animate-spin text-emerald-500" />
                                             <p className="text-[10px] font-black uppercase text-slate-400">Chargement Clinique...</p>
                                         </div>
                                     ) : (
@@ -296,10 +296,10 @@ export default function PatientDashboard({ params }: { params: { id: string } })
                             <Card className="rounded-[2rem] border-none shadow-luxury bg-white">
                                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                                     <CardTitle className="flex items-center gap-2 text-slate-800 font-black text-xs uppercase tracking-widest">
-                                        <PenTool className="h-4 w-4 text-accent" />
+                                        <PenTool className="h-4 w-4 text-emerald-600" />
                                         Consentements
                                     </CardTitle>
-                                    <Button size="icon" variant="ghost" className="h-8 w-8 text-accent" onClick={() => setIsSigning(true)}>
+                                    <Button size="icon" variant="ghost" className="h-8 w-8 text-emerald-600" onClick={() => setIsSigning(true)}>
                                         <Plus className="h-4 w-4" />
                                     </Button>
                                 </CardHeader>
@@ -310,7 +310,7 @@ export default function PatientDashboard({ params }: { params: { id: string } })
                                                 <div className="flex items-center justify-between mb-1">
                                                     <span className={cn(
                                                         "text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full",
-                                                        c.status === 'SIGNED' ? "bg-green-100 text-green-700" : "bg-orange-100 text-orange-700"
+                                                        c.status === 'SIGNED' ? "bg-emerald-100 text-emerald-700" : "bg-orange-100 text-orange-700"
                                                     )}>
                                                         {c.status === 'SIGNED' ? 'Signé' : 'À Signer'}
                                                     </span>
@@ -318,7 +318,7 @@ export default function PatientDashboard({ params }: { params: { id: string } })
                                                         {c.signedAt ? format(new Date(c.signedAt), 'dd/MM/yy') : (c.createdAt ? format(new Date(c.createdAt), 'dd/MM/yy') : '---')}
                                                     </span>
                                                 </div>
-                                                <p className="text-xs font-bold text-slate-800 line-clamp-1 group-hover:text-accent transition-colors">{c.title}</p>
+                                                <p className="text-xs font-bold text-slate-800 line-clamp-1 group-hover:text-emerald-600 transition-colors">{c.title}</p>
                                             </div>
                                         ))}
                                     </div>
@@ -340,7 +340,7 @@ export default function PatientDashboard({ params }: { params: { id: string } })
                             <CardContent className="p-6">
                                 <div className="flex items-center justify-between mb-4">
                                     <div className="flex items-center gap-2">
-                                        <div className="h-2 w-2 rounded-full bg-teal-500" />
+                                        <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                                         <span className="text-xs font-bold text-slate-800">Portail Actif</span>
                                     </div>
                                     <span className="text-[10px] text-slate-400 font-bold">Dernier accès : Hier</span>
@@ -496,7 +496,7 @@ export default function PatientDashboard({ params }: { params: { id: string } })
                             <div className="p-8 border-b bg-slate-50/50 flex justify-between items-center">
                                 <div>
                                     <h3 className="text-2xl font-black text-slate-900 tracking-tighter">CONSENTEMENT ÉCLAIRÉ</h3>
-                                    <p className="text-sm font-bold text-teal-600 uppercase tracking-widest">Signature Digitale Juridique</p>
+                                    <p className="text-sm font-bold text-emerald-600 uppercase tracking-widest">Signature Digitale Juridique</p>
                                 </div>
                                 <Button variant="ghost" size="icon" className="rounded-full hover:bg-red-50 hover:text-red-500 transition-colors" onClick={() => setIsSigning(false)}>
                                     <X className="h-6 w-6" />
@@ -543,7 +543,7 @@ export default function PatientDashboard({ params }: { params: { id: string } })
                                     <Sparkles className="h-6 w-6 text-accent animate-pulse" />
                                     <div>
                                         <h3 className="text-xl font-black tracking-tighter uppercase italic">Rapport Elite Pilot AI</h3>
-                                        <p className="text-[10px] font-black text-accent uppercase tracking-[0.3em]">Analyse de Dossier Haute Fidélité</p>
+                                        <p className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.3em]">Analyse de Dossier Haute Fidélité</p>
                                     </div>
                                 </div>
                                 <Button variant="ghost" size="icon" className="rounded-full hover:bg-white/10 text-white/50" onClick={() => setShowSummary(false)}>
@@ -562,7 +562,7 @@ export default function PatientDashboard({ params }: { params: { id: string } })
                                             {caseSummary}
                                         </div>
                                         <div className="flex gap-4">
-                                            <Button className="flex-1 bg-accent text-white font-black uppercase tracking-widest h-12 rounded-xl">Imprimer le rapport</Button>
+                                            <Button className="flex-1 bg-emerald-600 text-white font-black uppercase tracking-widest h-12 rounded-xl shadow-lg shadow-emerald-500/20">Imprimer le rapport</Button>
                                             <Button variant="outline" className="flex-1 border-white/10 text-white font-black uppercase tracking-widest h-12 rounded-xl" onClick={() => setShowSummary(false)}>Fermer</Button>
                                         </div>
                                     </div>

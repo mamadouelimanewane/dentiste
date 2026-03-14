@@ -130,7 +130,7 @@ export default function WaitingRoomPage() {
                         <div className="h-1 w-8 bg-slate-900 rounded-full" />
                         <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Gestion Flux Patient</span>
                     </div>
-                    <h1 className="text-4xl font-black text-slate-900 tracking-tighter">Salle d'Attente <span className="text-teal-600">Digitale</span></h1>
+                    <h1 className="text-4xl font-black text-slate-900 tracking-tighter">Salle d'Attente <span className="text-emerald-gradient">Digitale</span></h1>
                 </div>
                 <div className="flex items-center gap-4">
                     <button onClick={() => setShowQR(!showQR)}
@@ -139,8 +139,8 @@ export default function WaitingRoomPage() {
                     </button>
                     <button onClick={callNext} disabled={isUpdating}
                         className={cn(
-                            "flex items-center gap-2 px-6 py-3 text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-all",
-                            isUpdating ? "bg-teal-400 cursor-not-allowed" : "bg-teal-600 hover:bg-teal-700"
+                            "flex items-center gap-2 px-6 py-3 text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-lg shadow-emerald-500/20",
+                            isUpdating ? "bg-emerald-400 cursor-not-allowed" : "bg-emerald-600 hover:bg-emerald-500"
                         )}>
                         {isUpdating ? <Activity className="h-4 w-4 animate-spin" /> : <Bell className="h-4 w-4" />}
                         Appeler Suivant
@@ -152,7 +152,7 @@ export default function WaitingRoomPage() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="md:col-span-1 bg-slate-950 rounded-[2rem] p-6 text-white flex flex-col items-center justify-center">
                     <div className="flex items-center gap-2 mb-1">
-                        <Wifi className="h-3 w-3 text-teal-400 animate-pulse" />
+                        <Wifi className="h-3 w-3 text-emerald-400 animate-pulse" />
                         <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">Heure en direct</span>
                     </div>
                     <p className="text-4xl font-black tracking-tighter text-white">
@@ -163,7 +163,7 @@ export default function WaitingRoomPage() {
                     </p>
                 </div>
                 {[
-                    { label: 'En cours de soin', value: activePatients.length, color: 'text-teal-600', bg: 'bg-teal-50', icon: Activity },
+                    { label: 'En cours de soin', value: activePatients.length, color: 'text-emerald-600', bg: 'bg-emerald-50', icon: Activity },
                     { label: 'En attente', value: waitingPatients.length, color: 'text-orange-600', bg: 'bg-orange-50', icon: Clock },
                     { label: 'Arrivés (non appelés)', value: queue.filter(p => p.status === 'arrived').length, color: 'text-blue-600', bg: 'bg-blue-50', icon: Users },
                 ].map(stat => (
@@ -172,7 +172,7 @@ export default function WaitingRoomPage() {
                             <stat.icon className={`h-7 w-7 ${stat.color}`} />
                         </div>
                         <div>
-                            <p className={`text-4xl font-black ${stat.color}`}>{stat.value}</p>
+                             <p className={`text-4xl font-black ${stat.color}`}>{stat.value}</p>
                             <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">{stat.label}</p>
                         </div>
                     </div>
@@ -203,8 +203,8 @@ export default function WaitingRoomPage() {
             )}
 
             {/* Announcement Banner */}
-            <div className="bg-gradient-to-r from-accent/10 to-teal-500/10 border border-accent/20 rounded-2xl p-4 flex items-center gap-3 overflow-hidden">
-                <Bell className="h-4 w-4 text-accent flex-shrink-0" />
+            <div className="bg-gradient-to-r from-emerald-500/10 to-emerald-600/10 border border-emerald-500/20 rounded-2xl p-4 flex items-center gap-3 overflow-hidden">
+                <Bell className="h-4 w-4 text-emerald-600 flex-shrink-0" />
                 <p className="text-sm font-bold text-slate-700 transition-all duration-500">{ANNOUNCEMENTS[announcementIdx]}</p>
             </div>
 
@@ -227,7 +227,7 @@ export default function WaitingRoomPage() {
                             </div>
                             <div className="text-right">
                                 {patient.status === 'in-progress' && (
-                                    <span className="flex items-center gap-1 text-xs font-black text-teal-600 bg-teal-100 px-3 py-1 rounded-full">
+                                    <span className="flex items-center gap-1 text-xs font-black text-emerald-600 bg-emerald-100 px-3 py-1 rounded-full">
                                         <Activity className="h-3 w-3 animate-pulse" /> En soin
                                     </span>
                                 )}

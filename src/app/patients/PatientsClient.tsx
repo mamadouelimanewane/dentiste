@@ -140,15 +140,15 @@ export default function PatientsClient({ initialPatients = [] }: { initialPatien
         <div className="p-4 md:p-8 space-y-6 md:space-y-10 max-w-7xl mx-auto pb-40">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 no-print">
                 <div className="flex items-center gap-4 md:gap-6">
-                    <div className="h-12 w-12 md:h-16 md:w-16 bg-slate-900 rounded-3xl flex items-center justify-center text-white shadow-xl shadow-slate-200 shrink-0">
-                        <Users className="h-6 w-6 md:h-8 md:w-8 text-gold" />
+                    <div className="h-12 w-12 md:h-16 md:w-16 bg-slate-900 rounded-3xl flex items-center justify-center text-white shadow-xl shadow-emerald-500/10 shrink-0">
+                        <Users className="h-6 w-6 md:h-8 md:w-8 text-emerald-500" />
                     </div>
                     <div>
                         <div className="flex items-center gap-2 mb-1">
-                            <div className="h-1 w-4 md:h-1 md:w-8 bg-gold rounded-full"></div>
-                            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.3em] text-gold italic">Clinical Database Live</span>
+                            <div className="h-1 w-4 md:h-1 md:w-8 bg-emerald-600 rounded-full"></div>
+                            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 italic">Clinical Database Live</span>
                         </div>
-                        <h1 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter">Gestion <span className="text-gold">Patients Elite</span></h1>
+                        <h1 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter">Gestion <span className="text-emerald-gradient">Patients Elite</span></h1>
                         <p className="text-xs md:text-slate-500 font-medium tracking-tight">Accès sécurisé aux dossiers médicaux.</p>
                     </div>
                 </div>
@@ -165,7 +165,7 @@ export default function PatientsClient({ initialPatients = [] }: { initialPatien
                         </DialogTrigger>
                         <DialogContent className="sm:max-w-[500px] rounded-[3rem] border-none shadow-2xl p-10 bg-white">
                             <DialogHeader>
-                                <DialogTitle className="text-2xl font-black text-slate-900 tracking-tighter uppercase italic">Nouvelle <span className="text-gold">Inscription Elite</span></DialogTitle>
+                                <DialogTitle className="text-2xl font-black text-slate-900 tracking-tighter uppercase italic">Nouvelle <span className="text-emerald-gradient">Inscription Elite</span></DialogTitle>
                                 <p className="text-slate-400 font-medium text-xs uppercase tracking-widest mt-2">Enregistrement dans la base de données clinique.</p>
                             </DialogHeader>
                             <form onSubmit={handleRegister} className="space-y-6 pt-6">
@@ -174,7 +174,7 @@ export default function PatientsClient({ initialPatients = [] }: { initialPatien
                                         <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Prénom</Label>
                                         <Input
                                             required
-                                            className="h-14 rounded-2xl bg-slate-50 border-none px-6 font-bold focus-visible:ring-gold"
+                                            className="h-14 rounded-2xl bg-slate-50 border-none px-6 font-bold focus-visible:ring-emerald-500"
                                             value={formData.firstName}
                                             onChange={e => setFormData({ ...formData, firstName: e.target.value })}
                                         />
@@ -183,7 +183,7 @@ export default function PatientsClient({ initialPatients = [] }: { initialPatien
                                         <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Nom de Famille</Label>
                                         <Input
                                             required
-                                            className="h-14 rounded-2xl bg-slate-50 border-none px-6 font-bold focus-visible:ring-gold"
+                                            className="h-14 rounded-2xl bg-slate-50 border-none px-6 font-bold focus-visible:ring-emerald-500"
                                             value={formData.lastName}
                                             onChange={e => setFormData({ ...formData, lastName: e.target.value })}
                                         />
@@ -193,7 +193,7 @@ export default function PatientsClient({ initialPatients = [] }: { initialPatien
                                     <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Email (Optionnel)</Label>
                                     <Input
                                         type="email"
-                                        className="h-14 rounded-2xl bg-slate-50 border-none px-6 font-bold focus-visible:ring-gold"
+                                        className="h-14 rounded-2xl bg-slate-50 border-none px-6 font-bold focus-visible:ring-emerald-500"
                                         value={formData.email}
                                         onChange={e => setFormData({ ...formData, email: e.target.value })}
                                     />
@@ -201,7 +201,7 @@ export default function PatientsClient({ initialPatients = [] }: { initialPatien
                                 <div className="space-y-2">
                                     <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Téléphone Mobile</Label>
                                     <Input
-                                        className="h-14 rounded-2xl bg-slate-50 border-none px-6 font-bold focus-visible:ring-gold"
+                                        className="h-14 rounded-2xl bg-slate-50 border-none px-6 font-bold focus-visible:ring-emerald-500"
                                         value={formData.phone}
                                         onChange={e => setFormData({ ...formData, phone: e.target.value })}
                                     />
@@ -237,7 +237,7 @@ export default function PatientsClient({ initialPatients = [] }: { initialPatien
                 </Card>
                 <Card className="rounded-[2.5rem] border-none shadow-luxury bg-white">
                     <CardContent className="p-8 flex items-center gap-6">
-                        <div className="h-14 w-14 rounded-2xl bg-gold/10 flex items-center justify-center text-gold">
+                        <div className="h-14 w-14 rounded-2xl bg-emerald-600/10 flex items-center justify-center text-emerald-600">
                             <Star className="h-7 w-7" />
                         </div>
                         <div>
@@ -248,7 +248,7 @@ export default function PatientsClient({ initialPatients = [] }: { initialPatien
                 </Card>
                 <Card className="rounded-[2.5rem] border-none shadow-luxury bg-slate-950 text-white">
                     <CardContent className="p-8 flex items-center gap-6">
-                        <div className="h-14 w-14 rounded-2xl bg-white/10 flex items-center justify-center text-teal-400 border border-white/5">
+                        <div className="h-14 w-14 rounded-2xl bg-white/10 flex items-center justify-center text-emerald-400 border border-white/5">
                             <Activity className="h-7 w-7" />
                         </div>
                         <div>
@@ -262,10 +262,10 @@ export default function PatientsClient({ initialPatients = [] }: { initialPatien
             {/* Search and Filters */}
             <div className="flex flex-col md:flex-row items-center gap-4 bg-white p-2 md:p-4 rounded-[1.5rem] md:rounded-[2rem] border shadow-sm no-print">
                 <div className="relative flex-1 w-full group">
-                    <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-gold transition-colors" />
+                    <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-emerald-500 transition-colors" />
                     <Input
                         placeholder="Rechercher un patient..."
-                        className="h-12 md:h-14 pl-14 pr-6 rounded-xl md:rounded-2xl bg-slate-50 border-none text-sm font-bold placeholder:text-slate-300 focus-visible:ring-1 focus-visible:ring-gold transition-all w-full"
+                        className="h-12 md:h-14 pl-14 pr-6 rounded-xl md:rounded-2xl bg-slate-50 border-none text-sm font-bold placeholder:text-slate-300 focus-visible:ring-1 focus-visible:ring-emerald-500 transition-all w-full"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -313,7 +313,7 @@ export default function PatientsClient({ initialPatients = [] }: { initialPatien
                                                         {getSafeInitial(patient.firstName)}{getSafeInitial(patient.lastName)}
                                                     </div>
                                                     <div className="min-w-0">
-                                                        <p className="text-sm md:text-base font-black text-slate-900 group-hover:text-gold transition-colors truncate">{patient.firstName} {patient.lastName}</p>
+                                                        <p className="text-sm md:text-base font-black text-slate-900 group-hover:text-emerald-600 transition-colors truncate">{patient.firstName} {patient.lastName}</p>
                                                         <p className="text-[8px] md:text-[10px] font-bold text-slate-300 uppercase tracking-widest truncate">Dossier #{patient.id.slice(0, 8)}</p>
                                                     </div>
                                                 </div>
@@ -339,7 +339,7 @@ export default function PatientsClient({ initialPatients = [] }: { initialPatien
                                             </TableCell>
                                             <TableCell className="text-right pr-6 md:pr-10">
                                                 <Link href={`/patients/${patient.id}`}>
-                                                    <Button size="icon" variant="ghost" className="h-8 w-8 md:h-10 md:w-10 rounded-full text-slate-300 hover:text-gold hover:bg-gold/5 transition-all">
+                                                    <Button size="icon" variant="ghost" className="h-8 w-8 md:h-10 md:w-10 rounded-full text-slate-300 hover:text-emerald-600 hover:bg-emerald-600/5 transition-all">
                                                         <ArrowUpRight className="h-4 w-4 md:h-5 md:w-5" />
                                                     </Button>
                                                 </Link>

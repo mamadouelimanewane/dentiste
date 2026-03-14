@@ -194,7 +194,7 @@ export default function FinancialWarRoom() {
                         <Target className="h-4 w-4 text-emerald-500" />
                         <span className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500 italic">Executive Financial Command</span>
                     </div>
-                    <h1 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter">Financial <span className="text-emerald-600">War Room</span></h1>
+                    <h1 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter">Financial <span className="text-emerald-gradient">War Room</span></h1>
                     <p className="text-sm text-slate-500 font-medium tracking-tight">Pilotage financier temps réel · Wave & Orange Money Sénégal</p>
                 </div>
                 <div className="flex flex-wrap gap-2 md:gap-3">
@@ -206,7 +206,7 @@ export default function FinancialWarRoom() {
                                 onClick={() => setActiveTab(tab)}
                                 className={cn(
                                     "px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
-                                    activeTab === tab ? "bg-slate-900 text-white shadow-sm" : "text-slate-400 hover:text-slate-900"
+                                    activeTab === tab ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/20" : "text-slate-400 hover:text-emerald-600"
                                 )}
                             >
                                 {tab === 'OVERVIEW' ? 'Tableau de Bord' : tab === 'PAIEMENT' ? '💳 Encaisser' : 'Flux Live'}
@@ -257,7 +257,7 @@ export default function FinancialWarRoom() {
                                 <div className="relative z-10 p-10 space-y-8">
                                     <div className="flex justify-between items-center flex-wrap gap-4">
                                         <div>
-                                            <h3 className="text-2xl font-black tracking-tighter uppercase italic">Projection <span className="text-emerald-400">Croissance 2026</span></h3>
+                                            <h3 className="text-2xl font-black tracking-tighter uppercase italic">Projection <span className="text-emerald-gradient">Croissance 2026</span></h3>
                                             <p className="text-slate-400 text-sm font-medium">Analyse prédictive basée sur l'historique Q4 2025.</p>
                                         </div>
                                         <div className="flex gap-2">
@@ -298,7 +298,7 @@ export default function FinancialWarRoom() {
                                         <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                                         <h3 className="text-sm font-black uppercase tracking-widest text-slate-900">Flux de Trésorerie Live</h3>
                                     </div>
-                                    <Button variant="ghost" className="text-[10px] font-black uppercase text-emerald-600" onClick={() => setActiveTab('FLUX')}>Voir tout →</Button>
+                                    <Button variant="ghost" className="text-[10px] font-black uppercase text-emerald-600 hover:text-emerald-500" onClick={() => setActiveTab('FLUX')}>Voir tout →</Button>
                                 </CardHeader>
                                 <div className="divide-y divide-slate-50">
                                     {transactions.slice(0, 4).map((t) => (
@@ -326,13 +326,13 @@ export default function FinancialWarRoom() {
                         </div>
 
                         <div className="col-span-12 lg:col-span-4 space-y-8">
-                            <Card className="rounded-[3rem] border-none shadow-luxury bg-emerald-600 text-white p-10 space-y-8 relative overflow-hidden">
-                                <div className="absolute -right-10 -bottom-10 p-8 opacity-10"><Target className="h-64 w-64" /></div>
+                            <Card className="rounded-[3rem] border-none shadow-luxury bg-emerald-600 text-white p-10 space-y-8 relative overflow-hidden group">
+                                <div className="absolute -right-10 -bottom-10 p-8 opacity-10 group-hover:scale-110 transition-transform duration-700"><Target className="h-64 w-64" /></div>
                                 <div className="relative z-10 space-y-6">
                                     <h3 className="text-lg font-black tracking-tighter uppercase italic opacity-80">Objectif Mensuel</h3>
                                     <p className="text-5xl font-black tracking-tighter">82%</p>
                                     <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">12.4M / 15M FCFA</p>
-                                    <Progress value={82} className="h-3 bg-black/20" />
+                                    <Progress value={82} className="h-3 bg-white/20" />
                                     <p className="text-[11px] font-medium leading-relaxed opacity-80 italic">
                                         "Excellent Docteur. +12% vs Jan 2025. Poursuivez les cas d'implantologie pour maximiser la marge."
                                     </p>
@@ -375,7 +375,7 @@ export default function FinancialWarRoom() {
                                     </div>
                                 </div>
                                 <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Wave & Orange Money</p>
-                                <p className="text-lg font-black text-white tracking-tight group-hover:text-emerald-400 transition-colors">Encaisser un paiement →</p>
+                                <p className="text-lg font-black text-white tracking-tight group-hover:text-emerald-400 transition-colors">Encaisser & Sécuriser →</p>
                             </button>
                         </div>
                     </motion.div>
@@ -464,7 +464,7 @@ export default function FinancialWarRoom() {
                                                         placeholder="Ex: 125000"
                                                         value={paymentAmount}
                                                         onChange={e => setPaymentAmount(e.target.value)}
-                                                        className="h-14 rounded-2xl border-slate-200 text-lg font-black"
+                                                        className="h-14 rounded-2xl border-slate-200 text-lg font-black focus-visible:ring-emerald-500"
                                                         min="100"
                                                     />
                                                     {paymentAmount && (
@@ -480,7 +480,7 @@ export default function FinancialWarRoom() {
                                                         placeholder="Ex: Mamadou Diallo"
                                                         value={patientName}
                                                         onChange={e => setPatientName(e.target.value)}
-                                                        className="h-14 rounded-2xl border-slate-200"
+                                                        className="h-14 rounded-2xl border-slate-200 focus-visible:ring-emerald-500 font-bold"
                                                     />
                                                 </div>
 
@@ -506,14 +506,13 @@ export default function FinancialWarRoom() {
                                                         placeholder="Ex: INV-2026-042"
                                                         value={invoiceRef}
                                                         onChange={e => setInvoiceRef(e.target.value)}
-                                                        className="h-14 rounded-2xl border-slate-200"
+                                                        className="h-14 rounded-2xl border-slate-200 focus-visible:ring-emerald-500"
                                                     />
                                                 </div>
                                             </div>
 
                                             <Button
                                                 onClick={initiatePayment}
-                                                disabled={payStatus === 'LOADING'}
                                                 className={cn(
                                                     "w-full h-16 rounded-[2rem] font-black uppercase text-[12px] tracking-widest shadow-2xl transition-all",
                                                     paymentProvider === 'WAVE' ? "bg-yellow-400 text-slate-900 hover:bg-yellow-300 shadow-yellow-400/30" :
@@ -521,15 +520,10 @@ export default function FinancialWarRoom() {
                                                     "bg-indigo-600 text-white hover:bg-indigo-500 shadow-indigo-600/30"
                                                 )}
                                             >
-                                                {payStatus === 'LOADING' ? (
-                                                    <><RefreshCw className="h-5 w-5 mr-3 animate-spin" /> Connexion à l'opérateur...</>
-                                                ) : (
-                                                    <><Send className="h-5 w-5 mr-3" />
-                                                    {paymentProvider === 'WAVE' ? 'Créer Session Wave' :
-                                                     paymentProvider === 'ORANGE_MONEY' ? 'Initier Paiement Orange Money' :
-                                                     'Générer Lien Carte CB'}
-                                                    </>
-                                                )}
+                                                <Send className="h-5 w-5 mr-3" />
+                                                {paymentProvider === 'WAVE' ? 'Créer Session Wave' :
+                                                 paymentProvider === 'ORANGE_MONEY' ? 'Initier Paiement Orange Money' :
+                                                 'Générer Lien Carte CB'}
                                             </Button>
 
                                             {payStatus === 'ERROR' && (
@@ -636,7 +630,7 @@ export default function FinancialWarRoom() {
 
                                             <p className="text-xs text-white/60 italic">{payResult.message}</p>
 
-                                            <Button onClick={resetPayment} variant="ghost" className="w-full text-white/70 hover:text-white font-black uppercase text-[10px] tracking-widest">
+                                            <Button onClick={resetPayment} variant="ghost" className="w-full text-white/70 hover:text-white font-black uppercase text-[10px] tracking-widest hover:bg-white/10">
                                                 + Nouveau paiement
                                             </Button>
                                         </Card>

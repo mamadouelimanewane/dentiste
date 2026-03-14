@@ -13,19 +13,18 @@ import {
 import { cn } from '@/lib/utils'
 
 const MODULES_GRID = [
-  { name: 'Patients', icon: Users, href: '/patients', desc: 'Gestion base patient', color: 'bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white', roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
-  { name: 'Agenda', icon: Calendar, href: '/agenda', desc: 'Planning & RDV', color: 'bg-teal-50 text-teal-600 group-hover:bg-teal-600 group-hover:text-white', roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
-  { name: 'Soins', icon: Activity, href: '/charting', desc: 'Dossier clinique', color: 'bg-purple-50 text-purple-600 group-hover:bg-purple-600 group-hover:text-white', roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
-  { name: 'Paiement', icon: CreditCard, href: '/payment', desc: 'Wave, Orange Money', color: 'bg-green-50 text-green-600 group-hover:bg-green-600 group-hover:text-white', isNew: true, roles: ['OWNER', 'SECRETARY', 'ACCOUNTANT', 'CLIENT'] },
-  { name: 'Salle Attente', icon: Clock, href: '/waiting-room', desc: 'File d\'attente live', color: 'bg-orange-50 text-orange-600 group-hover:bg-orange-600 group-hover:text-white', isNew: true, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
-  { name: 'Communication', icon: MessageSquare, href: '/communication', desc: 'WhatsApp, SMS', color: 'bg-cyan-50 text-cyan-600 group-hover:bg-cyan-600 group-hover:text-white', roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY', 'CLIENT'] },
-  { name: 'Compta', icon: BarChart3, href: '/accounting', desc: 'OHADA Reporting', color: 'bg-violet-50 text-violet-600 group-hover:bg-violet-600 group-hover:text-white', roles: ['OWNER', 'ACCOUNTANT'] },
-  { name: 'Labo', icon: Activity, href: '/lab', desc: 'Prothèses', color: 'bg-indigo-50 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white', roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
-  { name: 'Tasks', icon: Briefcase, href: '/tasks', desc: 'Opérations', color: 'bg-slate-50 text-slate-600 group-hover:bg-slate-800 group-hover:text-white', roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
-  { name: 'Devis', icon: FileText, href: '/quotes', desc: 'Plans financiers', color: 'bg-amber-100/50 text-amber-700 group-hover:bg-amber-600 group-hover:text-white', roles: ['OWNER', 'SECRETARY'] },
-  { name: 'Stérilisation', icon: ShieldCheck, href: '/sterilization', desc: 'Traçabilité IoT', color: 'bg-rose-50 text-rose-600 group-hover:bg-rose-600 group-hover:text-white', roles: ['OWNER', 'ASSISTANT'] },
-  { name: 'Inventory', icon: Package, href: '/inventory', desc: 'Stock & Ruptures', color: 'bg-orange-50 text-orange-600 group-hover:bg-orange-600 group-hover:text-white', roles: ['OWNER', 'ASSISTANT'] },
-  { name: 'AI Hub', icon: Brain, href: '/ai-hub', desc: 'Neural Command', color: 'bg-indigo-50 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white', isNew: true, roles: ['OWNER', 'DENTIST'] },
+  { name: 'Patients', icon: Users, href: '/patients', desc: 'Gestion base patient', color: 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white', roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
+  { name: 'Agenda', icon: Calendar, href: '/agenda', desc: 'Planning & RDV', color: 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white', roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
+  { name: 'Soins', icon: Activity, href: '/charting', desc: 'Dossier clinique', color: 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white', roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
+  { name: 'Paiement', icon: CreditCard, href: '/payment', desc: 'Wave, Orange Money', color: 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white', isNew: true, roles: ['OWNER', 'SECRETARY', 'ACCOUNTANT', 'CLIENT'] },
+  { name: 'Salle Attente', icon: Clock, href: '/waiting-room', desc: 'File d\'attente live', color: 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white', isNew: true, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
+  { name: 'AI Hub', icon: Brain, href: '/ai-hub', desc: 'Neural Command', color: 'bg-slate-900 text-emerald-400 group-hover:bg-emerald-600 group-hover:text-white', isNew: true, roles: ['OWNER', 'DENTIST'] },
+  { name: 'Compta', icon: BarChart3, href: '/accounting', desc: 'OHADA Reporting', color: 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white', roles: ['OWNER', 'ACCOUNTANT'] },
+  { name: 'Labo', icon: Activity, href: '/lab', desc: 'Prothèses', color: 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white', roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
+  { name: 'Stérilisation', icon: ShieldCheck, href: '/sterilization', desc: 'Traçabilité IoT', color: 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white', roles: ['OWNER', 'ASSISTANT'] },
+  { name: 'Inventory', icon: Package, href: '/inventory', desc: 'Stock & Ruptures', color: 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white', roles: ['OWNER', 'ASSISTANT'] },
+  { name: 'Devis', icon: FileText, href: '/quotes', desc: 'Plans financiers', color: 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white', roles: ['OWNER', 'SECRETARY'] },
+  { name: 'Tasks', icon: Briefcase, href: '/tasks', desc: 'Opérations', color: 'bg-slate-50 text-slate-400 group-hover:bg-slate-900 group-hover:text-white', roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
 ]
 
 export default function DashboardPage() {
@@ -101,8 +100,8 @@ export default function DashboardPage() {
           <div className="relative z-10 flex items-center justify-between">
             <div>
               <p className="text-xs font-black uppercase tracking-[0.3em] text-slate-400 mb-2">{new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</p>
-              <h2 className="text-3xl font-black tracking-tighter">Bonjour, <span className="text-accent">{user?.name || 'Dr. Lao'}</span> 👋</h2>
-              <p className="text-slate-400 mt-1 font-medium italic uppercase text-[10px] tracking-widest">Opérations en temps réel • Dakar Plateau</p>
+              <h2 className="text-3xl font-black tracking-tighter">Bonjour, <span className="text-emerald-gradient">{user?.name || 'Dr. Lao'}</span> 👋</h2>
+              <p className="text-slate-400 mt-1 font-medium italic uppercase text-[10px] tracking-widest">Opérations en temps réel • DentoPrestige <span className="text-emerald-500">Emerald Elite</span></p>
             </div>
             <div className="hidden md:flex gap-3">
               <Link href="/waiting-room"
@@ -110,7 +109,7 @@ export default function DashboardPage() {
                 <Clock className="h-4 w-4" /> Salle d'Attente
               </Link>
               <Link href="/agenda"
-                className="flex items-center gap-2 px-5 py-3 bg-accent hover:bg-accent/90 rounded-2xl font-black text-xs uppercase tracking-widest transition-all">
+                className="flex items-center gap-2 px-5 py-3 bg-emerald-600 hover:bg-emerald-500 shadow-lg shadow-emerald-500/20 rounded-2xl font-black text-xs uppercase tracking-widest transition-all">
                 <Calendar className="h-4 w-4" /> Agenda
               </Link>
             </div>
@@ -119,10 +118,10 @@ export default function DashboardPage() {
 
         {/* Quick Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard label="Trésorerie" value={stats.revenue.toLocaleString()} unit="FCFA" trend="+5%" icon={DollarSign} color="text-teal-600" />
-          <StatCard label="RDV Cette Semaine" value={stats.appointmentsCount} unit="RDV" trend="Stable" icon={Calendar} color="text-blue-600" />
-          <StatCard label="En Attente" value={stats.waitingCount} unit="Salle" trend="Moy 15min" icon={Clock} color="text-orange-600" />
-          <StatCard label="Résultat Net" value={stats.unpaidCount.toLocaleString()} unit="FCFA" trend="+12%" icon={Activity} color="text-indigo-600" />
+          <StatCard label="Trésorerie" value={stats.revenue.toLocaleString()} unit="FCFA" trend="+5%" icon={DollarSign} color="text-emerald-600" />
+          <StatCard label="RDV Cette Semaine" value={stats.appointmentsCount} unit="RDV" trend="Stable" icon={Calendar} color="text-emerald-600" />
+          <StatCard label="En Attente" value={stats.waitingCount} unit="Salle" trend="Moy 15min" icon={Clock} color="text-emerald-600" />
+          <StatCard label="Résultat Net" value={stats.unpaidCount.toLocaleString()} unit="FCFA" trend="+12%" icon={Activity} color="text-emerald-600" />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -139,8 +138,8 @@ export default function DashboardPage() {
             </div>
 
             <div className="bg-slate-900 rounded-[2rem] p-6 text-white text-center space-y-4 border border-white/5 shadow-xl">
-              <div className="h-12 w-12 bg-accent/20 rounded-xl flex items-center justify-center mx-auto">
-                <Brain className="h-6 w-6 text-accent" />
+              <div className="h-12 w-12 bg-emerald-500/20 rounded-xl flex items-center justify-center mx-auto">
+                <Brain className="h-6 w-6 text-emerald-500" />
               </div>
               <h4 className="text-sm font-black uppercase tracking-widest">Elite Intelligence</h4>
               <p className="text-[10px] text-slate-400 leading-relaxed italic">"Le taux d'acceptation des devis a augmenté de 15% grâce aux nouveaux plans d'échelonnement."</p>
@@ -151,14 +150,14 @@ export default function DashboardPage() {
           <div className="lg:col-span-2 bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
             <div className="p-6 border-b border-slate-50 flex items-center justify-between">
               <h2 className="text-xs font-black uppercase tracking-[0.3em] text-slate-400">Prochains Rendez-vous</h2>
-              <Link href="/agenda" className="text-xs font-black text-accent hover:text-accent/80 transition-colors flex items-center gap-1">
+              <Link href="/agenda" className="text-xs font-black text-emerald-600 hover:text-emerald-500 transition-colors flex items-center gap-1">
                 Voir tout <ArrowRight className="h-3 w-3" />
               </Link>
             </div>
             <div className="divide-y divide-slate-50">
               {isLoading ? (
                 <div className="p-20 text-center">
-                  <Loader2 className="h-8 w-8 animate-spin text-accent mx-auto" />
+                  <Loader2 className="h-8 w-8 animate-spin text-emerald-600 mx-auto" />
                 </div>
               ) : todayApts.length === 0 ? (
                 <div className="p-20 text-center text-slate-400 uppercase text-[10px] font-black tracking-widest">Aucun rendez-vous</div>
@@ -209,10 +208,10 @@ function StatCard({ label, value, unit, trend, icon: Icon, color }: any) {
   return (
     <div className="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm hover:shadow-luxury transition-all">
       <div className="flex justify-between items-start mb-4">
-        <div className={cn("p-3 rounded-2xl bg-slate-50", color.replace('text-', 'bg-').replace('600', '50'))}>
+        <div className={cn("p-3 rounded-2xl bg-slate-50", color.replace('text-', 'bg-').replace('600', '100'))}>
           <Icon className={cn("h-5 w-5", color)} />
         </div>
-        <span className="text-[9px] font-black bg-teal-50 text-teal-600 px-2.5 py-1 rounded-full uppercase tracking-tighter">{trend}</span>
+        <span className="text-[9px] font-black bg-emerald-50 text-emerald-600 px-2.5 py-1 rounded-full uppercase tracking-tighter">{trend}</span>
       </div>
       <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">{label}</p>
       <div className="flex items-baseline gap-2">

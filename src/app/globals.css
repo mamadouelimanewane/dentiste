@@ -68,9 +68,9 @@
   }
 }
 
-/* Custom Scrollbar Premium */
+/* Custom Scrollbar Premium - Emerald themed */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -78,30 +78,53 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #cbd5e1;
+  background-color: #10b981; /* emerald-500 */
   border-radius: 99px;
+  border: 1px solid transparent;
+  background-clip: padding-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #94a3b8;
+  background-color: #059669; /* emerald-600 */
 }
 
 /* Luxury Elements */
 .shadow-luxury {
-  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.04), 0 20px 25px -5px rgba(0, 0, 0, 0.02);
+}
+
+.shadow-emerald-glow {
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
 }
 
 .bg-glass {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .text-gold {
   background: linear-gradient(135deg, #d4af37 0%, #f1c40f 50%, #d4af37 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.text-emerald-gradient {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient 8s ease infinite;
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .no-scrollbar::-webkit-scrollbar {

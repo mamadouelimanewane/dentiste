@@ -94,7 +94,7 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
                             onFocus={() => setShowSearch(true)}
                             onBlur={() => setTimeout(() => setShowSearch(false), 200)}
                             placeholder="Rechercher un module, patient..."
-                            className="w-full h-10 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-medium pl-11 pr-4 focus:outline-none focus:border-accent/30 focus:bg-white transition-all"
+                            className="w-full h-10 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-medium pl-11 pr-4 focus:outline-none focus:border-emerald-500/30 focus:bg-white transition-all focus:ring-1 focus:ring-emerald-500/10"
                         />
                         {showSearch && searchResults.length > 0 && (
                             <div className="absolute top-full mt-2 w-full bg-white rounded-2xl border border-slate-100 shadow-xl overflow-hidden z-50">
@@ -115,7 +115,7 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
                 <div className="flex items-center gap-3">
                     {/* Live Clock */}
                     <div className="hidden lg:flex items-center gap-2 px-4 py-2 bg-slate-50 rounded-2xl border border-slate-100">
-                        <Wifi className="h-3 w-3 text-teal-500" />
+                        <Wifi className="h-3 w-3 text-emerald-500" />
                         <span className="text-xs font-black text-slate-600 tabular-nums">
                             {currentTime.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                         </span>
@@ -123,7 +123,7 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
 
                     {/* Quick Actions */}
                     <Link href="/teleconsultation"
-                        className="hidden lg:flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all">
+                        className="hidden lg:flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white shadow-lg shadow-emerald-500/20 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-emerald-500 transition-all">
                         <Zap className="h-3.5 w-3.5" /> Téléconsult
                     </Link>
 
@@ -163,7 +163,7 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
                                 </div>
                                 <div className="p-3 border-t border-slate-50">
                                     <Link href="/notifications" onClick={() => setShowNotifications(false)}
-                                        className="block w-full text-center text-xs font-black text-accent hover:text-accent/80 transition-colors uppercase tracking-widest">
+                                        className="block w-full text-center text-xs font-black text-emerald-600 hover:text-emerald-500 transition-colors uppercase tracking-widest">
                                         Voir toutes les notifications →
                                     </Link>
                                 </div>
@@ -173,7 +173,7 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
 
                     {/* User Avatar */}
                     <Link href="/settings"
-                        className="h-10 w-10 rounded-2xl bg-accent/20 border border-accent/30 flex items-center justify-center text-accent font-black text-xs hover:bg-accent/30 transition-all">
+                        className="h-10 w-10 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-600 font-black text-xs hover:bg-emerald-50 transition-all">
                         {initials}
                     </Link>
                 </div>
