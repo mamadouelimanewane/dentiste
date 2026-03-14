@@ -65,6 +65,58 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
     }
     */
 
+    // Simplified RBAC logic based on Sidebar navigationSections
+    const userRole = (session?.user as any)?.role || 'OWNER' // Default to OWNER if no role (demo)
+
+    const isAccessDenied = () => {
+        // Paths that only OWNER can access
+        const ownerOnlyPaths = ['/admin-portal', '/management', '/settings']
+        if (ownerOnlyPaths.includes(pathname) && userRole !== 'OWNER') return true
+
+        // Client (Patient) restrictions
+        if (userRole === 'CLIENT') {
+            const allowedForClient = ['/portal', '/payment', '/loyalty', '/teleconsultation', '/notifications']
+            if (!allowedForClient.includes(pathname) && !pathname.startsWith('/portal/')) return true
+        }
+
+        // Accountant restrictions
+        if (userRole === 'ACCOUNTANT') {
+            const allowedForAccountant = ['/dashboard', '/accounting', '/billing', '/financial-war-room', '/messages']
+            if (!allowedForAccountant.includes(pathname)) return true
+        }
+
+        // Assistant/Secretary restrictions (Clinical + Admin minus sensitive owner stuff)
+        if (userRole === 'ASSISTANT' || userRole === 'SECRETARY') {
+            const deniedForStaff = ['/admin-portal', '/management', '/settings', '/smile-design']
+            if (deniedForStaff.includes(pathname)) return true
+        }
+
+        return false
+    }
+
+    if (isAccessDenied()) {
+        return (
+            <div className="min-h-screen bg-slate-950 flex items-center justify-center p-8">
+                <div className="max-w-md w-full bg-slate-900 border border-red-500/20 rounded-[3rem] p-12 text-center shadow-2xl">
+                    <div className="h-20 w-20 bg-red-500/10 rounded-[2rem] flex items-center justify-center mx-auto mb-8 border border-red-500/20">
+                        <Loader2 className="h-10 w-10 text-red-500" />
+                    </div>
+                    <h2 className="text-3xl font-black text-white uppercase italic tracking-tighter mb-4">Accès Restreint</h2>
+                    <p className="text-slate-400 text-sm font-medium leading-relaxed mb-8">
+                        Désolé, votre rôle (**{userRole}**) ne vous permet pas d'accéder à ce module Elite. 
+                        Veuillez contacter l'administrateur du cabinet.
+                    </p>
+                    <button 
+                        onClick={() => router.push(userRole === 'CLIENT' ? '/portal' : '/dashboard')}
+                        className="w-full bg-emerald-600 text-white font-black uppercase text-[10px] tracking-widest h-14 rounded-2xl hover:bg-emerald-500 transition-all shadow-xl shadow-emerald-500/20"
+                    >
+                        Retour au Hub Autorisé
+                    </button>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className="flex h-full w-full">
             {/* Desktop Sidebar */}

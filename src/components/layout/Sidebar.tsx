@@ -56,7 +56,7 @@ export const navigationSections = [
         title: 'Gestion Clinique',
         roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'],
         items: [
-            { name: 'Tableau de bord', href: '/dashboard', icon: LayoutDashboard, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY', 'ACCOUNTANT'] },
+            { name: 'Tableau de bord', href: '/dashboard', icon: LayoutDashboard, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
             { name: 'Patients Elite', href: '/patients', icon: Users, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
             { name: 'Workflow Clinique', href: '/workflow', icon: Activity, roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
             { name: 'Smile Design Studio', href: '/smile-design', icon: Sparkles, roles: ['OWNER', 'DENTIST'] },
@@ -68,16 +68,16 @@ export const navigationSections = [
     },
     {
         title: 'Portails Elite',
-        roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY', 'ACCOUNTANT'],
+        roles: ['OWNER', 'ASSISTANT', 'SECRETARY'],
         items: [
             { name: 'Admin Portal', href: '/admin-portal', icon: ShieldCheck, roles: ['OWNER'] },
-            { name: 'Portail Accueil', href: '/reception-portal', icon: Users, roles: ['OWNER', 'SECRETARY'] },
+            { name: 'Portail Accueil', href: '/reception-portal', icon: Users, roles: ['OWNER', 'SECRETARY', 'ASSISTANT'] },
             { name: 'Assistant Admin', href: '/assistant-portal', icon: FileText, roles: ['OWNER', 'ASSISTANT', 'SECRETARY'] },
         ]
     },
     {
         title: 'Intelligence & Pilotage',
-        roles: ['OWNER', 'DENTIST', 'ASSISTANT'],
+        roles: ['OWNER', 'DENTIST', 'ACCOUNTANT', 'CLIENT'],
         items: [
             { name: 'AI Command Center', href: '/ai-hub', icon: Brain, roles: ['OWNER', 'DENTIST'] },
             { name: 'AI Radio Lab', href: '/ai-radio-lab', icon: Radiation, roles: ['OWNER', 'DENTIST'] },
@@ -88,12 +88,12 @@ export const navigationSections = [
     },
     {
         title: 'Admin & Finance',
-        roles: ['OWNER', 'SECRETARY', 'ACCOUNTANT'],
+        roles: ['OWNER', 'SECRETARY', 'ACCOUNTANT', 'ASSISTANT'],
         items: [
-            { name: 'GED Elite (Vault)', href: '/ged', icon: HardDrive, roles: ['OWNER', 'DENTIST', 'SECRETARY'] },
-            { name: 'Devis Multi-Options', href: '/quotes', icon: FileCheck, roles: ['OWNER', 'DENTIST', 'SECRETARY'] },
-            { name: 'Facturation & Actes', href: '/billing', icon: DollarSign, roles: ['OWNER', 'SECRETARY', 'ACCOUNTANT'] },
-            { name: 'Paiement en Ligne', href: '/payment', icon: CreditCard, isNew: true, roles: ['OWNER', 'CLIENT', 'SECRETARY', 'ACCOUNTANT'] },
+            { name: 'GED Elite (Vault)', href: '/ged', icon: HardDrive, roles: ['OWNER', 'DENTIST', 'SECRETARY', 'ASSISTANT'] },
+            { name: 'Devis Multi-Options', href: '/quotes', icon: FileCheck, roles: ['OWNER', 'DENTIST', 'SECRETARY', 'ASSISTANT'] },
+            { name: 'Facturation & Actes', href: '/billing', icon: DollarSign, roles: ['OWNER', 'SECRETARY', 'ACCOUNTANT', 'ASSISTANT'] },
+            { name: 'Paiement en Ligne', href: '/payment', icon: CreditCard, isNew: true, roles: ['OWNER', 'CLIENT', 'SECRETARY'] },
             { name: 'Comptabilité OHADA', href: '/accounting', icon: BookOpen, roles: ['OWNER', 'ACCOUNTANT'] },
         ]
     },
@@ -106,7 +106,7 @@ export const navigationSections = [
             { name: 'Stocks & Intrants', href: '/inventory', icon: Package, roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
             { name: 'Traçabilité Hub', href: '/sterilization', icon: ShieldCheck, roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
             { name: 'Portail Patient VIP', href: '/portal', icon: UserCircle, roles: ['OWNER', 'CLIENT'] },
-            { name: 'Programme Fidélité', href: '/loyalty', icon: Star, isNew: true, roles: ['OWNER', 'CLIENT', 'SECRETARY'] },
+            { name: 'Programme Fidélité', href: '/loyalty', icon: Star, isNew: true, roles: ['OWNER', 'CLIENT'] },
         ]
     },
     {
@@ -114,8 +114,8 @@ export const navigationSections = [
         roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY', 'ACCOUNTANT', 'CLIENT'],
         items: [
             { name: 'Messagerie Interne', href: '/messages', icon: Hash, isNew: true, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY', 'ACCOUNTANT'] },
-            { name: 'Communication', href: '/communication', icon: MessageSquare },
-            { name: 'Notifications', href: '/notifications', icon: Bell, badge: '3' },
+            { name: 'Communication', href: '/communication', icon: MessageSquare, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
+            { name: 'Notifications', href: '/notifications', icon: Bell, badge: '3', roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY', 'CLIENT'] },
         ]
     },
     {
@@ -123,7 +123,7 @@ export const navigationSections = [
         roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY', 'ACCOUNTANT'],
         items: [
             { name: 'Documentation Elite', href: '/documentation', icon: BookOpen },
-            { name: 'Elite Academy', href: '/academy', icon: GraduationCap },
+            { name: 'Elite Academy', href: '/academy', icon: GraduationCap, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
             { name: 'Paramètres', href: '/settings', icon: Settings, roles: ['OWNER'] },
         ]
     },
