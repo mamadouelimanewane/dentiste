@@ -27,12 +27,14 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
         setIsMobileMenuOpen(false)
     }, [pathname])
 
-    // Redirect unauthenticated users to login (except on public pages)
+    // Redirect unauthenticated users to login (except on public pages) - DISABLED FOR DEMO
+    /*
     useEffect(() => {
         if (status === "unauthenticated" && !PUBLIC_PAGES.includes(pathname)) {
             router.push("/login")
         }
     }, [status, pathname, router])
+    */
 
     // No context before mount
     if (!mounted) return <div className="min-h-screen bg-slate-950" />
@@ -56,10 +58,12 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
         )
     }
 
+    /*
     // If unauthenticated and not on public page, show nothing (redirect is happening)
     if (status === "unauthenticated") {
         return <div className="min-h-screen bg-slate-950" />
     }
+    */
 
     return (
         <div className="flex h-full w-full">

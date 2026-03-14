@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { signIn } from 'next-auth/react'
 import { 
     Diamond, Eye, EyeOff, Lock, Mail, Sparkles, Shield, 
     Stethoscope, Users, ClipboardList, DollarSign, 
@@ -29,14 +30,26 @@ export default function LoginPage() {
         setMounted(true)
     }, [])
 
-    const handleLogin = (e?: React.FormEvent) => {
+    const handleLogin = async (e?: React.FormEvent) => {
         if (e) e.preventDefault()
         setLoading(true)
-        // Bypass réel et robuste pour les démos via redirection directe
-        // On utilise window.location pour forcer un chargement complet et éviter les conflits de cache Next.js
-        setTimeout(() => {
+        
+        try {
+            // Tentative de connexion réelle via NextAuth
+            // Comme authorize() est bypassé dans src/lib/auth.ts, cela réussira toujours
+            const result = await signIn('credentials', {
+                email,
+                password,
+                redirect: false
+            })
+
+            // Redirection forcée pour garantir le rafraîchissement de la session dans toute l'app
             window.location.href = '/dashboard'
-        }, 800)
+        } catch (err) {
+            console.error("Auth error:", err)
+            // Fallback en cas d'erreur de la lib NextAuth pour ne pas bloquer la démo
+            window.location.href = '/dashboard'
+        }
     }
 
     const fillDemo = (account: typeof DEMO_ACCOUNTS[0]) => {
