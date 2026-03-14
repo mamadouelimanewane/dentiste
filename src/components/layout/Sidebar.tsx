@@ -147,9 +147,9 @@ export function Sidebar({ className }: { className?: string }) {
     const pathname = usePathname()
 
     const user = session?.user ? {
-        role: (session.user as any).role || 'OWNER',
+        role: (session.user as any).role || 'GUEST',
         name: session.user.name || 'Utilisateur',
-    } : { role: 'OWNER', name: 'Directeur Elite' } // Fallback pour la démo
+    } : { role: 'GUEST', name: 'Invité Elite' }
 
     useEffect(() => {
         setMounted(true)
@@ -159,7 +159,7 @@ export function Sidebar({ className }: { className?: string }) {
         // Check if section itself is restricted
         const sectionRoles = (section as any).roles
         if (sectionRoles) {
-            if (!user) return null
+            if (!user || user.role === 'GUEST') return null
             if (!sectionRoles.includes(user.role)) return null
         }
 

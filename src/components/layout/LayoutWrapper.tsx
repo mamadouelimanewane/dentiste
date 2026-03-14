@@ -66,7 +66,7 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
     */
 
     // Simplified RBAC logic based on Sidebar navigationSections
-    const userRole = (session?.user as any)?.role || 'OWNER' // Default to OWNER if no role (demo)
+    const userRole = (session?.user as any)?.role || 'GUEST'
 
     const isAccessDenied = () => {
         // Paths that only OWNER can access
