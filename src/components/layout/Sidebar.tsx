@@ -146,10 +146,13 @@ export function Sidebar({ className }: { className?: string }) {
     const { data: session } = useSession()
     const pathname = usePathname()
 
+    // For demo purposes, we allow switching roles if no real session exists
+    const [demoRole, setDemoRole] = useState<string>('OWNER')
+
     const user = session?.user ? {
-        role: (session.user as any).role || 'GUEST',
+        role: (session.user as any).role || 'OWNER',
         name: session.user.name || 'Utilisateur',
-    } : { role: 'GUEST', name: 'Invité Elite' }
+    } : { role: demoRole, name: demoRole === 'OWNER' ? 'Directeur Elite' : demoRole === 'ASSISTANT' ? 'Assistant Elite' : 'Patient VIP' }
 
     useEffect(() => {
         setMounted(true)
@@ -221,6 +224,31 @@ export function Sidebar({ className }: { className?: string }) {
             </div>
 
             <nav className="flex-1 space-y-8 px-4 py-8 overflow-y-auto no-scrollbar scroll-smooth">
+                {/* Demo Role Switcher (Only if no real session) */}
+                {!session && (
+                    <div className="px-4 mb-8">
+                        <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-3">
+                            <p className="text-[9px] font-black text-emerald-500 uppercase tracking-[0.2em]">Mode Démo : Tester les Rôles</p>
+                            <div className="grid grid-cols-2 gap-2">
+                                {['OWNER', 'ASSISTANT', 'CLIENT', 'ACCOUNTANT'].map(role => (
+                                    <button
+                                        key={role}
+                                        onClick={() => setDemoRole(role)}
+                                        className={cn(
+                                            "text-[8px] font-black py-2 rounded-lg transition-all border",
+                                            user?.role === role 
+                                                ? "bg-emerald-600 border-emerald-500 text-white shadow-lg" 
+                                                : "bg-white/5 border-white/10 text-slate-400 hover:bg-white/10"
+                                        )}
+                                    >
+                                        {role}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {filteredSections.map((section) => (
                     <div key={section.title} className="space-y-3">
                         {!collapsed && (
@@ -239,13 +267,13 @@ export function Sidebar({ className }: { className?: string }) {
                                             collapsed ? "justify-center mx-0 px-0" : "gap-4",
                                             isActive
                                                 ? "bg-emerald-600 text-white shadow-xl shadow-emerald-600/20"
-                                                : "text-slate-300 hover:bg-white/5 hover:text-white"
+                                                : "text-slate-200 hover:bg-white/5 hover:text-white"
                                         )}
                                     >
                                         <item.icon
                                             className={cn(
                                                 "h-5 w-5 flex-shrink-0 transition-all duration-300",
-                                                isActive ? "text-white scale-110" : "text-slate-400 group-hover:text-white group-hover:scale-110"
+                                                isActive ? "text-white scale-110" : "text-slate-300 group-hover:text-white group-hover:scale-110"
                                             )}
                                         />
                                         {!collapsed && (
