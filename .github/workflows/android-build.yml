@@ -1,0 +1,62 @@
+name: Build Android APKs
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Sélectionnez l''APK à générer'
+        required: true
+        default: 'patient'
+        type: choice
+        options:
+          - patient
+          - admin
+          - staff
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Configure for Target
+        run: node scripts/mobileify.js ${{ github.event.inputs.target }}
+
+      - name: Build Next.js Export
+        run: |
+          # Update next.config.js for static export temporarily or permanent
+          sed -i "s/const nextConfig = {/const nextConfig = { output: 'export', distDir: 'out', images: { unoptimized: true }, /" next.config.js
+          npm run build
+
+      - name: Capacitor Sync
+        run: |
+          npx cap sync android
+
+      - name: Build Android APK (Debug)
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: App-${{ github.event.inputs.target }}-Debug
+          path: android/app/build/outputs/apk/debug/app-debug.apk
