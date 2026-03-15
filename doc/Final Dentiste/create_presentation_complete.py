@@ -156,7 +156,7 @@ def p01(c):
     c.setFillColor(colors.HexColor("#94a3b8"))
     c.drawCentredString(W/2,H-228,"\u00c9cosyst\u00e8me d\u2019IA & Haute Gestion pour Cabinets Dentaires d\u2019Exception")
     # Stats
-    kpis=[("36","Modules int\u00e9gr\u00e9s","Couverture compl\u00e8te"),
+    kpis=[("44+","Modules int\u00e9gr\u00e9s","v4.0 — Couverture totale"),
           ("95%","Besoins couverts","vs ERP g\u00e9n\u00e9riques"),
           ("40%","Temps lib\u00e9r\u00e9","administratif"),
           ("48h","D\u00e9ploiement","formation incluse")]
@@ -190,16 +190,16 @@ def p01(c):
 def p02(c):
     c.setFillColor(LIGHT)
     c.rect(0,0,W,H,stroke=0,fill=1)
-    dark_header(c,"VUE D\u2019ENSEMBLE","36 Modules Couvrant 95\u0025 des Besoins de Votre Cabinet")
+    dark_header(c,"VUE D\u2019ENSEMBLE","44+ Modules v4.0 — Couverture Totale Cabinet Dentaire d\u2019Exception")
     footer(c,2)
     y=H-120
     cats=[
         ("Clinique & Soins","Odontogramme \u2022 Charting paro \u2022 Plans de traitement \u2022 Prescriptions \u2022 Imagerie \u2022 Chirurgie \u2022 Smile Design \u2022 Laboratoire"),
-        ("Administration","Agenda \u2022 Salle d\u2019attente \u2022 Patients \u2022 T\u00e2ches \u2022 Workflow \u2022 Gestion du personnel \u2022 Messages \u2022 Notifications"),
-        ("Financier","Facturation \u2022 FSE T\u00e9l\u00e9transmission \u2022 Comptabilit\u00e9 OHADA \u2022 Devis \u2022 Paiements \u2022 Financial War Room \u2022 Marketing"),
-        ("IA & Technologie","DentoAI \u2022 Scanner radio IA \u2022 Dict\u00e9e vocale \u2022 T\u00e9l\u00e9consultation \u2022 AI Hub \u2022 AI Lab \u2022 GED Elite \u2022 Analytics"),
-        ("Qualit\u00e9 & Conformit\u00e9","St\u00e9rilisation \u2022 Inventaire \u2022 Conformit\u00e9 \u2022 Audit Trail \u2022 Consentements \u2022 RGPD/OHADA"),
-        ("Patient & Mobile","Portail VIP \u2022 Loyalty \u2022 Communication \u2022 App Admin \u2022 App Patient \u2022 App Staff \u2022 App Comptable"),
+        ("Administration","Agenda \u2022 Salle d\u2019attente \u2022 Patients \u2022 T\u00e2ches \u2022 Workflow \u2022 Gestion du personnel \u2022 Messagerie Interne \u2022 Notifications"),
+        ("Financier","Facturation \u2022 FSE T\u00e9l\u00e9transmission \u2022 Comptabilit\u00e9 OHADA \u2022 Devis \u2022 Paiements \u2022 Free Money \u2022 Financial War Room \u2022 Marketing"),
+        ("IA & Technologie v4.0","DentoAI \u2022 Scanner radio IA \u2022 Neural Vision Lab \u2022 Dict\u00e9e vocale \u2022 AI Command Center \u2022 Holo-Smile Studio \u2022 GED Elite"),
+        ("Qualit\u00e9 & Innovation","St\u00e9rilisation \u2022 Blockchain Ledger \u2022 Conformit\u00e9 \u2022 Audit Trail \u2022 Consentements \u2022 RGPD/OHADA \u2022 Executive Satellite"),
+        ("Patient & Mobile","Portail VIP \u2022 Programme Fid\u00e9lit\u00e9 \u2022 Concierge Bio-Logistique \u2022 T\u00e9l\u00e9consultation \u2022 App Mobile \u2022 Analytics 360\u00b0"),
     ]
     ch=90
     cw=(W-60-16)/2
@@ -1033,11 +1033,11 @@ def p19(c):
     # Checklist
     checks=[
         "\u25c6  Conformit\u00e9 OHADA/SYSCOHADA native d\u00e8s le premier jour",
-        "\u25c6  Intelligence Artificielle clinique int\u00e9gr\u00e9e de pointe",
-        "\u25c6  Paiements Wave & Orange Money sans d\u00e9veloppement",
-        "\u25c6  Communication WhatsApp, SMS & Email unifi\u00e9e",
-        "\u25c6  Formation compl\u00e8te et d\u00e9ploiement en 48 heures",
-        "\u25c6  Support d\u00e9di\u00e9 avec \u00e9quipe d\u2019experts locaux",
+        "\u25c6  IA v4.0 : Holo-Smile, Neural Vision Lab, AI Command Center",
+        "\u25c6  Blockchain Ledger + Messagerie Interne + Concierge VIP",
+        "\u25c6  Paiements Wave, Orange Money & Free Money unifi\u00e9s",
+        "\u25c6  Communication WhatsApp, SMS, Email & T\u00e9l\u00e9consultation",
+        "\u25c6  44+ modules, formation compl\u00e8te, d\u00e9ploiement en 48 heures",
     ]
     cy=H-280
     for check in checks:
@@ -1062,11 +1062,146 @@ def p19(c):
     c.drawCentredString(W/2,cy-76,"Mamadou Dia  \u2022  +221 777 529 288  \u2022  mamadou.dia@processingenierie.com")
     footer(c,19)
 
+# ═══════════════════════════════════════════════════════════════════════════════
+# PAGE 20 — NOUVELLES FONCTIONNALITES IA v4.0 : Holo-Smile + Neural Vision
+# ═══════════════════════════════════════════════════════════════════════════════
+def p20(c):
+    c.setFillColor(LIGHT)
+    c.rect(0,0,W,H,stroke=0,fill=1)
+    dark_header(c,"INTELLIGENCE ARTIFICIELLE v4.0","Holo-Smile Studio \u2022 Neural Vision Lab \u2022 AI Command Center")
+    footer(c,20)
+    y=H-120
+    y=sec_title(c,"NOUVEAU \u2014 Holo-Smile Studio (AR G\u00e9n\u00e9ratif)",y)
+    holo=[
+        "Simulation esth\u00e9tique holographique du sourire en temps r\u00e9el",
+        "Technologie de r\u00e9alit\u00e9 augment\u00e9e via cam\u00e9ra du cabinet",
+        "Miroir holographique : le patient visualise son futur sourire avant acte",
+        "G\u00e9n\u00e9ration IA de propositions de smile design personnalis\u00e9es",
+        "Partage s\u00e9curis\u00e9 des simulations holographiques via portail VIP",
+        "Compatible avec les flux STL et outils d\u2019imagerie 3D",
+    ]
+    for h in holo:
+        y=bul(c,h,y)
+    y-=14
+    y=sec_title(c,"NOUVEAU \u2014 Neural Vision Lab",y)
+    neural=[
+        "Analyse diagnostique avanc\u00e9e bas\u00e9e sur r\u00e9seaux de neurones profonds",
+        "D\u00e9tection automatique : caries, p\u00e9riapicales, pertes osseuses, implants",
+        "Comparaison inter-s\u00e9ances avec cartographie des \u00e9volutions",
+        "Pr\u00e9cision diagnostique : 99,8\u0025 sur les radiographies panoramiques",
+        "Rapport IA g\u00e9n\u00e9r\u00e9 automatiquement int\u00e9gr\u00e9 dans le dossier patient",
+        "Mod\u00e8les entra\u00een\u00e9s sp\u00e9cifiquement sur les pathologies dentaires africaines",
+    ]
+    for n in neural:
+        y=bul(c,n,y)
+    y-=14
+    y=sec_title(c,"NOUVEAU \u2014 AI Command Center",y)
+    aicmd=[
+        "Centre de commande vocal : pilotage de l\u2019application par la voix",
+        "Commandes intelligentes : \u00ab Cr\u00e9e un RDV pour Mme Diallo vendredi \u00bb",
+        "Ex\u00e9cution d\u2019actions m\u00e9tier en langage naturel sans navigation",
+        "Elite Companion : assistant IA contextuel int\u00e9gr\u00e9 par page",
+        "Neural Treatment Map : cartographie IA du parcours th\u00e9rapeutique optimal",
+        "Support multi-LLM : DeepSeek v3 + OpenAI GPT-4 Vision",
+    ]
+    for a in aicmd:
+        y=bul(c,a,y)
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# PAGE 21 — INNOVATION : Blockchain + Messagerie Interne
+# ═══════════════════════════════════════════════════════════════════════════════
+def p21(c):
+    c.setFillColor(LIGHT)
+    c.rect(0,0,W,H,stroke=0,fill=1)
+    dark_header(c,"INNOVATION & CONNECTIVIT\u00c9","Blockchain Ledger \u2022 Messagerie Interne \u2022 Paiement Free Money")
+    footer(c,21)
+    y=H-120
+    y=sec_title(c,"NOUVEAU \u2014 Blockchain Medical Ledger",y)
+    blockchain=[
+        "Registre m\u00e9dical immuable : chaque acte sign\u00e9 et hash\u00e9 sur blockchain",
+        "Tra\u00e7abilit\u00e9 juridique absolue des interventions et prescriptions",
+        "Acc\u00e8s patient s\u00e9curis\u00e9 aux enregistrements blockchain via portail VIP",
+        "Conformit\u00e9 RGPD et loi de protection des donn\u00e9es de sant\u00e9 s\u00e9n\u00e9galaise",
+        "Int\u00e9gration transparente avec l\u2019Audit Trail existant (couche suppl\u00e9mentaire)",
+        "Certificats d\u2019authenticit\u00e9 PDF g\u00e9n\u00e9r\u00e9s automatiquement pour chaque dossier",
+    ]
+    for b in blockchain:
+        y=bul(c,b,y)
+    y-=14
+    y=sec_title(c,"NOUVEAU \u2014 Messagerie Interne (Slack-Like)",y)
+    msg=[
+        "Plateforme de communication d\u2019\u00e9quipe int\u00e9gr\u00e9e type Slack",
+        "Canaux th\u00e9matiques : #urgences, #labo, #admin, #general",
+        "Mentions @praticien, @secr\u00e9taire avec notifications en temps r\u00e9el",
+        "Partage s\u00e9curis\u00e9 de fichiers et radios dans le fil de discussion",
+        "Messages li\u00e9s aux dossiers patients avec contexte automatique",
+        "Historique complet archiv\u00e9 pour tra\u00e7abilit\u00e9 et audit",
+    ]
+    for m in msg:
+        y=bul(c,m,y)
+    y-=14
+    y=sec_title(c,"NOUVEAU \u2014 Paiement Free Money + Gateway Compl\u00e8te",y)
+    freemoney=[
+        "Free Money : int\u00e9gration du 3\u00e8me op\u00e9rateur mobile money s\u00e9n\u00e9galais",
+        "Passerelle unifi\u00e9e : Wave \u2022 Orange Money \u2022 Free Money \u2022 Visa/Mastercard",
+        "QR Code de paiement g\u00e9n\u00e9r\u00e9 automatiquement depuis la facture",
+        "Remboursement automatique en cas d\u2019annulation ou avoir",
+        "Dashboard temps r\u00e9el des flux de paiement par op\u00e9rateur",
+        "Rapprochement bancaire automatis\u00e9 multi-canaux",
+    ]
+    for f in freemoney:
+        y=bul(c,f,y)
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# PAGE 22 — VIP & MULTI-SITE : Concierge Bio-Logistique + Executive Satellite
+# ═══════════════════════════════════════════════════════════════════════════════
+def p22(c):
+    c.setFillColor(LIGHT)
+    c.rect(0,0,W,H,stroke=0,fill=1)
+    dark_header(c,"EXCELLENCE VIP & MULTI-SITE","Concierge Bio-Logistique \u2022 Executive Satellite")
+    footer(c,22)
+    y=H-120
+    y=sec_title(c,"NOUVEAU \u2014 Concierge Bio-Logistique",y)
+    concierge=[
+        "Service de logistique VIP int\u00e9gr\u00e9 pour les patients premium",
+        "R\u00e9servation transport (taxi, VTC) depuis le dossier patient",
+        "Gestion d\u2019h\u00e9bergement h\u00f4telier pour patients venant de l\u2019ext\u00e9rieur",
+        "Coordination inter-sp\u00e9cialistes : radiologie, laboratoire, chirurgien",
+        "Suivi logistique en temps r\u00e9el visible par le patient via portail VIP",
+        "Niveau Platinum exclusive : activation sur les plans ELITE et Enterprise",
+    ]
+    for co in concierge:
+        y=bul(c,co,y)
+    y-=14
+    y=sec_title(c,"NOUVEAU \u2014 Executive Satellite (Multi-Cliniques)",y)
+    satellite=[
+        "Tableau de bord ex\u00e9cutif pour la gestion de plusieurs cabinets",
+        "Vue consolid\u00e9e : CA, patients, performances par site en temps r\u00e9el",
+        "Benchmarking inter-cliniques : indicateurs compar\u00e9s entre sites",
+        "Gestion centralis\u00e9e des praticiens itin\u00e9rants entre plusieurs adresses",
+        "Alertes critiques consolid\u00e9es : stocks, impay\u00e9s, urgences multi-sites",
+        "Rapports de performance consolid\u00e9s exportables PDF/CSV",
+    ]
+    for s in satellite:
+        y=bul(c,s,y)
+    y-=14
+    y=sec_title(c,"R\u00e9capitulatif Innovation v4.0",y)
+    recap=[
+        "8 nouvelles fonctionnalit\u00e9s majeures int\u00e9gr\u00e9es dans la version 4.0",
+        "IA de nouvelle g\u00e9n\u00e9ration : Holo-Smile, Neural Vision, AI Command",
+        "Infrastructure blockchain : immuabilit\u00e9 et s\u00e9curit\u00e9 juridique absolue",
+        "Communication unifi\u00e9e : messagerie interne + t\u00e9l\u00e9consultation Jitsi",
+        "Paiements compl\u00e8ts : Free Money compl\u00e8te la triade mobile africaine",
+        "Services VIP : Concierge Bio-Logistique + Multi-site Executive Satellite",
+    ]
+    for r in recap:
+        y=bul(c,r,y)
+
 def main():
     c=canvas.Canvas(OUTPUT,pagesize=A4)
-    c.setTitle("DentoPrestige - Presentation Complete")
+    c.setTitle("DentoPrestige - Presentation Complete v4.0")
     c.setAuthor("ProcessIngenierie")
-    pages=[p01,p02,p03,p04,p05,p06,p07,p08,p09,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19]
+    pages=[p01,p02,p03,p04,p05,p06,p07,p08,p09,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,p20,p21,p22]
     for fn in pages:
         fn(c)
         c.showPage()

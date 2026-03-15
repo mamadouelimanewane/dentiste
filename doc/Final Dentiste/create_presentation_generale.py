@@ -199,9 +199,9 @@ def page2(c):
     innov_text = ("Au-del\u00e0 des fonctionnalit\u00e9s traditionnelles, DentoPrestige se distingue par "
                   "l\u2019int\u00e9gration de technologies de pointe adapt\u00e9es au contexte africain. "
                   "Le syst\u00e8me int\u00e8gre des capacit\u00e9s d\u2019intelligence artificielle avanc\u00e9es "
-                  "\u00e0 travers plusieurs modules : DentoAI pour l\u2019assistance clinique automatis\u00e9e, "
-                  "un scanner radiologique capable d\u2019analyser les pathologies, une IA pr\u00e9dictive "
-                  "\u00e9valuant les plans de traitement, et un g\u00e9n\u00e9rateur automatique de protocoles.")
+                  "\u00e0 travers plusieurs modules v4.0 : Holo-Smile Studio AR, Neural Vision Lab \u00e0 99,8\u0025 de pr\u00e9cision, "
+                  "AI Command Center vocal, Blockchain Medical Ledger immuable, "
+                  "Messagerie Interne \u00e9quipe et Concierge Bio-Logistique VIP.")
     y = body_text(c, innov_text, 24, y, lh=15)
 
 # ───────────────────────────────────────────────────────────────────────────────
@@ -382,8 +382,8 @@ def page6(c):
 
     y = H - 58
 
-    y = subsection(c, "3.3.", "Couverture Fonctionnelle Exhaustive", y)
-    cov_text = ("La couverture fonctionnelle propos\u00e9e par les 36 modules s\u2019av\u00e8re "
+    y = subsection(c, "3.3.", "Couverture Fonctionnelle Exhaustive v4.0", y)
+    cov_text = ("La couverture fonctionnelle propos\u00e9e par les 44+ modules v4.0 s\u2019av\u00e8re "
                 "particuli\u00e8rement exhaustive. L\u2019analyse comparative r\u00e9v\u00e8le que "
                 "DentoPrestige r\u00e9pond \u00e0 plus de 95\u0025 des besoins r\u00e9els d\u2019un "
                 "cabinet dentaire op\u00e9rant dans l\u2019espace OHADA. Cette couverture surpasse "
@@ -394,10 +394,10 @@ def page6(c):
 
     # Module grid
     modules_cat = [
-        ("Clinique",       ["Odontogramme", "Charting paro", "Prescriptions", "Imagerie CBCT", "Chirurgie"]),
-        ("Administration", ["Agenda", "Patients", "T\u00e2ches", "Workflow", "Staf\u00f8ing"]),
-        ("Financier",      ["Facturation", "Comptabilit\u00e9", "Devis", "Paiements", "War Room"]),
-        ("IA & Tech",      ["DentoAI", "Scanner radio", "Dict\u00e9e vocale", "T\u00e9l\u00e9consultation", "GED"]),
+        ("Clinique",        ["Odontogramme", "Charting paro", "Holo-Smile Studio", "Neural Vision Lab", "Chirurgie"]),
+        ("Administration",  ["Agenda", "Patients", "Messagerie Interne", "Workflow", "Blockchain Ledger"]),
+        ("Financier",       ["Facturation", "Comptabilit\u00e9 OHADA", "Free Money", "Wave/Orange", "War Room"]),
+        ("IA & Innovation", ["DentoAI v4", "AI Command Ctr", "Dict\u00e9e vocale", "Concierge VIP", "Satellite"]),
     ]
     cw = (W - 48 - 3 * 10) / 4
     for i, (cat, mods) in enumerate(modules_cat):

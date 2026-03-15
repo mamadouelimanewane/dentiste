@@ -170,9 +170,9 @@ def main():
         ),
         (
             "\u00c9cosyst\u00e8me Complet sur Mesure",
-            "36 modules int\u00e9gr\u00e9s couvrent l\u2019int\u00e9gralit\u00e9 de vos besoins : "
-            "gestion de dossiers patients intelligente, odontogramme interactif, agenda synchronis\u00e9 "
-            "avec rappels automatiques, facturation et recouvrement, portail patient s\u00e9curis\u00e9, "
+            "44+ modules v4.0 couvrent l\u2019int\u00e9gralit\u00e9 de vos besoins : "
+            "gestion de dossiers patients intelligente, Holo-Smile Studio AR, Neural Vision Lab, "
+            "Blockchain Medical Ledger, Messagerie Interne, Concierge Bio-Logistique, "
             "GED avec OCR haute r\u00e9solution, comptabilit\u00e9 analytique en temps r\u00e9el.",
         ),
         (

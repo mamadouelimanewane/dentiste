@@ -218,9 +218,9 @@ def page1(c):
     badges = [
         ("40%",   "Temps lib\u00e9r\u00e9"),
         ("100%",  "Conforme SYSCOHADA"),
-        ("IA",    "Diagnostics avanc\u00e9s"),
+        ("IA v4", "Holo-Smile + Neural"),
         ("48h",   "D\u00e9ploiement"),
-        ("36",    "Modules int\u00e9gr\u00e9s"),
+        ("44+",   "Modules v4.0"),
     ]
     total_w = 5 * 110 + 4 * 12
     start_x = (W - total_w) / 2
@@ -490,15 +490,21 @@ def page5(c):
     y = draw_text_block(c, secu, 24, y, size=9.5, max_width=W - 48, line_height=15)
     y -= 14
 
-    section_title(c, "Accompagnement d\u2019\u00c9lite : Formation & Support", y)
-    y -= 8
-    accomp = ("M\u00e9thode magistrale de formation progressive du staff aux praticiens. Assistance "
-              "compl\u00e8te pour la migration de vos anciens dossiers patients. Support d\u00e9di\u00e9 "
-              "avec une \u00e9quipe d\u2019experts \u00e0 votre \u00e9coute au quotidien. Formation et "
-              "d\u00e9ploiement en moins de 48 heures. \u00c9volution continue avec nouvelles "
-              "fonctionnalit\u00e9s IA chaque mois.")
-    y = draw_text_block(c, accomp, 24, y, size=9.5, max_width=W - 48, line_height=15)
-    y -= 16
+    section_title(c, "Innovations v4.0 : 8 Nouvelles Fonctionnalit\u00e9s Majeures", y)
+    y -= 6
+    new_feats = [
+        "Holo-Smile Studio : Simulation esth\u00e9tique AR holographique en temps r\u00e9el",
+        "Neural Vision Lab : Diagnostic IA neuronal \u2014 99,8\u0025 de pr\u00e9cision",
+        "Blockchain Medical Ledger : Enregistrements m\u00e9dicaux immuables",
+        "Messagerie Interne : Communication \u00e9quipe type Slack int\u00e9gr\u00e9e",
+        "Free Money : Triade mobile africaine compl\u00e8te (Wave + Orange + Free)",
+        "Concierge Bio-Logistique : Transport & h\u00f4tel pour patients VIP",
+        "Executive Satellite : Pilotage multi-cabinets consolid\u00e9",
+        "AI Command Center : Pilotage vocal de l\u2019application par IA",
+    ]
+    for item in new_feats:
+        y = bullet_item(c, item, y)
+    y -= 10
 
     # Mobile apps
     apps = [
@@ -552,11 +558,11 @@ def page6(c):
     # Feature table
     features_table = [
         ("Adaptation Locale",  "Conformit\u00e9 OHADA/SYSCOHADA native"),
-        ("Innovation IA",      "Scanner radio et pr\u00e9diction clinique"),
-        ("Paiements",          "Wave & Orange Money int\u00e9gr\u00e9s"),
-        ("Communication",      "WhatsApp, SMS & Email unifi\u00e9s"),
-        ("D\u00e9ploiement",   "Formation compl\u00e8te en 48 heures"),
-        ("S\u00e9curit\u00e9", "Chiffrement AES-256 & Audit Trail"),
+        ("IA v4.0",            "Holo-Smile Studio & Neural Vision Lab"),
+        ("Paiements",          "Wave, Orange Money & Free Money"),
+        ("Blockchain",         "Registre m\u00e9dical immuable v4.0"),
+        ("Messagerie Interne", "Communication \u00e9quipe type Slack"),
+        ("Concierge VIP",      "Bio-Logistique + Executive Satellite"),
     ]
     y = H - 280
     c.setFillColor(GOLD)
