@@ -32,31 +32,37 @@ export default function LoginPage() {
 
     const handleLogin = async (e?: React.FormEvent) => {
         if (e) e.preventDefault()
+        console.log("Login attempt started with:", email)
         setLoading(true)
         
         try {
             const result = await signIn('credentials', {
-                email,
+                email: email.trim(),
                 password,
                 redirect: false
             })
 
+            console.log("Auth result:", result)
+
             if (result?.error) {
                 console.error("Auth error:", result.error)
+                alert("Erreur d'authentification: " + result.error)
                 return
             }
 
             // Redirection intelligente selon le rôle déduit de l'email pour la démo
-            if (email === 'patient@dentoprestige.sn') {
-                window.location.href = '/portal'
-            } else if (email === 'admin@dentoprestige.sn') {
-                window.location.href = '/admin-portal'
-            } else {
-                window.location.href = '/dashboard'
-            }
+            let targetUrl = '/dashboard'
+            if (email.includes('patient')) targetUrl = '/portal'
+            else if (email.includes('admin')) targetUrl = '/admin-portal'
+            
+            console.log("Redirecting to:", targetUrl)
+            window.location.href = targetUrl
         } catch (err) {
             console.error("Critical Auth error:", err)
+            // Fallback en cas d'erreur de signIn
             window.location.href = '/dashboard'
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -213,13 +219,12 @@ export default function LoginPage() {
                             </div>
 
                             <button
-                                type="button"
-                                onClick={() => handleLogin()}
+                                type="submit"
                                 disabled={loading}
-                                className="group relative w-full h-16 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black uppercase tracking-widest text-[13px] rounded-[1.5rem] transition-all duration-300 disabled:opacity-50 overflow-hidden shadow-[0_10px_30px_rgba(16,185,129,0.3)] cursor-pointer"
+                                className="group relative w-full h-16 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black uppercase tracking-widest text-[13px] rounded-[1.5rem] transition-all duration-300 disabled:opacity-50 overflow-hidden shadow-[0_10px_30px_rgba(16,185,129,0.3)] cursor-pointer z-30"
                             >
-                                <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-                                <div className="relative flex items-center justify-center gap-3">
+                                <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 pointer-events-none" />
+                                <div className="relative flex items-center justify-center gap-3 pointer-events-none">
                                     {loading ? (
                                         <div className="flex gap-1.5 items-center">
                                             {[0, 1, 2].map((i) => (
