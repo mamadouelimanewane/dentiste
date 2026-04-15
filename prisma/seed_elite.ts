@@ -3,6 +3,8 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
+type ColumnId = 'PHASE_1_ACCUEIL' | 'PHASE_2_ARRIVEE' | 'PHASE_3_CONSULTATION' | 'PHASE_4_ACTES' | 'PHASE_5_ADMIN' | 'PHASE_6_SUIVI'
+
 async function main() {
     console.log('--- DEBUT DU SEED ELITE FULL (SENEGAL / FCFA) ---')
 
@@ -41,10 +43,22 @@ async function main() {
         { first: 'Jean-Pierre', last: 'Badji', email: 'jp.badji@tech.sn', phone: '77 000 11 22', source: 'Site Web' },
     ]
 
-    for (const p of patientsData) {
+    const workflowStatuses: ColumnId[] = [
+        'PHASE_1_ACCUEIL', 
+        'PHASE_2_ARRIVEE', 
+        'PHASE_3_CONSULTATION', 
+        'PHASE_4_ACTES', 
+        'PHASE_5_ADMIN', 
+        'PHASE_6_SUIVI'
+    ]
+
+    for (let i = 0; i < patientsData.length; i++) {
+        const p = patientsData[i]
         await prisma.patient.upsert({
             where: { email: p.email },
-            update: {},
+            update: {
+                workflowStatus: workflowStatuses[i % workflowStatuses.length]
+            },
             create: {
                 firstName: p.first,
                 lastName: p.last,
@@ -52,6 +66,7 @@ async function main() {
                 phone: p.phone,
                 source: p.source,
                 status: 'ACTIVE',
+                workflowStatus: workflowStatuses[i % workflowStatuses.length],
                 medicalHistory: {
                     create: {
                         conditions: 'Diabète Type 2',

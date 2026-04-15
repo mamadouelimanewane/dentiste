@@ -63,99 +63,84 @@ import {
 
 export const navigationSections = [
     {
-        title: 'Gestion Clinique',
+        title: '1. Accueil & Prise en charge',
         roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'],
         items: [
-            { name: 'Tableau de bord', href: '/dashboard', icon: LayoutDashboard, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
-            { name: 'Patients Elite', href: '/patients', icon: Users, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
-            { name: 'Workflow Clinique', href: '/workflow', icon: Activity, roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
-            { name: 'Smile Design Studio', href: '/smile-design', icon: Sparkles, roles: ['OWNER', 'DENTIST'] },
-            { name: 'Holo-Smile Studio', href: '/clinical/smile-studio', icon: Wand2, isNew: true, roles: ['OWNER', 'DENTIST'] },
             { name: 'Agenda Dynamique', href: '/agenda', icon: Calendar, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
-            { name: 'Labo Hub', href: '/lab', icon: Activity, roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
-            { name: 'Command Center', href: '/tasks', icon: Briefcase, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
+            { name: 'Patients Elite', href: '/patients', icon: Users, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
+            { name: 'Téléconsultation', href: '/teleconsultation', icon: Video, isNew: true, roles: ['OWNER', 'DENTIST', 'CLIENT'] },
+            { name: 'Portail Rendez-vous', href: '/portal', icon: Globe, roles: ['OWNER', 'CLIENT'] },
+        ]
+    },
+    {
+        title: '2. Arrivée au Cabinet',
+        roles: ['OWNER', 'SECRETARY', 'ASSISTANT'],
+        items: [
+            { name: 'Portail Accueil', href: '/reception-portal', icon: Navigation, roles: ['OWNER', 'SECRETARY', 'ASSISTANT'] },
             { name: 'Salle d\'Attente', href: '/waiting-room', icon: Clock, badge: '3', roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
         ]
     },
     {
-        title: 'Portails Elite',
-        roles: ['OWNER', 'ASSISTANT', 'SECRETARY'],
+        title: '3. Consultation Clinique',
+        roles: ['OWNER', 'DENTIST', 'ASSISTANT'],
         items: [
-            { name: 'Admin Portal', href: '/admin-portal', icon: ShieldCheck, roles: ['OWNER'] },
-            { name: 'Portail Accueil', href: '/reception-portal', icon: Users, roles: ['OWNER', 'SECRETARY', 'ASSISTANT'] },
-            { name: 'Assistant Admin', href: '/assistant-portal', icon: FileText, roles: ['OWNER', 'ASSISTANT', 'SECRETARY'] },
+            { name: 'Workflow Clinique', href: '/workflow', icon: Activity, roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
+            { name: 'Bilan & Charting', href: '/charting', icon: Shapes, roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
+            { name: 'AI Radio Lab', href: '/ai-radio-lab', icon: Radiation, roles: ['OWNER', 'DENTIST'] },
+            { name: 'Smile Design Studio', href: '/smile-design', icon: Sparkles, roles: ['OWNER', 'DENTIST'] },
+            { name: 'Devis Multi-Options', href: '/quotes', icon: FileCheck, roles: ['OWNER', 'DENTIST', 'SECRETARY', 'ASSISTANT'] },
+        ]
+    },
+    {
+        title: '4. Réalisation des Actes',
+        roles: ['OWNER', 'DENTIST', 'ASSISTANT'],
+        items: [
+            { name: 'Chirurgie Hub', href: '/surgery', icon: Zap, roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
+            { name: 'Labo Hub', href: '/lab', icon: Activity, roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
+            { name: 'Ordonnances', href: '/prescriptions', icon: FileText, roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
+            { name: 'Traçabilité & Stéril.', href: '/sterilization', icon: ShieldCheck, roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
+        ]
+    },
+    {
+        title: '5. Gestion Administrative',
+        roles: ['OWNER', 'SECRETARY', 'ACCOUNTANT', 'ASSISTANT'],
+        items: [
+            { name: 'Facturation & Actes', href: '/billing', icon: DollarSign, roles: ['OWNER', 'SECRETARY', 'ACCOUNTANT', 'ASSISTANT'] },
+            { name: 'Encaissements', href: '/payment', icon: CreditCard, roles: ['OWNER', 'CLIENT', 'SECRETARY'] },
+        ]
+    },
+    {
+        title: '6. Suivi & Archivage',
+        roles: ['OWNER', 'DENTIST', 'SECRETARY', 'ASSISTANT'],
+        items: [
+            { name: 'GED Elite (Vault)', href: '/ged', icon: HardDrive, roles: ['OWNER', 'DENTIST', 'SECRETARY', 'ASSISTANT'] },
+            { name: 'Compliance & RGPD', href: '/compliance', icon: ShieldAlert, roles: ['OWNER', 'DENTIST', 'SECRETARY', 'ASSISTANT'] },
+            { name: 'Communication', href: '/communication', icon: MessageSquare, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
         ]
     },
     {
         title: 'Intelligence & Pilotage',
-        roles: ['OWNER', 'DENTIST', 'ACCOUNTANT', 'CLIENT'],
+        roles: ['OWNER', 'DENTIST', 'ACCOUNTANT'],
         items: [
-            { name: 'AI Command Center', href: '/ai-hub', icon: Brain, roles: ['OWNER', 'DENTIST'] },
-            { name: 'AI Radio Lab', href: '/ai-radio-lab', icon: Radiation, roles: ['OWNER', 'DENTIST'] },
-            { name: 'Neural Vision Lab', href: '/clinical/vision-lab', icon: BrainCircuit, isNew: true, roles: ['OWNER', 'DENTIST'] },
-            { name: 'AI Voice Dictation', href: '/dictation', icon: Mic, roles: ['OWNER', 'DENTIST'] },
+            { name: 'AI Center', href: '/ai-hub', icon: Brain, roles: ['OWNER', 'DENTIST'] },
             { name: 'Financial War Room', href: '/financial-war-room', icon: Target, roles: ['OWNER', 'ACCOUNTANT', 'DENTIST'] },
-            { name: 'Executive Satellite', href: '/executive', icon: Globe, roles: ['OWNER'] },
-            { name: 'Concierge VIP', href: '/executive/concierge', icon: Car, isNew: true, roles: ['OWNER'] },
-            { name: 'Téléconsultation', href: '/teleconsultation', icon: Video, isNew: true, roles: ['OWNER', 'DENTIST', 'CLIENT'] },
+            { name: 'Marketing Hub', href: '/marketing', icon: Megaphone, roles: ['OWNER', 'DENTIST'] },
+            { name: 'Dictée Vocale IA', href: '/dictation', icon: Mic, roles: ['OWNER', 'DENTIST'] },
         ]
     },
     {
-        title: 'Admin & Finance',
-        roles: ['OWNER', 'SECRETARY', 'ACCOUNTANT', 'ASSISTANT'],
-        items: [
-            { name: 'GED Elite (Vault)', href: '/ged', icon: HardDrive, roles: ['OWNER', 'DENTIST', 'SECRETARY', 'ASSISTANT'] },
-            { name: 'Devis Multi-Options', href: '/quotes', icon: FileCheck, roles: ['OWNER', 'DENTIST', 'SECRETARY', 'ASSISTANT'] },
-            { name: 'Facturation & Actes', href: '/billing', icon: DollarSign, roles: ['OWNER', 'SECRETARY', 'ACCOUNTANT', 'ASSISTANT'] },
-            { name: 'Paiement en Ligne', href: '/payment', icon: CreditCard, isNew: true, roles: ['OWNER', 'CLIENT', 'SECRETARY'] },
-            { name: 'Comptabilité OHADA', href: '/accounting', icon: BookOpen, roles: ['OWNER', 'ACCOUNTANT'] },
-            { name: 'Fiscalité OHADA', href: '/accounting/tax', icon: Landmark, roles: ['OWNER', 'ACCOUNTANT'] },
-            { name: 'Blockchain Ledger', href: '/admin-portal/blockchain', icon: Binary, isNew: true, roles: ['OWNER'] },
-        ]
-    },
-    {
-        title: 'Opérations & Cabinet',
-        roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY', 'CLIENT'],
-        items: [
-            { name: 'Marketing IA Hub', href: '/marketing', icon: Megaphone, roles: ['OWNER', 'DENTIST'] },
-            { name: 'Gestion Elite (RH)', href: '/management', icon: Briefcase, roles: ['OWNER'] },
-            { name: 'Stocks & Intrants', href: '/inventory', icon: Package, roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
-            { name: 'Traçabilité Hub', href: '/sterilization', icon: ShieldCheck, roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
-            { name: 'Suivi Post-Op IA', href: '/portal/post-op', icon: HeartPulse, roles: ['OWNER', 'DENTIST', 'CLIENT'] },
-            { name: 'Portail Patient VIP', href: '/portal', icon: UserCircle, roles: ['OWNER', 'CLIENT'] },
-            { name: 'Programme Fidélité', href: '/loyalty', icon: Star, isNew: true, roles: ['OWNER', 'CLIENT'] },
-        ]
-    },
-    {
-        title: 'Communication',
-        roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY', 'ACCOUNTANT', 'CLIENT'],
-        items: [
-            { name: 'Messagerie Interne', href: '/messages', icon: Hash, isNew: true, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY', 'ACCOUNTANT'] },
-            { name: 'Communication', href: '/communication', icon: MessageSquare, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
-            { name: 'Notifications', href: '/notifications', icon: Bell, badge: '3', roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY', 'CLIENT'] },
-        ]
-    },
-    {
-        title: 'Système',
+        title: 'Expertise & Système',
         roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY', 'ACCOUNTANT'],
         items: [
-            { name: 'Documentation Elite', href: '/documentation', icon: BookOpen },
+            { name: 'Gouvernance (RH)', href: '/management', icon: Briefcase, roles: ['OWNER'] },
+            { name: 'Comptabilité OHADA', href: '/accounting', icon: BookOpen, roles: ['OWNER', 'ACCOUNTANT'] },
+            { name: 'Stocks & Intrants', href: '/inventory', icon: Package, roles: ['OWNER', 'DENTIST', 'ASSISTANT'] },
             { name: 'Elite Academy', href: '/academy', icon: GraduationCap, roles: ['OWNER', 'DENTIST', 'ASSISTANT', 'SECRETARY'] },
             { name: 'Paramètres', href: '/settings', icon: Settings, roles: ['OWNER'] },
         ]
-    },
-    {
-        title: 'Mobile Apps (Elite)',
-        roles: ['OWNER'], // Only Admin can switch for demo
-        items: [
-            { name: 'Mobile Hub (Switcher)', href: '/mobile', icon: Smartphone, badge: '4' },
-            { name: 'App Patient', href: '/mobile/client', icon: UserCircle },
-            { name: 'App Admin', href: '/mobile/admin', icon: ShieldCheck },
-            { name: 'App Dentiste', href: '/mobile/staff', icon: Stethoscope },
-            { name: 'App Comptable', href: '/mobile/comptable', icon: BookOpen },
-        ]
     }
 ]
+
 
 export function Sidebar({ className }: { className?: string }) {
     const [mounted, setMounted] = useState(false)

@@ -30,8 +30,8 @@ const MODULES_GRID = [
 import { PractitionerDashboard } from '@/components/dashboard/PractitionerDashboard'
 import { AccountantDashboard } from '@/components/dashboard/AccountantDashboard'
 import { StaffDashboard } from '@/components/dashboard/StaffDashboard'
-import AdminPortal from '../admin-portal/page'
-import PatientPortal from '../portal/page'
+import AdminPortal from '@/app/(modules)/(admin)/admin-portal/page'
+import PatientPortal from '@/app/(core)/(1-accueil)/portal/page'
 import { useRole } from '@/hooks/useRole'
 
 export default function DashboardPage() {

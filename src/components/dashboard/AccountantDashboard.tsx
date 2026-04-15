@@ -8,6 +8,7 @@ import {
 } from "lucide-react"
 import { motion } from "framer-motion"
 import Link from "next/link"
+import { cn } from "@/lib/utils"
 
 export function AccountantDashboard({ user }: { user: any }) {
     const finStats = [
@@ -73,6 +74,45 @@ export function AccountantDashboard({ user }: { user: any }) {
                             ))}
                         </div>
                     </div>
+                </div>
+            </div>
+
+            {/* Pipeline Ribbon */}
+            <div className="bg-slate-900 rounded-[2.5rem] p-6 text-white shadow-luxury flex flex-wrap lg:flex-nowrap items-center justify-between gap-4">
+                <div className="flex items-center gap-3 pr-6 lg:border-r border-white/10 shrink-0">
+                    <div className="h-10 w-10 bg-emerald-500 rounded-xl flex items-center justify-center">
+                        <Activity className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                        <p className="text-[9px] font-black uppercase tracking-widest text-emerald-400">Flux Temps Réel</p>
+                        <p className="text-xl font-black">24 <span className="text-sm font-bold text-slate-400">Actifs</span></p>
+                    </div>
+                </div>
+                
+                <div className="flex-1 flex items-center gap-2 overflow-x-auto no-scrollbar justify-between">
+                    {[
+                        { label: 'Accueil', val: 3, id: 'PHASE_1_ACCUEIL', color: 'bg-indigo-500' },
+                        { label: 'Attente', val: 4, id: 'PHASE_2_ARRIVEE', color: 'bg-amber-500' },
+                        { label: 'Fauteuil', val: 2, id: 'PHASE_3_CONSULTATION', color: 'bg-teal-500' },
+                        { label: 'Chirurgie', val: 0, id: 'PHASE_4_ACTES', color: 'bg-rose-500', empty: true },
+                        { label: 'Admin/Paiement', val: 5, id: 'PHASE_5_ADMIN', color: 'bg-blue-600' },
+                        { label: 'Sortie', val: 10, id: 'PHASE_6_SUIVI', color: 'bg-emerald-500' }
+                    ].map((phase, i) => (
+                        <div key={i} className="flex items-center gap-2 group cursor-pointer">
+                            <div className={cn("flex items-center gap-2 px-3 py-2 rounded-xl transition-all", phase.empty ? "opacity-30 grayscale" : "bg-white/5 hover:bg-white/10")}>
+                                <div className={cn("h-3 w-3 rounded-full", phase.color)} />
+                                <span className="text-[10px] font-black uppercase tracking-widest text-slate-300 group-hover:text-white leading-none hidden sm:block whitespace-nowrap">{phase.label}</span>
+                                <span className="text-sm font-black ml-1">{phase.val}</span>
+                            </div>
+                            {i < 5 && <ArrowRight className="h-3 w-3 text-slate-600 hidden md:block" />}
+                        </div>
+                    ))}
+                </div>
+
+                <div className="pl-6 lg:border-l border-white/10 shrink-0 hidden lg:block">
+                    <Link href="/workflow">
+                        <Button className="bg-white text-slate-900 hover:bg-slate-200 uppercase font-black text-[10px] tracking-widest rounded-xl">Ouvrir Workflow</Button>
+                    </Link>
                 </div>
             </div>
 

@@ -11,7 +11,7 @@ import {
 import { cn } from "@/lib/utils"
 
 type Priority = 'HIGH' | 'MEDIUM' | 'LOW'
-type ColumnId = 'VISIT_UPCOMING' | 'TREATMENT_PLAN' | 'PROCEDURE' | 'FOLLOW_UP' | 'COMPLETED'
+type ColumnId = 'PHASE_1_ACCUEIL' | 'PHASE_2_ARRIVEE' | 'PHASE_3_CONSULTATION' | 'PHASE_4_ACTES' | 'PHASE_5_ADMIN' | 'PHASE_6_SUIVI'
 
 interface Patient {
     id: string
@@ -23,11 +23,12 @@ interface Patient {
 }
 
 const COLUMNS: { id: ColumnId; title: string; color: string; bg: string }[] = [
-    { id: 'VISIT_UPCOMING', title: 'Consultation Initiale', color: 'bg-indigo-500', bg: 'bg-indigo-50/50' },
-    { id: 'TREATMENT_PLAN', title: 'Plan de Soin / Devis', color: 'bg-amber-500', bg: 'bg-amber-50/50' },
-    { id: 'PROCEDURE', title: 'En Traitement', color: 'bg-teal-500', bg: 'bg-teal-50/50' },
-    { id: 'FOLLOW_UP', title: 'Suivi Post-Op', color: 'bg-fuchsia-500', bg: 'bg-fuchsia-50/50' },
-    { id: 'COMPLETED', title: 'Terminé / Satisfaction', color: 'bg-emerald-500', bg: 'bg-emerald-50/50' },
+    { id: 'PHASE_1_ACCUEIL', title: '1. Accueil & Prise en charge', color: 'bg-indigo-500', bg: 'bg-indigo-50/50' },
+    { id: 'PHASE_2_ARRIVEE', title: '2. Arrivée au Cabinet', color: 'bg-amber-500', bg: 'bg-amber-50/50' },
+    { id: 'PHASE_3_CONSULTATION', title: '3. Consultation Clinique', color: 'bg-teal-500', bg: 'bg-teal-50/50' },
+    { id: 'PHASE_4_ACTES', title: '4. Réalisation des Actes', color: 'bg-rose-500', bg: 'bg-rose-50/50' },
+    { id: 'PHASE_5_ADMIN', title: '5. Gestion Administrative', color: 'bg-blue-600', bg: 'bg-blue-50/50' },
+    { id: 'PHASE_6_SUIVI', title: '6. Suivi & Archivage', color: 'bg-emerald-500', bg: 'bg-emerald-50/50' },
 ]
 
 const PRIORITY_COLORS: Record<Priority, string> = {
@@ -55,8 +56,8 @@ export default function WorkflowPage() {
                 setPatients(items.map((p: any) => ({
                     id: p.id,
                     name: `${p.firstName} ${p.lastName}`,
-                    status: (p.workflowStatus as ColumnId) || 'VISIT_UPCOMING',
-                    priority: 'MEDIUM', // Placeholder logic
+                    status: (p.workflowStatus as ColumnId) || 'PHASE_1_ACCUEIL',
+                    priority: 'MEDIUM',
                     date: new Date(p.updatedAt).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' }),
                     procedure: 'Consultation Elite'
                 })))
@@ -162,13 +163,13 @@ export default function WorkflowPage() {
                     <Button variant="outline" className="rounded-2xl border-slate-200 h-10 px-6 text-[11px] font-black uppercase tracking-widest text-slate-500 bg-white">
                         <Filter className="mr-2 h-3 w-3" /> Filtres
                     </Button>
-                    <Button onClick={() => setAddingIn('VISIT_UPCOMING')} className="bg-slate-900 text-white hover:bg-slate-800 font-black px-8 rounded-2xl uppercase tracking-widest text-[11px] h-12 shadow-lg transition-all">
+                    <Button onClick={() => setAddingIn('PHASE_1_ACCUEIL')} className="bg-slate-900 text-white hover:bg-slate-800 font-black px-8 rounded-2xl uppercase tracking-widest text-[11px] h-12 shadow-lg transition-all">
                         <Plus className="mr-2 h-5 w-5" /> Nouveau Patient
                     </Button>
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
                 {COLUMNS.map(col => (
                     <div
                         key={col.id}
@@ -279,8 +280,8 @@ export default function WorkflowPage() {
                     <div>
                         <span className="text-[9px] font-black uppercase tracking-widest text-indigo-600">AI Predictive Engine</span>
                         <p className="text-sm font-bold text-slate-800 italic leading-snug">
-                            {patients.filter(p => p.status === 'VISIT_UPCOMING').length > 3
-                                ? `"Attention : Goulot d'étranglement détecté en consultation initiale. Priorisez les plans de soins pour libérer le flux."`
+                            {patients.filter(p => p.status === 'PHASE_1_ACCUEIL').length > 3
+                                ? `"Attention : Goulot d'étranglement détecté en phase d'accueil. Priorisez les admissions pour libérer le flux."`
                                 : `"Optimisation Elite : Le flux patient est fluide. {patients.length} parcours actifs sous surveillance IA."`.replace('{patients.length}', patients.length.toString())}
                         </p>
                     </div>

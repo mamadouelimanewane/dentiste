@@ -36,9 +36,35 @@ export async function PATCH(req: Request) {
             include: { communications: true }
         })
 
-        // Déclencher le suivi Post-Op si le patient passe dans cette étape
-        if (workflowStatus === 'SUIVI_POST_OP') {
-            const message = `Bonjour ${patient.firstName}, nous avons bien noté votre passage en phase de suivi. Un assistant vous contactera demain pour s'assurer que votre cicatrisation se passe bien. En attendant, n'oubliez pas vos soins ! 🦷`
+        // Déclencher la préparation clinique
+        if (workflowStatus === 'PHASE_4_ACTES') {
+            await prisma.task.create({
+                data: {
+                    patientId: patient.id,
+                    title: `Préparer le plateau technique pour ${patient.firstName}`,
+                    priority: 'HIGH',
+                    category: 'CLINICAL'
+                }
+            })
+            console.log(`[ELITE CONNECT] Tâche ajoutée : Préparation pour ${patient.firstName}`)
+        }
+
+        // Déclencher l'alerte administrative
+        if (workflowStatus === 'PHASE_5_ADMIN') {
+            await prisma.task.create({
+                data: {
+                    patientId: patient.id,
+                    title: `Vérifier la FSE et le règlement de ${patient.firstName}`,
+                    priority: 'URGENT',
+                    category: 'ADMIN'
+                }
+            })
+            console.log(`[ELITE CONNECT] Tâche ajoutée : Facturation pour ${patient.firstName}`)
+        }
+
+        // Déclencher le suivi Post-Op et la fin de traitement
+        if (workflowStatus === 'PHASE_6_SUIVI') {
+            const message = `Félicitations ${patient.firstName} ! Votre traitement est terminé. 🎉 Un assistant vous contactera pour s'assurer que tout se passe bien. N'oubliez pas vos soins ! 🦷`
 
             await prisma.communicationLog.create({
                 data: {
@@ -50,22 +76,6 @@ export async function PATCH(req: Request) {
                 }
             })
             console.log(`[ELITE CONNECT] Suivi Post-Op automatisé pour ${patient.firstName}`)
-        }
-
-        // Déclencher le message de fin de traitement
-        if (workflowStatus === 'COMPLETED') {
-            const message = `Félicitations ${patient.firstName} ! Votre traitement est maintenant terminé. 🎉 Nous espérons que votre nouveau sourire vous comble de bonheur. Dans quelques jours, vous recevrez un petit lien pour nous donner votre avis. À très bientôt !`
-
-            await prisma.communicationLog.create({
-                data: {
-                    patientId: patient.id,
-                    type: 'WHATSAPP',
-                    category: 'EDUCATION',
-                    content: message,
-                    status: 'DELIVERED'
-                }
-            })
-            console.log(`[ELITE CONNECT] Fin de traitement célébrée pour ${patient.firstName}`)
         }
 
         return NextResponse.json(patient)

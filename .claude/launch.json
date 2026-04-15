@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "livreur-dev",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["--prefix", "C:/gravity/livreur", "vite", "--port", "5174"],
+      "port": 5174
+    },
+    {
+      "name": "culte-dev",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["C:/gravity/culte/serve.js"],
+      "port": 3031
+    }
+  ]
+}
