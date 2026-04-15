@@ -22,30 +22,30 @@ export function StaffDashboard({ user }: { user: any }) {
     return (
         <div className="space-y-8 max-w-7xl mx-auto">
             {/* Header / Hero */}
-            <div className="bg-white rounded-[3rem] p-8 border border-slate-100 shadow-luxury relative overflow-hidden">
+            <div className="bg-white rounded-[2rem] p-8 border border-slate-200 shadow-sm relative overflow-hidden">
                 <div className="absolute top-0 right-0 p-10 opacity-[0.03]">
                     <Smartphone className="h-64 w-64 text-slate-900" />
                 </div>
                 <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-10">
                     <div className="space-y-6">
                         <div className="flex items-center gap-3">
-                            <span className="px-3 py-1 bg-slate-900 rounded-full text-[9px] font-black uppercase tracking-widest text-white">Opérations & Accueil Elite</span>
+                            <span className="px-3 py-1 bg-emerald-50 rounded-full text-[10px] font-bold uppercase tracking-wider text-emerald-600 border border-emerald-100">Opérations & Accueil Elite</span>
                             <span className="text-slate-500 text-xs font-bold italic">Prêt pour le service, {user.name}</span>
                         </div>
-                        <h2 className="text-5xl font-black text-slate-900 tracking-tighter leading-[0.9] italic uppercase">
-                            Command <span className="text-emerald-gradient">Center</span>
+                        <h2 className="text-3xl font-bold text-slate-900 tracking-tight">
+                            Command Center
                         </h2>
                         <p className="text-slate-500 text-base font-medium leading-relaxed max-w-md">
                             Gérez le flux de patients et les communications du cabinet en temps réel. Système de synchronisation SmartCheck active.
                         </p>
                         <div className="flex gap-4 pt-4">
                             <Link href="/waiting-room">
-                                <Button className="bg-slate-900 text-white font-black uppercase text-[10px] tracking-widest h-14 rounded-2xl px-10 shadow-xl hover:bg-slate-800">
+                                <Button className="bg-slate-900 text-white font-semibold text-sm h-12 rounded-xl px-8 shadow-sm hover:bg-slate-800">
                                     Salle d'Attente
                                 </Button>
                             </Link>
                             <Link href="/sterilization">
-                                <Button variant="outline" className="border-indigo-500/50 text-indigo-600 font-black uppercase text-[10px] tracking-widest h-14 rounded-2xl px-10 hover:bg-indigo-50">
+                                <Button variant="outline" className="border-slate-200 text-slate-600 font-semibold text-sm h-12 rounded-xl px-8 hover:bg-slate-50">
                                     Traçabilité Hub
                                 </Button>
                             </Link>
@@ -59,7 +59,7 @@ export function StaffDashboard({ user }: { user: any }) {
                             { label: 'Gestion Tâches', icon: ClipboardList, color: 'bg-amber-500' },
                             { label: 'Urgences', icon: Zap, color: 'bg-red-500' },
                         ].map((btn, i) => (
-                            <button key={i} className="h-28 w-32 bg-slate-50 border border-slate-100 rounded-[2rem] flex flex-col items-center justify-center gap-3 hover:bg-white hover:shadow-xl hover:scale-105 transition-all group">
+                            <button key={i} className="h-28 w-32 bg-white border border-slate-200 rounded-2xl flex flex-col items-center justify-center gap-3 hover:bg-slate-50 hover:shadow-sm transition-all group">
                                 <div className={`h-10 w-10 rounded-xl flex items-center justify-center text-white ${btn.color} shadow-lg shadow-current/20 group-hover:scale-110 transition-transform`}>
                                     <btn.icon className="h-5 w-5" />
                                 </div>
@@ -71,14 +71,14 @@ export function StaffDashboard({ user }: { user: any }) {
             </div>
 
             {/* Pipeline Ribbon */}
-            <div className="bg-slate-900 rounded-[2.5rem] p-6 text-white shadow-luxury flex flex-wrap lg:flex-nowrap items-center justify-between gap-4">
-                <div className="flex items-center gap-3 pr-6 lg:border-r border-white/10 shrink-0">
+            <div className="bg-white rounded-2xl p-6 text-slate-900 border border-slate-200 shadow-sm flex flex-wrap lg:flex-nowrap items-center justify-between gap-4">
+                <div className="flex items-center gap-3 pr-6 lg:border-r border-slate-200 shrink-0">
                     <div className="h-10 w-10 bg-emerald-500 rounded-xl flex items-center justify-center">
                         <Activity className="h-5 w-5 text-white" />
                     </div>
                     <div>
                         <p className="text-[9px] font-black uppercase tracking-widest text-emerald-400">Flux Temps Réel</p>
-                        <p className="text-xl font-black">24 <span className="text-sm font-bold text-slate-400">Actifs</span></p>
+                        <p className="text-xl font-bold">24 <span className="text-sm font-medium text-slate-500">Actifs</span></p>
                     </div>
                 </div>
                 
@@ -92,19 +92,19 @@ export function StaffDashboard({ user }: { user: any }) {
                         { label: 'Sortie', val: 10, id: 'PHASE_6_SUIVI', color: 'bg-emerald-500' }
                     ].map((phase, i) => (
                         <div key={i} className="flex items-center gap-2 group cursor-pointer">
-                            <div className={cn("flex items-center gap-2 px-3 py-2 rounded-xl transition-all", phase.empty ? "opacity-30 grayscale" : "bg-white/5 hover:bg-white/10")}>
+                            <div className={cn("flex items-center gap-2 px-3 py-2 rounded-xl transition-all", phase.empty ? "opacity-30 grayscale" : "bg-slate-50 hover:bg-slate-100")}>
                                 <div className={cn("h-3 w-3 rounded-full", phase.color)} />
-                                <span className="text-[10px] font-black uppercase tracking-widest text-slate-300 group-hover:text-white leading-none hidden sm:block whitespace-nowrap">{phase.label}</span>
-                                <span className="text-sm font-black ml-1">{phase.val}</span>
+                                <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-600 group-hover:text-slate-900 leading-none hidden sm:block whitespace-nowrap">{phase.label}</span>
+                                <span className="text-sm font-bold ml-1">{phase.val}</span>
                             </div>
-                            {i < 5 && <ArrowRight className="h-3 w-3 text-slate-600 hidden md:block" />}
+                            {i < 5 && <ArrowRight className="h-3 w-3 text-slate-300 hidden md:block" />}
                         </div>
                     ))}
                 </div>
 
                 <div className="pl-6 lg:border-l border-white/10 shrink-0 hidden lg:block">
                     <Link href="/workflow">
-                        <Button className="bg-white text-slate-900 hover:bg-slate-200 uppercase font-black text-[10px] tracking-widest rounded-xl">Ouvrir Workflow</Button>
+                        <Button className="bg-slate-900 text-white hover:bg-slate-800 font-semibold text-[11px] rounded-xl px-6">Ouvrir Workflow</Button>
                     </Link>
                 </div>
             </div>

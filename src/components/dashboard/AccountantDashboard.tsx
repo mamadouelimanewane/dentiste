@@ -21,40 +21,40 @@ export function AccountantDashboard({ user }: { user: any }) {
     return (
         <div className="space-y-8 max-w-7xl mx-auto">
             {/* Header / Hero */}
-            <div className="bg-slate-950 rounded-[3rem] p-10 text-white relative overflow-hidden shadow-2xl">
+            <div className="bg-white rounded-[2rem] p-10 text-slate-900 border border-slate-200 shadow-sm relative overflow-hidden">
                 <div className="absolute top-0 right-0 p-10 opacity-5">
                     <BarChart3 className="h-64 w-64 text-emerald-500" />
                 </div>
                 <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-10">
                     <div className="space-y-6">
                         <div className="flex items-center gap-3">
-                            <span className="px-3 py-1 bg-emerald-600 rounded-full text-[9px] font-black uppercase tracking-widest text-white">Finance & Compta Elite</span>
-                            <span className="text-slate-400 text-xs font-bold italic">Bienvenue, {user.name}</span>
+                            <span className="px-3 py-1 bg-emerald-50 text-emerald-600 border border-emerald-100 rounded-full text-[10px] font-bold uppercase tracking-wider">Finance & Compta Elite</span>
+                            <span className="text-slate-500 text-xs font-medium italic">Bienvenue, {user.name}</span>
                         </div>
-                        <h2 className="text-5xl font-black tracking-tighter leading-none italic uppercase">
-                            Vision <span className="text-emerald-gradient">Financière</span>
+                        <h2 className="text-3xl font-bold tracking-tight leading-none text-slate-900">
+                            Vision Financière
                         </h2>
-                        <p className="text-slate-400 text-base font-medium leading-relaxed max-w-md">
+                        <p className="text-slate-500 text-sm font-normal leading-relaxed max-w-md">
                             Reporting OHADA en temps réel. Vos indicateurs de performance sont à jour avec les dernières encaissement Wave & Orange Money.
                         </p>
                         <div className="flex gap-4 pt-4">
                             <Link href="/accounting">
-                                <Button className="bg-emerald-600 text-white font-black uppercase text-[10px] tracking-widest h-14 rounded-2xl px-10 shadow-xl shadow-emerald-500/20 hover:bg-emerald-500">
+                                <Button className="bg-emerald-600 text-white font-semibold text-sm h-12 rounded-xl px-8 shadow-sm hover:bg-emerald-700">
                                     Grand Livre OHADA
                                 </Button>
                             </Link>
                             <Link href="/accounting/tax">
-                                <Button variant="outline" className="border-emerald-500/50 text-emerald-400 font-black uppercase text-[10px] tracking-widest h-14 rounded-2xl px-10 hover:bg-emerald-500/10">
+                                <Button variant="outline" className="border-slate-200 text-slate-600 font-semibold text-sm h-12 rounded-xl px-8 hover:bg-slate-50">
                                     Fiscalité OHADA
                                 </Button>
                             </Link>
                         </div>
                     </div>
                     
-                    <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-[3rem] p-8 space-y-6 min-w-[320px]">
+                    <div className="bg-slate-50 border border-slate-100 rounded-[2rem] p-8 space-y-6 min-w-[320px]">
                         <div className="flex items-center justify-between">
-                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Répartition Recettes</span>
-                            <PieChart className="h-4 w-4 text-emerald-500" />
+                            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Répartition Recettes</span>
+                            <PieChart className="h-4 w-4 text-slate-400" />
                         </div>
                         <div className="space-y-4">
                             {[
@@ -64,10 +64,10 @@ export function AccountantDashboard({ user }: { user: any }) {
                             ].map((item, i) => (
                                 <div key={i} className="space-y-1.5">
                                     <div className="flex justify-between text-[10px] font-bold uppercase tracking-tight">
-                                        <span className="text-slate-300">{item.method}</span>
-                                        <span className="text-white">{item.percent}%</span>
+                                        <span className="text-slate-600">{item.method}</span>
+                                        <span className="text-slate-900">{item.percent}%</span>
                                     </div>
-                                    <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                                    <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
                                         <div className={`h-full ${item.color}`} style={{ width: `${item.percent}%` }} />
                                     </div>
                                 </div>
@@ -78,14 +78,14 @@ export function AccountantDashboard({ user }: { user: any }) {
             </div>
 
             {/* Pipeline Ribbon */}
-            <div className="bg-slate-900 rounded-[2.5rem] p-6 text-white shadow-luxury flex flex-wrap lg:flex-nowrap items-center justify-between gap-4">
-                <div className="flex items-center gap-3 pr-6 lg:border-r border-white/10 shrink-0">
+            <div className="bg-white rounded-2xl p-6 text-slate-900 border border-slate-200 shadow-sm flex flex-wrap lg:flex-nowrap items-center justify-between gap-4">
+                <div className="flex items-center gap-3 pr-6 lg:border-r border-slate-200 shrink-0">
                     <div className="h-10 w-10 bg-emerald-500 rounded-xl flex items-center justify-center">
                         <Activity className="h-5 w-5 text-white" />
                     </div>
                     <div>
                         <p className="text-[9px] font-black uppercase tracking-widest text-emerald-400">Flux Temps Réel</p>
-                        <p className="text-xl font-black">24 <span className="text-sm font-bold text-slate-400">Actifs</span></p>
+                        <p className="text-xl font-bold">24 <span className="text-sm font-medium text-slate-500">Actifs</span></p>
                     </div>
                 </div>
                 
@@ -99,19 +99,19 @@ export function AccountantDashboard({ user }: { user: any }) {
                         { label: 'Sortie', val: 10, id: 'PHASE_6_SUIVI', color: 'bg-emerald-500' }
                     ].map((phase, i) => (
                         <div key={i} className="flex items-center gap-2 group cursor-pointer">
-                            <div className={cn("flex items-center gap-2 px-3 py-2 rounded-xl transition-all", phase.empty ? "opacity-30 grayscale" : "bg-white/5 hover:bg-white/10")}>
+                            <div className={cn("flex items-center gap-2 px-3 py-2 rounded-xl transition-all", phase.empty ? "opacity-30 grayscale" : "bg-slate-50 hover:bg-slate-100")}>
                                 <div className={cn("h-3 w-3 rounded-full", phase.color)} />
-                                <span className="text-[10px] font-black uppercase tracking-widest text-slate-300 group-hover:text-white leading-none hidden sm:block whitespace-nowrap">{phase.label}</span>
-                                <span className="text-sm font-black ml-1">{phase.val}</span>
+                                <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-600 group-hover:text-slate-900 leading-none hidden sm:block whitespace-nowrap">{phase.label}</span>
+                                <span className="text-sm font-bold ml-1">{phase.val}</span>
                             </div>
-                            {i < 5 && <ArrowRight className="h-3 w-3 text-slate-600 hidden md:block" />}
+                            {i < 5 && <ArrowRight className="h-3 w-3 text-slate-300 hidden md:block" />}
                         </div>
                     ))}
                 </div>
 
                 <div className="pl-6 lg:border-l border-white/10 shrink-0 hidden lg:block">
                     <Link href="/workflow">
-                        <Button className="bg-white text-slate-900 hover:bg-slate-200 uppercase font-black text-[10px] tracking-widest rounded-xl">Ouvrir Workflow</Button>
+                        <Button className="bg-slate-900 text-white hover:bg-slate-800 font-semibold text-[11px] rounded-xl px-6">Ouvrir Workflow</Button>
                     </Link>
                 </div>
             </div>

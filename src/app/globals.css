@@ -88,13 +88,12 @@
   background-color: #059669; /* emerald-600 */
 }
 
-/* Luxury Elements */
 .shadow-luxury {
-  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.04), 0 20px 25px -5px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 
 .shadow-emerald-glow {
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.1);
 }
 
 .bg-glass {

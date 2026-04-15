@@ -21,50 +21,50 @@ export function PractitionerDashboard({ user }: { user: any }) {
     return (
         <div className="space-y-8 max-w-7xl mx-auto">
             {/* Header / Hero */}
-            <div className="bg-slate-900 rounded-[3rem] p-10 text-white relative overflow-hidden shadow-2xl">
+            <div className="bg-white rounded-[2rem] p-10 text-slate-900 border border-slate-200 shadow-sm relative overflow-hidden">
                 <div className="absolute top-0 right-0 p-10 opacity-10">
                     <Stethoscope className="h-64 w-64 text-emerald-500" />
                 </div>
                 <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
                     <div className="space-y-6">
                         <div className="flex items-center gap-3">
-                            <span className="px-3 py-1 bg-emerald-600 rounded-full text-[9px] font-black uppercase tracking-widest">Hub Clinique Elite</span>
-                            <span className="text-slate-400 text-xs font-bold italic">Bienvenue, {user.name}</span>
+                            <span className="px-3 py-1 bg-emerald-50 text-emerald-600 border border-emerald-100 rounded-full text-[10px] font-bold uppercase tracking-wider">Hub Clinique Elite</span>
+                            <span className="text-slate-500 text-xs font-medium italic">Bienvenue, {user.name}</span>
                         </div>
-                        <h2 className="text-5xl font-black tracking-tighter leading-none italic uppercase">
-                            Focus <span className="text-emerald-gradient">Praticien</span>
+                        <h2 className="text-3xl font-bold tracking-tight leading-none text-slate-900">
+                            Focus Praticien
                         </h2>
-                        <p className="text-slate-400 text-base font-medium leading-relaxed max-w-md">
+                        <p className="text-slate-500 text-sm font-normal leading-relaxed max-w-md">
                             Votre arsenal technologique est prêt. L'IA a pré-analysé les 3 prochaines panoramiques pour vous.
                         </p>
                         <div className="flex gap-4 pt-4">
                             <Link href="/agenda">
-                                <Button className="bg-emerald-600 text-white font-black uppercase text-[10px] tracking-widest h-14 rounded-2xl px-10 shadow-xl shadow-emerald-500/20 hover:bg-emerald-500">
+                                <Button className="bg-emerald-600 text-white font-semibold text-sm h-12 rounded-xl px-8 shadow-sm hover:bg-emerald-700">
                                     Voir mon Agenda
                                 </Button>
                             </Link>
                             <Link href="/workflow">
-                                <Button variant="outline" className="border-white/20 text-white font-black uppercase text-[10px] tracking-widest h-14 rounded-2xl px-10 hover:bg-white/5">
+                                <Button variant="outline" className="border-slate-200 text-slate-600 font-semibold text-sm h-12 rounded-xl px-8 hover:bg-slate-50">
                                     Workflow Patient
                                 </Button>
                             </Link>
                         </div>
                     </div>
                     
-                    <div className="hidden md:block bg-emerald-500/5 backdrop-blur-sm border border-emerald-500/20 rounded-[2.5rem] p-6 space-y-4">
-                        <div className="flex items-center gap-3 text-emerald-400">
+                    <div className="hidden md:block bg-emerald-50 border border-emerald-100 rounded-[2rem] p-6 space-y-4">
+                        <div className="flex items-center gap-3 text-emerald-600">
                             <Brain className="h-5 w-5" />
-                            <span className="text-xs font-black uppercase tracking-widest">AI Radio Insight</span>
+                            <span className="text-xs font-bold uppercase tracking-wider">AI Radio Insight</span>
                         </div>
                         <div className="space-y-3">
-                            <div className="p-3 bg-white/5 rounded-xl border border-white/5">
-                                <p className="text-[11px] font-bold text-slate-200">Patient #224 : Anomalie détectée sur la 36 (possible carie interproximale).</p>
+                            <div className="p-3 bg-white rounded-xl border border-emerald-100/50 shadow-sm">
+                                <p className="text-[12px] font-medium text-slate-700">Patient #224 : Anomalie détectée sur la 36 (possible carie interproximale).</p>
                             </div>
-                            <div className="p-3 bg-white/5 rounded-xl border border-white/5">
-                                <p className="text-[11px] font-bold text-slate-200">Patient #225 : Densité osseuse optimale pour l'implant prévu.</p>
+                            <div className="p-3 bg-white rounded-xl border border-emerald-100/50 shadow-sm">
+                                <p className="text-[12px] font-medium text-slate-700">Patient #225 : Densité osseuse optimale pour l'implant prévu.</p>
                             </div>
                         </div>
-                        <Button className="w-full bg-white/10 hover:bg-white/20 text-white text-[9px] font-black uppercase tracking-widest h-10 mt-2 rounded-xl">
+                        <Button className="w-full bg-emerald-100 hover:bg-emerald-200 text-emerald-700 text-xs font-semibold h-10 mt-2 rounded-xl">
                             Ouvrir AI Radio Lab
                         </Button>
                     </div>
@@ -72,14 +72,14 @@ export function PractitionerDashboard({ user }: { user: any }) {
             </div>
 
             {/* Pipeline Ribbon */}
-            <div className="bg-slate-900 rounded-[2.5rem] p-6 text-white shadow-luxury flex flex-wrap lg:flex-nowrap items-center justify-between gap-4">
-                <div className="flex items-center gap-3 pr-6 lg:border-r border-white/10 shrink-0">
+            <div className="bg-white rounded-2xl p-6 text-slate-900 border border-slate-200 shadow-sm flex flex-wrap lg:flex-nowrap items-center justify-between gap-4">
+                <div className="flex items-center gap-3 pr-6 lg:border-r border-slate-200 shrink-0">
                     <div className="h-10 w-10 bg-emerald-500 rounded-xl flex items-center justify-center">
                         <Activity className="h-5 w-5 text-white" />
                     </div>
                     <div>
                         <p className="text-[9px] font-black uppercase tracking-widest text-emerald-400">Flux Temps Réel</p>
-                        <p className="text-xl font-black">24 <span className="text-sm font-bold text-slate-400">Actifs</span></p>
+                        <p className="text-xl font-bold">24 <span className="text-sm font-medium text-slate-500">Actifs</span></p>
                     </div>
                 </div>
                 
@@ -93,19 +93,19 @@ export function PractitionerDashboard({ user }: { user: any }) {
                         { label: 'Sortie', val: 10, id: 'PHASE_6_SUIVI', color: 'bg-emerald-500' }
                     ].map((phase, i) => (
                         <div key={i} className="flex items-center gap-2 group cursor-pointer">
-                            <div className={cn("flex items-center gap-2 px-3 py-2 rounded-xl transition-all", phase.empty ? "opacity-30 grayscale" : "bg-white/5 hover:bg-white/10")}>
+                            <div className={cn("flex items-center gap-2 px-3 py-2 rounded-xl transition-all", phase.empty ? "opacity-30 grayscale" : "bg-slate-50 hover:bg-slate-100")}>
                                 <div className={cn("h-3 w-3 rounded-full", phase.color)} />
-                                <span className="text-[10px] font-black uppercase tracking-widest text-slate-300 group-hover:text-white leading-none hidden sm:block whitespace-nowrap">{phase.label}</span>
-                                <span className="text-sm font-black ml-1">{phase.val}</span>
+                                <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-600 group-hover:text-slate-900 leading-none hidden sm:block whitespace-nowrap">{phase.label}</span>
+                                <span className="text-sm font-bold ml-1">{phase.val}</span>
                             </div>
-                            {i < 5 && <ArrowRight className="h-3 w-3 text-slate-600 hidden md:block" />}
+                            {i < 5 && <ArrowRight className="h-3 w-3 text-slate-300 hidden md:block" />}
                         </div>
                     ))}
                 </div>
 
                 <div className="pl-6 lg:border-l border-white/10 shrink-0 hidden lg:block">
                     <Link href="/workflow">
-                        <Button className="bg-white text-slate-900 hover:bg-slate-200 uppercase font-black text-[10px] tracking-widest rounded-xl">Ouvrir Workflow</Button>
+                        <Button className="bg-slate-900 text-white hover:bg-slate-800 font-semibold text-[11px] rounded-xl px-6">Ouvrir Workflow</Button>
                     </Link>
                 </div>
             </div>
