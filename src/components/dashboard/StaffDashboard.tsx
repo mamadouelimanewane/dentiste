@@ -142,7 +142,10 @@ export function StaffDashboard({ user }: { user: any }) {
                             { name: 'Awa Diop', time: 'Depuis 15 min', doc: 'Dr. Diallo', status: 'EN ATTENTE', color: 'text-amber-600 bg-amber-50' },
                             { name: 'Cheikh Ndiaye', time: 'À l\'instant', doc: 'Dr. Lao', status: 'ARRIVÉ', color: 'text-blue-600 bg-blue-50' },
                         ].map((patient, i) => (
-                            <div key={i} className="p-8 flex items-center justify-between hover:bg-slate-50 transition-all group">
+                            <div key={i} 
+                                onClick={() => window.location.href = `/patients/demo-id`}
+                                className="p-8 flex items-center justify-between hover:bg-slate-50 transition-all group cursor-pointer"
+                            >
                                 <div className="flex items-center gap-8">
                                     <div className="h-14 w-14 bg-slate-900 rounded-3xl flex items-center justify-center text-white text-[11px] font-black uppercase">
                                         {patient.name.split(' ').map(n => n[0]).join('')}

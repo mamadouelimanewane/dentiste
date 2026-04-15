@@ -145,7 +145,10 @@ export function PractitionerDashboard({ user }: { user: any }) {
                             { time: '11:45', name: 'Moussa Gueye', procedure: 'Smile Design - Consultation', room: 'Studio VIP', badge: 'EN ATTENTE' },
                             { time: '14:00', name: 'Marie Curie', procedure: 'Détartrage & Bilan', room: 'Salle 2', badge: 'CONFIRMÉ' },
                         ].map((apt, i) => (
-                            <div key={i} className="p-8 flex items-center justify-between hover:bg-slate-50 transition-all cursor-pointer">
+                            <div key={i} 
+                                onClick={() => window.location.href = `/patients/demo-id`}
+                                className="p-8 flex items-center justify-between hover:bg-slate-50 transition-all cursor-pointer group"
+                            >
                                 <div className="flex items-center gap-8">
                                     <div className="h-14 w-14 bg-slate-950 rounded-2xl flex items-center justify-center text-emerald-500 font-black text-xs">
                                         {apt.time}
@@ -161,7 +164,7 @@ export function PractitionerDashboard({ user }: { user: any }) {
                                 </div>
                                 <div className="flex items-center gap-4">
                                     <span className="px-4 py-1.5 bg-slate-100 text-slate-500 rounded-full text-[9px] font-black uppercase tracking-widest">{apt.badge}</span>
-                                    <Link href="/charting">
+                                    <Link href="/patients/demo-id">
                                         <Button className="h-10 px-5 rounded-xl bg-slate-900 text-white font-semibold text-[11px]">Ouvrir Dossier</Button>
                                     </Link>
                                 </div>

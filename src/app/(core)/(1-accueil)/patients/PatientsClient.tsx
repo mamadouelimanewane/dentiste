@@ -305,6 +305,7 @@ export default function PatientsClient({ initialPatients = [] }: { initialPatien
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ delay: i * 0.05 }}
+                                            onClick={() => window.location.href = `/patients/${patient.id}`}
                                             className="hover:bg-slate-50 cursor-pointer border-b border-slate-50 last:border-0 group transition-all"
                                         >
                                             <TableCell className="py-4 md:py-6 pl-6 md:pl-10">

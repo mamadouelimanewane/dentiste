@@ -503,6 +503,7 @@ export default function AgendaPage() {
                                                 key={app.id}
                                                 initial={{ opacity: 0, scale: 0.95 }}
                                                 animate={{ opacity: 1, scale: 1 }}
+                                                onClick={() => window.location.href = `/patients/${app.patientId || 'demo-id'}`}
                                                 className={cn(
                                                     "absolute rounded-[2.5rem] p-6 z-20 cursor-pointer shadow-xl border-2 overflow-hidden group transition-all hover:scale-[1.02] hover:shadow-2xl hover:z-30",
                                                     isSurgery ? "bg-slate-950 text-white border-emerald-500/50" : "bg-white text-slate-900 border-slate-100"

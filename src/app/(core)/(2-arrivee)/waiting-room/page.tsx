@@ -163,11 +163,13 @@ export default function WaitingRoomPage() {
                                 { name: 'Jean Valjean (Vous)', time: 'Prévu : 14:15', status: 'WAITING', room: 'Salle Elite 2', wait: '12' },
                                 { name: 'Fatou Binetou', time: 'Prévu : 15:00', status: 'WAITING', room: 'Salle 3', wait: '25' },
                             ].map((p, i) => (
-                                <div key={i} className={cn(
-                                    "p-8 rounded-[2.5rem] flex flex-col md:flex-row items-center justify-between gap-6 transition-all",
-                                    p.status === 'IN_PROGRESS' ? "bg-slate-900 text-white" : 
-                                    p.status === 'NEXT' ? "bg-emerald-50 border border-emerald-100" : "bg-slate-50"
-                                )}>
+                                <div key={i} 
+                                    onClick={() => window.location.href = `/patients/demo-id`}
+                                    className={cn(
+                                        "p-8 rounded-[2.5rem] flex flex-col md:flex-row items-center justify-between gap-6 transition-all cursor-pointer group",
+                                        p.status === 'IN_PROGRESS' ? "bg-slate-900 text-white" : 
+                                        p.status === 'NEXT' ? "bg-emerald-50 border border-emerald-100" : "bg-slate-50"
+                                    )}>
                                     <div className="flex items-center gap-6 w-full md:w-auto">
                                         <div className={cn(
                                             "h-14 w-14 rounded-2xl flex items-center justify-center font-black text-xs",
