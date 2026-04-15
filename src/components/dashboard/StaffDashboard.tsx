@@ -54,17 +54,17 @@ export function StaffDashboard({ user }: { user: any }) {
                     
                     <div className="grid grid-cols-2 gap-4">
                         {[
-                            { label: 'Check-in rapide', icon: UserPlus, color: 'bg-emerald-500' },
-                            { label: 'Rappels Patient', icon: Phone, color: 'bg-blue-500' },
-                            { label: 'Gestion Tâches', icon: ClipboardList, color: 'bg-amber-500' },
-                            { label: 'Urgences', icon: Zap, color: 'bg-red-500' },
+                            { label: 'Check-in rapide', icon: UserPlus, color: 'bg-emerald-500', href: '/reception-portal' },
+                            { label: 'Rappels Patient', icon: Phone, color: 'bg-blue-500', href: '/communication' },
+                            { label: 'Gestion Tâches', icon: ClipboardList, color: 'bg-amber-500', href: '/tasks' },
+                            { label: 'Urgences', icon: Zap, color: 'bg-red-500', href: '/agenda' },
                         ].map((btn, i) => (
-                            <button key={i} className="h-28 w-32 bg-white border border-slate-200 rounded-2xl flex flex-col items-center justify-center gap-3 hover:bg-slate-50 hover:shadow-sm transition-all group">
+                            <Link key={i} href={btn.href} className="h-28 w-32 bg-white border border-slate-200 rounded-2xl flex flex-col items-center justify-center gap-3 hover:bg-slate-50 hover:shadow-sm transition-all group cursor-pointer">
                                 <div className={`h-10 w-10 rounded-xl flex items-center justify-center text-white ${btn.color} shadow-lg shadow-current/20 group-hover:scale-110 transition-transform`}>
                                     <btn.icon className="h-5 w-5" />
                                 </div>
                                 <span className="text-[10px] font-black text-slate-600 uppercase tracking-tight">{btn.label}</span>
-                            </button>
+                            </Link>
                         ))}
                     </div>
                 </div>

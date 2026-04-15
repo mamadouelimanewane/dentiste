@@ -142,7 +142,9 @@ export function AccountantDashboard({ user }: { user: any }) {
                             <CardTitle className="text-xl font-black uppercase tracking-tight">Derniers Encaissements</CardTitle>
                             <CardDescription className="text-xs font-bold text-slate-400 uppercase tracking-widest">Flux de trésorerie direct</CardDescription>
                         </div>
-                        <Button variant="ghost" className="text-emerald-600 font-black uppercase text-[10px] tracking-widest">Historique Complet</Button>
+                        <Link href="/billing">
+                            <Button variant="ghost" className="text-emerald-600 font-black uppercase text-[10px] tracking-widest">Historique Complet</Button>
+                        </Link>
                     </CardHeader>
                     <div className="divide-y divide-slate-50">
                         {[
@@ -186,11 +188,15 @@ export function AccountantDashboard({ user }: { user: any }) {
                         <div className="space-y-4">
                             <div className="p-4 bg-slate-50 rounded-2xl space-y-2">
                                 <p className="text-[11px] font-bold text-slate-600">3 devis en attente de vérification fiscale.</p>
-                                <Button className="w-full bg-slate-900 text-white text-[9px] font-black uppercase tracking-widest h-9 rounded-xl">Traiter</Button>
+                                <Link href="/quotes" className="block">
+                                    <Button className="w-full bg-slate-900 text-white text-[9px] font-black uppercase tracking-widest h-9 rounded-xl">Traiter</Button>
+                                </Link>
                             </div>
                             <div className="p-4 bg-slate-50 rounded-2xl space-y-2">
                                 <p className="text-[11px] font-bold text-slate-600">Clôture mensuelle prête pour signature.</p>
-                                <Button className="w-full bg-emerald-600 text-white text-[9px] font-black uppercase tracking-widest h-9 rounded-xl">Signer OHADA</Button>
+                                <Link href="/accounting" className="block">
+                                    <Button className="w-full bg-emerald-600 text-white text-[9px] font-black uppercase tracking-widest h-9 rounded-xl">Signer OHADA</Button>
+                                </Link>
                             </div>
                         </div>
                     </Card>
@@ -201,9 +207,11 @@ export function AccountantDashboard({ user }: { user: any }) {
                         </div>
                         <h3 className="text-xs font-black uppercase tracking-widest mb-4">Stratégie Fiscale</h3>
                         <p className="text-lg font-black mb-4 tracking-tight leading-tight italic">Maximisez vos marges avec l'analyse prédictive IA.</p>
-                        <Button className="w-full bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[9px] font-black uppercase tracking-widest h-12 rounded-xl">
-                            Simuler mon ROI
-                        </Button>
+                        <Link href="/financial-war-room" className="block w-full">
+                            <Button className="w-full bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[9px] font-black uppercase tracking-widest h-12 rounded-xl">
+                                Simuler mon ROI
+                            </Button>
+                        </Link>
                     </Card>
                 </div>
             </div>

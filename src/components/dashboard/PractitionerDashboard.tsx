@@ -64,9 +64,11 @@ export function PractitionerDashboard({ user }: { user: any }) {
                                 <p className="text-[12px] font-medium text-slate-700">Patient #225 : Densité osseuse optimale pour l'implant prévu.</p>
                             </div>
                         </div>
-                        <Button className="w-full bg-emerald-100 hover:bg-emerald-200 text-emerald-700 text-xs font-semibold h-10 mt-2 rounded-xl">
-                            Ouvrir AI Radio Lab
-                        </Button>
+                        <Link href="/ai-radio-lab" className="block mt-2">
+                            <Button className="w-full bg-emerald-100 hover:bg-emerald-200 text-emerald-700 text-xs font-semibold h-10 rounded-xl">
+                                Ouvrir AI Radio Lab
+                            </Button>
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -159,7 +161,9 @@ export function PractitionerDashboard({ user }: { user: any }) {
                                 </div>
                                 <div className="flex items-center gap-4">
                                     <span className="px-4 py-1.5 bg-slate-100 text-slate-500 rounded-full text-[9px] font-black uppercase tracking-widest">{apt.badge}</span>
-                                    <Button className="h-12 px-6 rounded-xl bg-slate-900 text-white font-black text-[10px] uppercase tracking-widest">Ouvrir Dossier</Button>
+                                    <Link href="/charting">
+                                        <Button className="h-10 px-5 rounded-xl bg-slate-900 text-white font-semibold text-[11px]">Ouvrir Dossier</Button>
+                                    </Link>
                                 </div>
                             </div>
                         ))}
